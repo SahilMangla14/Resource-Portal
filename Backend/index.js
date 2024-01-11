@@ -1,9 +1,9 @@
 const express = require('express')
 const cors = require('cors')
-const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const {dbConnect} = require('./config/db.js')
 const userRouter = require('./routes/user.js')
+const resourceRouter = require('./routes/resource.js')
 
 dotenv.config()
 
@@ -17,7 +17,7 @@ app.get('/',(req,res) => {
 })
 
 app.use('/api/v1/user',userRouter)
-
+app.use('/api/v1/resource',resourceRouter)
 
 PORT = process.env.PORT || 5000
 
