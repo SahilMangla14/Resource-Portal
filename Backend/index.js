@@ -3,6 +3,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const {dbConnect} = require('./config/db.js')
+const userRouter = require('./routes/user.js')
 
 dotenv.config()
 
@@ -14,6 +15,9 @@ app.use(cors())
 app.get('/',(req,res) => {
     res.send('HomePage')
 })
+
+app.use('/api/v1/user',userRouter)
+
 
 PORT = process.env.PORT || 5000
 

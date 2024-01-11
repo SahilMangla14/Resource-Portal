@@ -1,6 +1,6 @@
 const User = require('../models/User.js')
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs');
 
 const registerUser = async (req, res) => {
     const {email,password} = req.body
@@ -48,4 +48,80 @@ const loginUser = async (req, res) => {
     const token = jwt.sign({email}, process.env.JWT_SECRET, {expiresIn: '1d'})
 
     res.status(200).json({message: "User logged in successfully", token})
+}
+
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find()
+        res.status(200).json({message: "All users fetched successfully", users})
+    }
+    catch (err){
+        console.log("Error while getting all users")
+        res.status(500).json({message: err.message})
+    }
+}
+
+const getUserById = async (req, res) => {
+    try{
+        const id = req.params.id
+        const user = await User.findById(id)
+        
+        if(!user){
+            console.log("User not found")
+            res.status(404).json({message: "User not found"})
+        }
+        res.status(200).json({message: "User fetched successfully", user})
+    }
+    catch (err){
+        console.log("Error while getting user by id")
+        res.status(500).json({message: err.message})
+    }
+}
+
+
+const updateUser = async (req, res) => {
+    try {
+        const id = req.params.id
+        const user = await User.findById(id)
+
+        if(!user){
+            console.log("User not found")
+            res.status(404).json({message: "User not found"})
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(id, req.body, {new: true})
+        res.status(200).json({message: "User updated successfully", updatedUser})
+    }
+    catch(err){
+        console.log("Error while updating user")
+        res.status(500).json({message: err.message})
+    }
+}
+
+const deleteUser = async (req, res) => {
+    try {
+        const id = req.params.id
+        const user = await User.findById(id)
+        
+        if(!user){
+            console.log("User not found")
+            res.status(404).json({message: "User not found"})
+        }
+
+        const deletedUser = await User.findByIdAndDelete(id)
+        res.status(200).json({message: "User deleted successfully", deletedUser})
+    }
+    catch (err){
+        console.log("Error while deleting user")
+        res.status(500).json({message: err.message})
+    }
+}
+
+module.exports = {
+    registerUser,
+    loginUser,
+    getAllUsers,
+    getUserById,
+    updateUser,
+    deleteUser
 }
