@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const {dbConnect} = require('./config/db.js')
 const userRouter = require('./routes/user.js')
 const resourceRouter = require('./routes/resource.js')
+const notFound = require('./middleware/notFound.js')
 
 dotenv.config()
 
@@ -12,12 +13,14 @@ app.use(express.json())
 app.use(cors())
 
 
-app.get('/',(req,res) => {
+app.get('/api',(req,res) => {
     res.send('HomePage')
 })
 
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/resource',resourceRouter)
+app.use(notFound)
+
 
 PORT = process.env.PORT || 5000
 
