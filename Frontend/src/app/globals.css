@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+<<<<<<< HEAD
 
 :root {
   --foreground-rgb: 255, 255, 255;
@@ -25,3 +26,5 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+=======
+>>>>>>> 644d49d (profile updated)
