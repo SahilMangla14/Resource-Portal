@@ -109,6 +109,7 @@ const Navbar = () => {
   };
 
   return (
+    
     <header className="flex items-center justify-between px-6 py-3 bg-[#1A120B] bg-opacity-90 fixed top-0 w-full z-10 text-[#FAF6F0]">
       <Link href="#">
         <SchoolIcon className="h-8 w-8" />
@@ -140,6 +141,8 @@ const Navbar = () => {
           Log In
         </Link>
 
+        
+
         <Sheet>
           <SheetTrigger>
             <Avatar>
@@ -147,7 +150,7 @@ const Navbar = () => {
               <AvatarFallback className={color}>SB</AvatarFallback>
             </Avatar>
           </SheetTrigger>
-          <SheetContent side="left" className="bg-gray-950 border-black">
+          <SheetContent side="left" className="bg-gray-950 border-black ">
             <SheetHeader>
               <Avatar className="m-auto w-[70%] h-auto aspect-square p-5">
                 <AvatarImage src="" className="rounded-full m-auto " />
@@ -188,7 +191,7 @@ const Navbar = () => {
                     <DialogContent>
                       {/* <DialogHeader> */}
                       {/* <DialogDescription> */}
-                      <DialogTitle>Edit Profile</DialogTitle>
+                      <DialogTitle className="text-black">Edit Profile</DialogTitle>
                       <Tabs defaultValue="account" className="w-[400px]">
                         <TabsList className="w-full">
                           <TabsTrigger value="account" className="w-[50%]">
@@ -211,7 +214,7 @@ const Navbar = () => {
                                 name="username"
                                 render={({ field }) => (
                                   <FormItem className="p-1">
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel className="text-black">Username</FormLabel>
                                     <FormControl>
                                       <Input
                                         placeholder="Username"
@@ -230,7 +233,7 @@ const Navbar = () => {
                                 name="entry_number"
                                 render={({ field }) => (
                                   <FormItem className="p-1">
-                                    <FormLabel>Entry Number</FormLabel>
+                                    <FormLabel className="text-black">Entry Number</FormLabel>
                                     <FormControl>
                                       <Input
                                         placeholder="20--ABC1234"
@@ -246,7 +249,7 @@ const Navbar = () => {
                                 name="status"
                                 render={({ field }) => (
                                   <FormItem className="p-1">
-                                    <FormLabel>Status</FormLabel>
+                                    <FormLabel className="text-black">Status</FormLabel>
                                     <FormControl>
                                       <Input
                                         placeholder="Type something"
@@ -278,7 +281,7 @@ const Navbar = () => {
                                 name="password"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Enter new Password</FormLabel>
+                                    <FormLabel className="text-black">Enter new Password</FormLabel>
                                     <FormControl>
                                       <Input placeholder="Password" {...field} type="password" />
                                     </FormControl>
@@ -291,7 +294,7 @@ const Navbar = () => {
                                 name="confirm"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Confirm Password</FormLabel>
+                                    <FormLabel className="text-black">Confirm Password</FormLabel>
                                     <FormControl>
                                       <Input placeholder="" {...field} type="password" />
                                     </FormControl>
@@ -332,6 +335,7 @@ const Navbar = () => {
             </SheetHeader>
           </SheetContent>
         </Sheet>
+      
       </nav>
     </header>
   );

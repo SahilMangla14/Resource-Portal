@@ -131,7 +131,7 @@ const add = () => {
   return (
     <>
       <Navbar />
-      <section className="flex flex-col lg:flex-row bg-[#F4EAE0] min-w-full min-h-screen  space-x-20 pt-20">
+      <section className="flex flex-col lg:flex-row bg-[#F4EAE0] min-w-full min-h-screen  space-x-20 pt-20 text-black">
         <div className="bg-white w-full mx-28 rounded-3xl flex flex-col p-10 shadow-2xl ">
           <div className="font-extrabold text-3xl border-b-emerald-900 border-b-4">
             Upload New Resources

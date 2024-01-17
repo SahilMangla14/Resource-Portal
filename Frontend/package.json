@@ -32,10 +32,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.49.3",
-<<<<<<< HEAD
     "react-icons": "^5.0.1",
-=======
->>>>>>> 644d49d (profile updated)
     "react-router": "^6.21.2",
     "react-router-dom": "^6.21.2",
     "react-toastify": "^9.1.3",
