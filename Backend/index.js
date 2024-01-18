@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const {dbConnect} = require('./config/db.js')
 const userRouter = require('./routes/user.js')
 const resourceRouter = require('./routes/resource.js')
+const commentRouter = require('./routes/comment.js')
 const notFound = require('./middleware/notFound.js')
 
 dotenv.config()
@@ -19,6 +20,7 @@ app.get('/api',(req,res) => {
 
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/resource',resourceRouter)
+app.use('/api/v1/comment',commentRouter)
 app.use(notFound)
 
 
