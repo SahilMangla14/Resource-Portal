@@ -90,7 +90,7 @@ export default function CoursePage() {
         name: string;
         comment: string;
     }
-    
+
     const handleLike = () => setLikes(likes + 1);
     const handleDislike = () => setDislikes(dislikes + 1);
 
@@ -143,7 +143,7 @@ export default function CoursePage() {
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
                             Your Name
-                        </label>
+                        </label>    
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="name"
