@@ -118,7 +118,7 @@ const Navbar = () => {
       <nav className="flex space-x-4">
         <Link
           className="text-sm font-medium hover:underline hover:text-gray-400 m-auto"
-          href="/results"
+          href="/resources"
         >
           Academic Resources
         </Link>

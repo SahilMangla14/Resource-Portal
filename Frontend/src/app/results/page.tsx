@@ -2,7 +2,12 @@ import Navbar from "@/components/Navbar"
 import SearchBar from "@/components/SearchBar"
 import Link from "next/link"
 
+
+
+
 export default function Component() {
+
+
   return (
     <div className="flex flex-col h-screen bg-[#F4EAE0] text-black" style={{ fontFamily: 'Ubuntu, sans-serif' }}>
         <Navbar />
