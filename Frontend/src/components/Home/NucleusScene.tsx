@@ -4,7 +4,7 @@ import * as THREE from 'three';
 const NucleusScene = () => {
     useEffect(() => {
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xF4EAE0);
+        scene.background = new THREE.Color(0xE6F0FF);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);

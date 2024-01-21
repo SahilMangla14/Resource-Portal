@@ -110,7 +110,7 @@ const Navbar = () => {
 
   return (
     
-    <header className="flex items-center justify-between px-6 py-3 bg-[#1A120B] bg-opacity-90 fixed top-0 w-full z-10 text-[#FAF6F0]">
+    <header className="flex items-center justify-between px-6 py-2.5 bg-gradient-to-br from-cyan-500 to-blue-500 bg-opacity-95 fixed top-0 w-full z-10 text-[#FAF6F0] shadow-lg">
       <Link href="#">
         <SchoolIcon className="h-8 w-8" />
         <span className="sr-only">University Name</span>
