@@ -1,0 +1,16 @@
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotate-icon {
+    animation: spin 5s linear infinite;
+    width: 3rem;
+    height: 3rem;
+    color: #04276a;
+}

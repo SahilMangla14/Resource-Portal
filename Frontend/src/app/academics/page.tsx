@@ -23,6 +23,7 @@ import crown from '../assets/crown.svg'
 import star3 from '../assets/3-star-medal.svg'
 import trophy from '../assets/trophy.svg'
 import Link from "next/link"
+import LoadingIndicator from "@/components/LoadingIndicator";
 
 interface filterprop {
   label:string,
@@ -156,9 +157,24 @@ const page = () => {
     }
   },[filters,courseCode,course])
 
+  const [isPageLoading, setIsPageLoading] = useState(true);
+
+  useEffect(() => {
+      const loadingTimeout = setTimeout(() => {
+          setIsPageLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(loadingTimeout);
+  }, []);
+
 
   return (
-    <>
+
+    <div>
+    {isPageLoading ? (
+        <LoadingIndicator />
+    ) : (
+<>
       <div
         className="flex flex-col h-screen w-screen bg-[#F4EAE0] text-black"
         style={{ fontFamily: "Ubuntu, sans-serif" }}
@@ -312,6 +328,9 @@ const page = () => {
         </div>
       </div>
     </>
+    )}
+</div>
+    
   );
 };
 

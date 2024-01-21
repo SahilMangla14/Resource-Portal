@@ -15,10 +15,10 @@ const Header = () => {
             <div className="container grid grid-cols-1 lg:grid-cols-2 px-4 md:px-6">
                 <div className="flex flex-col items-start space-y-4 text-left pl-10">
                     <div className="space-y-2">
-                        <h1 className="pt-20 text-[1.75rem] font-bold tracking-tighter" style={{ backgroundClip: 'text', color: 'transparent', backgroundImage: 'linear-gradient(to bottom right, #06B6D4, #4299E1);' }}>
+                        <h1 className="pt-20 text-[1.75rem] font-bold tracking-tighter text-transparent bg-gradient-to-br from-cyan-500 to-blue-500 bg-clip-text">
                             Welcome to
                         </h1>
-                        <h1 className="pl-3 text-8xl font-bold" style={{ backgroundClip: 'text', color: 'transparent', backgroundImage: 'linear-gradient(to bottom right, #06B6D4, #4299E1);' }}>
+                        <h1 className="pl-3 text-8xl font-bold text-transparent bg-gradient-to-br from-cyan-500 to-blue-500 bg-clip-text">
                             InfoNest
                         </h1>
                         <p className="pl-4 text-gray-600 md:text-xl" style={{ marginTop: '-5px' }}>
