@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import bookmark from '../app/assets/bookmarks.svg'
 import add from '../app/assets/add.svg'
@@ -81,6 +81,7 @@ const Navbar = () => {
     ];
 
     const [color, setColor] = useState<string>("");
+    const [userDetails, setUserDetails] = useState<any>({})
     const router = useRouter()
 
     useEffect(() => {
@@ -88,11 +89,41 @@ const Navbar = () => {
         setColor(defaultAvatars[randomIndex]);
     }, []);
 
+    const getUserDetails = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/v1/user/getParticularUser', {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
+            console.log("HELLO", response.data.user);
+            return response.data.user;
+        } catch (error) {
+            console.log(error);
+            // Handle error if needed
+            return null;
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                router.push('/login');
+                return;
+            }
+
+            const data = await getUserDetails();
+            setUserDetails(data);
+            console.log("USER DETAILS", userDetails);
+        };
+
+        fetchData();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             //replace with username later
-            username: "Sakshi",
+            username: userDetails?.name ? userDetails.name : "Username",
             entry_number: "",
             status: "",
         },
@@ -203,7 +234,7 @@ const Navbar = () => {
                                     </AvatarFallback>
                                 </Avatar>
                                 <SheetTitle className="m-auto text-white text-2xl">
-                                    Username
+                                    {userDetails?.name? userDetails.name : "Username"}
                                 </SheetTitle>
                                 <Separator className="bg-gray-500" />
                                 <SheetDescription className="p-8">
