@@ -19,8 +19,10 @@ const UserSchema = mongoose.Schema({
         required: [true, 'must provide password'],
     },
     year: {
-        type: Number,
-        required: [true, 'must provide year']
+        type: Number
+    },
+    entry_number: {
+        type: String
     },
     rating: {
         type: Number,

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 
 const registerUser = async (req, res) => {
-    const {email,password} = req.body
+    const {name,email,password} = req.body
     try {
         const user = await User.findOne({email})
         if(user){
@@ -24,31 +24,30 @@ const registerUser = async (req, res) => {
 
 
 const loginUser = async (req, res) => {
-    const {email,password} = req.body
-
-    if(!email || !password){
-        console.log("Email or password is missing")
-        res.status(400).json({message: "Email or password is missing"})
+    try{
+        const {email,password} = req.body
+        if(!email || !password){
+            console.log("Email or password is missing")
+            return res.status(400).json({message: "Email or password is missing"})
+        }
+        const user = await User.findOne({email})
+        if(!user){
+            console.log("User not found")
+            return res.status(404).json({message: "User not found"})
+        }
+        const isPasswordCorrect = await bcrypt.compare(password, user.password)
+        if(!isPasswordCorrect){
+            console.log("Password is incorrect")
+            return res.status(401).json({message: "Password is incorrect"})
+        }
+        const id = user._id
+        const token = jwt.sign({id, email}, process.env.JWT_SECRET, {expiresIn: '1d'})
+        res.status(200).json({message: "User logged in successfully", token})
     }
-
-    const user = await User.findOne({email})
-
-    if(!user){
-        console.log("User not found")
-        res.status(404).json({message: "User not found"})
+    catch (err){
+        console.log("Error while logging in user")
+        res.status(500).json({message: "Error while logging in user"})
     }
-
-    const isPasswordCorrect = await bcrypt.compare(password, user.password)
-
-    if(!isPasswordCorrect){
-        console.log("Password is incorrect")
-        res.status(401).json({message: "Password is incorrect"})
-    }
-
-    const id = user._id
-    const token = jwt.sign({id, email}, process.env.JWT_SECRET, {expiresIn: '1d'})
-
-    res.status(200).json({message: "User logged in successfully", token})
 }
 
 const getAllUsers = async (req, res) => {
@@ -64,7 +63,7 @@ const getAllUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try{
-        const id = req.params.id
+        const id = req.user.id
         const user = await User.findById(id)
         
         if(!user){
@@ -82,15 +81,24 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.user.id
         const user = await User.findById(id)
-
+        
         if(!user){
             console.log("User not found")
             res.status(404).json({message: "User not found"})
         }
 
+        // check if req.body contains password and if contains password then hash it
+        if(req.body.password){
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            req.body.password = hashedPassword;
+        }
+
+        const newUser = {...user._doc, ...req.body}
+
         const updatedUser = await User.findByIdAndUpdate(id, req.body, {new: true})
+        console.log(updatedUser)
         res.status(200).json({message: "User updated successfully", updatedUser})
     }
     catch(err){
@@ -99,9 +107,10 @@ const updateUser = async (req, res) => {
     }
 }
 
+
 const deleteUser = async (req, res) => {
     try {
-        const id = req.params.id
+        const id = req.user.id
         const user = await User.findById(id)
         
         if(!user){

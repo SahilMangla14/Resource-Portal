@@ -12,7 +12,7 @@ import lock from '../assets/padlock.png'
 import google from '../assets/google.png'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import axios from 'axios'
 
 const SignUp = () => {
 
@@ -69,11 +69,38 @@ const SignUp = () => {
     try {
       setError('');
       setLoading(true);
-      notifySuccess('Successfully signed up')
-      router.push('/')
 
-      
+      // const res= await fetch('http://localhost:5000/api/v1/user/register',{
+      //   method:'POST',
+      //   headers:{
+      //     'Content-Type':'application/json'
+      //   },
+      //   body:JSON.stringify({
+      //     name:nameRef.current?.value,
+      //     email:emailRef.current?.value,
+      //     password:passwordRef.current?.value
+      //   })
+      // })
+
+      // const response=await res.json();
+      // console.log(response.data);
+
+      // notifySuccess('Successfully signed up')
+
+      const res=await axios.post('http://localhost:5000/api/v1/user/register',{
+        name:nameRef.current?.value,
+        email:emailRef.current?.value,
+        password:passwordRef.current?.value
+      })
+
+      // console.log(res.data.data)
+
+      notifySuccess(res.data.message)
+
+      router.push('/login')
     } catch (error:any) {
+      console.log(error)
+      notifyError(error.response.data.message)
       setError(error.message);
     }
     

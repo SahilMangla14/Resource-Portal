@@ -13,7 +13,7 @@ import google from '../assets/google.png'
 import reset from '../assets/reset.webp'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import axios from 'axios'
 
 const Login = () => {
     const emailRef=useRef<HTMLInputElement>(null);
@@ -27,7 +27,7 @@ const Login = () => {
     const [resetPasswordMode, setResetPasswordMode] = useState<boolean>(false);
     
     const [resetPasswordError, setResetPasswordError] = useState('');
-
+  
    
 
     const notifySuccess = (message:string) => {
@@ -55,17 +55,57 @@ const Login = () => {
       }
 
     const handleLogin=async(e:React.FormEvent)=>{
-        setLoading(true);
-        e.preventDefault();
-        try {
+      e.preventDefault();
+      
+      const email=emailRef.current?.value;
+      const password=passwordRef.current?.value||'';
+      
+      if(!/@iitrpr\.ac\.in$/.test(emailRef.current?.value||'')){
+        setEmailStatus(true);
+        return;
+      }
+  
+      if(password.length<8){
+        setPasswordStatus({
+          status:true,
+          message:'Your password should be at least 8 characters long'
+        })
+        return;
+      }
+      if(!/[A-Z]/.test(password)||!/[a-z]/.test(password)||!/\d/.test(password)||!/[!@#$%^&*]/.test(password)){
+        setPasswordStatus({
+          status:true,
+          message:'Your password should be at least 8 characters long and include a mix of uppercase letters, lowercase letters, numbers, and special characters'
+        })
+        return;
+      }
+      
+      try {
+          setError('');
+          setLoading(true);
           if (resetPasswordMode) {
             await handleForgotPassword();
-          } else {
-              notifySuccess('Successfully logged in')
+          } 
+          else {
+
+              //login
+              const res = await axios.post('http://localhost:5000/api/v1/user/login', {
+                email,
+                password,
+              });
+
+              console.log(res.data);
+            
+              // store token in local storage
+              localStorage.setItem('authToken', res.data.token);
+
+              notifySuccess(res.data.message)
               router.push('/')
           }
-        } catch {
-          notifyError('Failed to login. Please retry');
+        } catch(error: any) {
+            console.log(error)
+            notifyError(error.response.data.message)
+            setError(error.message);
         }
         setLoading(false);
     }

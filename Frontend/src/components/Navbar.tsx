@@ -42,6 +42,10 @@ import { Input } from "./ui/input";
 import bookmark from '../app/assets/bookmarks.svg'
 import add from '../app/assets/add.svg'
 import { SiInformatica } from "react-icons/si";
+import { useRouter } from 'next/navigation';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios'
+
 
 const formSchema = z.object({
     username: z.string().min(3, {
@@ -77,6 +81,7 @@ const Navbar = () => {
     ];
 
     const [color, setColor] = useState<string>("");
+    const router = useRouter()
 
     useEffect(() => {
         const randomIndex = Math.floor(Math.random() * defaultAvatars.length);
@@ -88,8 +93,8 @@ const Navbar = () => {
         defaultValues: {
             //replace with username later
             username: "Sakshi",
-            entry_number: " ",
-            status: " ",
+            entry_number: "",
+            status: "",
         },
     });
 
@@ -101,237 +106,294 @@ const Navbar = () => {
         },
     });
 
-    const onAccountSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+    const notifySuccess = (message: string) => {
+        toast.success(message);
     };
 
-    const onPasswordSubmit = (values: z.infer<typeof passwordSchema>) => {
-        console.log(values);
+    const notifyError = (message: string) => {
+        toast.error(message);
+    }
+
+    const onAccountSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            // set the token in the header from local storage
+            const data = {
+                name: values.username,
+                entry_number: values.entry_number,
+                status: values.status
+            }
+            const token = localStorage.getItem('authToken')
+            const res = await axios.put('http://localhost:5000/api/v1/user/updateUser', data, { headers: { 'Authorization': `Bearer ${token}` } })
+
+            console.log(res.data)
+            notifySuccess(res.data.message)
+        }
+        catch (err: any) {
+            console.log(err)
+            if (err.response.data.message === 'Unauthorized' || err.response.data.message === "No token provided") {
+                // redirect to login page
+                router.push('/login')
+            }
+            notifyError(err.response.data.message)
+        }
+    };
+
+    const onPasswordSubmit = async (values: z.infer<typeof passwordSchema>) => {
+        try {
+            const data = {
+                password: values.password
+            }
+            const token = localStorage.getItem('authToken')
+            const res = await axios.put('http://localhost:5000/api/v1/user/updateUser', data, { headers: { 'Authorization': `Bearer ${token}` } })
+            console.log("Password changed successfully", res.data)
+            notifySuccess(res.data.message)
+        }
+        catch (err: any) {
+            console.log(err)
+            if (err.response.data.message === 'Unauthorized' || err.response.data.message === "No token provided") {
+                // redirect to login page
+                router.push('/login')
+            }
+            notifyError(err.response.data.message)
+        }
     };
 
     return (
-        <header className="flex items-center justify-between px-6 py-2.5 bg-gradient-to-br from-cyan-600 to-blue-600 bg-opacity-95 fixed top-0 w-full z-10 text-[#FAF6F0] shadow-lg ">
-            <div className="flex items-center">
-            <SiInformatica size={30} />
-            <p className="ml-2 text-xl font-bold">InfoNest</p>
-            </div>
-            <nav className="flex space-x-4">
-                <Link
-                    className="text-sm font-medium duration-300 tranform hover:font-bold active:scale-90 hover:underline hover:text-black m-auto hover:underline-offset-4 "
-                    href="/"
-                >
-                    Home
-                </Link>
-                <Link
-                    className="text-sm font-medium duration-300 tranform hover:font-bold active:scale-90 hover:underline hover:text-black m-auto hover:underline-offset-4 "
-                    href="#"
-                >
-                    About
-                </Link>
-                <Link
-                    className="text-sm font-medium duration-300 tranform hover:font-bold active:scale-90 hover:underline hover:text-black m-auto hover:underline-offset-4 "
-                    href="/login"
-                >
-                    Log In
-                </Link>
+        <>
+            <header className="flex items-center justify-between px-6 py-2.5 bg-gradient-to-br from-cyan-600 to-blue-600 bg-opacity-95 fixed top-0 w-full z-10 text-[#FAF6F0] shadow-lg ">
+                <div className="flex items-center">
+                    <SiInformatica size={30} />
+                    <p className="ml-2 text-xl font-bold">InfoNest</p>
+                </div>
+                <nav className="flex space-x-4">
+                    <Link
+                        className="text-sm font-medium duration-300 tranform hover:font-bold active:scale-90 hover:underline hover:text-black m-auto hover:underline-offset-4 "
+                        href="/"
+                    >
+                        Home
+                    </Link>
+                    <Link
+                        className="text-sm font-medium duration-300 tranform hover:font-bold active:scale-90 hover:underline hover:text-black m-auto hover:underline-offset-4 "
+                        href="#"
+                    >
+                        About
+                    </Link>
+                    <Link
+                        className="text-sm font-medium duration-300 tranform hover:font-bold active:scale-90 hover:underline hover:text-black m-auto hover:underline-offset-4 "
+                        href="/login"
+                    >
+                        Log In
+                    </Link>
 
 
 
-                <Sheet>
-                    <SheetTrigger>
-                        <Avatar>
-                            <AvatarImage src="" className="w-8 h-8 rounded-full m-auto" />
-                            <AvatarFallback className={color}>SB</AvatarFallback>
-                        </Avatar>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="bg-gray-950 border-black ">
-                        <SheetHeader>
-                            <Avatar className="m-auto w-[70%] h-auto aspect-square p-5">
-                                <AvatarImage src="" className="rounded-full m-auto " />
-                                <AvatarFallback className={`${color} text-3xl`}>
-                                    SB
-                                </AvatarFallback>
+                    <Sheet>
+                        <SheetTrigger>
+                            <Avatar>
+                                <AvatarImage src="" className="w-8 h-8 rounded-full m-auto" />
+                                <AvatarFallback className={color}>SB</AvatarFallback>
                             </Avatar>
-                            <SheetTitle className="m-auto text-white text-2xl">
-                                Username
-                            </SheetTitle>
-                            <Separator className="bg-gray-500" />
-                            <SheetDescription className="p-8">
-                                <div className="flex flex-col ">
-                                    <Link href="/add">
-                                        <div className="flex flex-row p-3 hover:scale-105 opacity-80 hover:opacity-100 hover:cursor-grab">
-                                            <Image
-                                                src={add}
-                                                alt=""
-                                                className="w-8 h-8"
-                                            />
-                                            <p className="m-auto font-bold text-lg text-gray-100 ">
-                                                Add Resources
-                                            </p>
-                                        </div>
-                                    </Link>
-
-                                    <Separator className="bg-gray-700" />
-
-                                    <Dialog>
-                                        <DialogTrigger>
-                                            <div className="flex flex-row p-3 hover:scale-105 opacity-80 hover:opacity-100 hover:cursor-grab ">
-                                                <Image src={profile} alt="" className="w-8 h-8" />
+                        </SheetTrigger>
+                        <SheetContent side="left" className="bg-gray-950 border-black ">
+                            <SheetHeader>
+                                <Avatar className="m-auto w-[70%] h-auto aspect-square p-5">
+                                    <AvatarImage src="" className="rounded-full m-auto " />
+                                    <AvatarFallback className={`${color} text-3xl`}>
+                                        SB
+                                    </AvatarFallback>
+                                </Avatar>
+                                <SheetTitle className="m-auto text-white text-2xl">
+                                    Username
+                                </SheetTitle>
+                                <Separator className="bg-gray-500" />
+                                <SheetDescription className="p-8">
+                                    <div className="flex flex-col ">
+                                        <Link href="/add">
+                                            <div className="flex flex-row p-3 hover:scale-105 opacity-80 hover:opacity-100 hover:cursor-grab">
+                                                <Image
+                                                    src={add}
+                                                    alt=""
+                                                    className="w-8 h-8"
+                                                />
                                                 <p className="m-auto font-bold text-lg text-gray-100 ">
-                                                    Profile
+                                                    Add Resources
                                                 </p>
                                             </div>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            {/* <DialogHeader> */}
-                                            {/* <DialogDescription> */}
-                                            <DialogTitle className="text-black">Edit Profile</DialogTitle>
-                                            <Tabs defaultValue="account" className="w-[400px]">
-                                                <TabsList className="w-full">
-                                                    <TabsTrigger value="account" className="w-[50%]">
-                                                        Account
-                                                    </TabsTrigger>
-                                                    <TabsTrigger value="password" className="w-[50%]">
-                                                        Password
-                                                    </TabsTrigger>
-                                                </TabsList>
-                                                <TabsContent value="account">
-                                                    <p className="text-sm text-gray-500 p-3">
-                                                        Make changes to your account here. Click save when
-                                                        you're done.
+                                        </Link>
+
+                                        <Separator className="bg-gray-700" />
+
+                                        <Dialog>
+                                            <DialogTrigger>
+                                                <div className="flex flex-row p-3 hover:scale-105 opacity-80 hover:opacity-100 hover:cursor-grab ">
+                                                    <Image src={profile} alt="" className="w-8 h-8" />
+                                                    <p className="m-auto font-bold text-lg text-gray-100 ">
+                                                        Profile
                                                     </p>
+                                                </div>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                {/* <DialogHeader> */}
+                                                {/* <DialogDescription> */}
+                                                <DialogTitle className="text-black">Edit Profile</DialogTitle>
+                                                <Tabs defaultValue="account" className="w-[400px]">
+                                                    <TabsList className="w-full">
+                                                        <TabsTrigger value="account" className="w-[50%]">
+                                                            Account
+                                                        </TabsTrigger>
+                                                        <TabsTrigger value="password" className="w-[50%]">
+                                                            Password
+                                                        </TabsTrigger>
+                                                    </TabsList>
+                                                    <TabsContent value="account">
+                                                        <p className="text-sm text-gray-500 p-3">
+                                                            Make changes to your account here. Click save when
+                                                            you're done.
+                                                        </p>
 
-                                                    <Form {...form}>
-                                                        <form onSubmit={form.handleSubmit(onAccountSubmit)}>
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="username"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="p-1">
-                                                                        <FormLabel className="text-black">Username</FormLabel>
-                                                                        <FormControl>
-                                                                            <Input
-                                                                                placeholder="Username"
-                                                                                {...field}
-                                                                            />
-                                                                        </FormControl>
-                                                                        <FormDescription>
-                                                                            This is your public display name.
-                                                                        </FormDescription>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="entry_number"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="p-1">
-                                                                        <FormLabel className="text-black">Entry Number</FormLabel>
-                                                                        <FormControl>
-                                                                            <Input
-                                                                                placeholder="20--ABC1234"
-                                                                                {...field}
-                                                                            />
-                                                                        </FormControl>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="status"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="p-1">
-                                                                        <FormLabel className="text-black">Status</FormLabel>
-                                                                        <FormControl>
-                                                                            <Input
-                                                                                placeholder="Type something"
-                                                                                {...field}
-                                                                            />
-                                                                        </FormControl>
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                            <Button type="submit" className="mt-3">
-                                                                Submit
-                                                            </Button>
-                                                        </form>
-                                                    </Form>
-                                                </TabsContent>
+                                                        <Form {...form}>
+                                                            <form onSubmit={form.handleSubmit(onAccountSubmit)} className="text-black">
+                                                                <FormField
+                                                                    control={form.control}
+                                                                    name="username"
+                                                                    render={({ field }) => (
+                                                                        <FormItem className="p-1">
+                                                                            <FormLabel className="text-black">Username</FormLabel>
+                                                                            <FormControl>
+                                                                                <Input
+                                                                                    placeholder="Username"
+                                                                                    {...field}
+                                                                                />
+                                                                            </FormControl>
+                                                                            <FormDescription>
+                                                                                This is your public display name.
+                                                                            </FormDescription>
+                                                                            <FormMessage />
+                                                                        </FormItem>
+                                                                    )}
+                                                                />
+                                                                <FormField
+                                                                    control={form.control}
+                                                                    name="entry_number"
+                                                                    render={({ field }) => (
+                                                                        <FormItem className="p-1">
+                                                                            <FormLabel className="text-black">Entry Number</FormLabel>
+                                                                            <FormControl>
+                                                                                <Input
+                                                                                    placeholder="20--ABC1234"
+                                                                                    {...field}
+                                                                                />
+                                                                            </FormControl>
+                                                                            <FormMessage />
+                                                                        </FormItem>
+                                                                    )}
+                                                                />
+                                                                <FormField
+                                                                    control={form.control}
+                                                                    name="status"
+                                                                    render={({ field }) => (
+                                                                        <FormItem className="p-1">
+                                                                            <FormLabel className="text-black">Status</FormLabel>
+                                                                            <FormControl>
+                                                                                <Input
+                                                                                    placeholder="Type anything"
+                                                                                    {...field}
+                                                                                />
+                                                                            </FormControl>
+                                                                        </FormItem>
+                                                                    )}
+                                                                />
+                                                                <Button type="submit" className="mt-3">
+                                                                    Submit
+                                                                </Button>
+                                                            </form>
+                                                        </Form>
+                                                    </TabsContent>
 
-                                                <TabsContent value="password">
-                                                    <p className="text-sm text-gray-500 p-3">
-                                                        Change your password here.
-                                                    </p>
-                                                    <Form {...passwordForm}>
-                                                        <form
-                                                            onSubmit={passwordForm.handleSubmit(
-                                                                onPasswordSubmit
-                                                            )}
-                                                        >
-                                                            <FormField
-                                                                control={passwordForm.control}
-                                                                name="password"
-                                                                render={({ field }) => (
-                                                                    <FormItem>
-                                                                        <FormLabel className="text-black">Enter new Password</FormLabel>
-                                                                        <FormControl>
-                                                                            <Input placeholder="Password" {...field} type="password" />
-                                                                        </FormControl>
-                                                                        <FormMessage />
-                                                                    </FormItem>
+                                                    <TabsContent value="password">
+                                                        <p className="text-sm text-gray-500 p-3">
+                                                            Change your password here.
+                                                        </p>
+                                                        <Form {...passwordForm}>
+                                                            <form
+                                                                onSubmit={passwordForm.handleSubmit(
+                                                                    onPasswordSubmit
                                                                 )}
-                                                            />
-                                                            <FormField
-                                                                control={passwordForm.control}
-                                                                name="confirm"
-                                                                render={({ field }) => (
-                                                                    <FormItem>
-                                                                        <FormLabel className="text-black">Confirm Password</FormLabel>
-                                                                        <FormControl>
-                                                                            <Input placeholder="" {...field} type="password" />
-                                                                        </FormControl>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                            <Button type="submit" className="mt-3">Change Password</Button>
-                                                        </form>
-                                                    </Form>
-                                                </TabsContent>
-                                            </Tabs>
+                                                                className="text-black"
+                                                            >
+                                                                <FormField
+                                                                    control={passwordForm.control}
+                                                                    name="password"
+                                                                    render={({ field }) => (
+                                                                        <FormItem>
+                                                                            <FormLabel className="text-black">Enter new Password</FormLabel>
+                                                                            <FormControl>
+                                                                                <Input placeholder="Password" {...field} type="password" />
+                                                                            </FormControl>
+                                                                            <FormMessage />
+                                                                        </FormItem>
+                                                                    )}
+                                                                />
+                                                                <FormField
+                                                                    control={passwordForm.control}
+                                                                    name="confirm"
+                                                                    render={({ field }) => (
+                                                                        <FormItem>
+                                                                            <FormLabel className="text-black">Confirm Password</FormLabel>
+                                                                            <FormControl>
+                                                                                <Input placeholder="" {...field} type="password" />
+                                                                            </FormControl>
+                                                                            <FormMessage />
+                                                                        </FormItem>
+                                                                    )}
+                                                                />
+                                                                <Button type="submit" className="mt-3">Change Password</Button>
+                                                            </form>
+                                                        </Form>
+                                                    </TabsContent>
+                                                </Tabs>
 
-                                        </DialogContent>
-                                    </Dialog>
+                                            </DialogContent>
+                                        </Dialog>
 
-                                    <Separator className="bg-gray-700" />
-                                    <Link href='/saved'>
+                                        <Separator className="bg-gray-700" />
+                                        <Link href='/saved'>
 
-                                        <div className="flex flex-row p-3 hover:scale-105  opacity-80 hover:opacity-100 hover:cursor-grab ">
-                                            <Image src={bookmark} alt="" className=" w-8 h-8" />
+                                            <div className="flex flex-row p-3 hover:scale-105  opacity-80 hover:opacity-100 hover:cursor-grab ">
+                                                <Image src={bookmark} alt="" className=" w-8 h-8" />
+                                                <p className="m-auto font-bold text-lg text-gray-100 ">
+                                                    Saved
+                                                </p>
+                                            </div>
+                                        </Link>
+
+                                        <Separator className="bg-gray-700" />
+                                        <div className="flex flex-row p-3 hover:scale-105  opacity-80 hover:opacity-100 hover:cursor-grab">
+                                            <Image src={logout} alt="" className=" w-8 h-8 " />
                                             <p className="m-auto font-bold text-lg text-gray-100 ">
-                                                Saved
+                                                Log out
                                             </p>
                                         </div>
-                                    </Link>
 
-                                    <Separator className="bg-gray-700" />
-                                    <div className="flex flex-row p-3 hover:scale-105  opacity-80 hover:opacity-100 hover:cursor-grab">
-                                        <Image src={logout} alt="" className=" w-8 h-8 " />
-                                        <p className="m-auto font-bold text-lg text-gray-100 ">
-                                            Log out
-                                        </p>
                                     </div>
+                                </SheetDescription>
+                            </SheetHeader>
+                        </SheetContent>
+                    </Sheet>
 
-                                </div>
-                            </SheetDescription>
-                        </SheetHeader>
-                    </SheetContent>
-                </Sheet>
-
-            </nav>
-        </header>
+                </nav>
+            </header>
+            <ToastContainer position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light" />
+        </>
     );
 };
 
