@@ -1,16 +1,12 @@
 const mongoose = require('mongoose')
 
 const ResourceSchema = mongoose.Schema({
-    name : {
-        type : String,
-        required : [true, 'must provide name']
-    },
     link : {
         type: String,
         required : [true, 'must provide link']
     },
     year: {
-        type: Number,
+        type: String,
         required : [true, 'must provide year']
     },
     semester: {
@@ -20,6 +16,14 @@ const ResourceSchema = mongoose.Schema({
     courseCode: {
         type: String,
         required : [true, 'must provide course code']
+    },
+    courseTitle: {
+        type: String,
+        required : [true, 'must provide course title']
+    },
+    instructor: {
+        type: String,
+        required : [true, 'must provide instructor']
     },
     description: {
         type: String,

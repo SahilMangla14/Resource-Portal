@@ -1,4 +1,5 @@
 const Resource = require('../models/Resource.js');
+const User = require('../models/User.js');
 
 const getAllResources = async (req, res) => {
     try {
@@ -27,7 +28,14 @@ const addResource = async (req, res) => {
     try {
         const resource = new Resource(req.body)
         await resource.save()
-        res.status(200).json({message : "Resource added successfully!"  ,resource})
+
+        const userId = req.user.id 
+        // add the id of this resource to the contributed resources of the user
+        const user = await User.findById(userId)
+        user.contributedResources.push(resource._id)
+        await user.save()
+
+        res.status(200).json({message : "Resource added successfully!"  ,resource,user})
     }
     catch(err) {
         console.log("Error in adding resource!")

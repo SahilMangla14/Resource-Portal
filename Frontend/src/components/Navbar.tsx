@@ -117,7 +117,7 @@ const Navbar = () => {
         };
 
         fetchData();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []); 
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
