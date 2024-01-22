@@ -44,6 +44,11 @@ interface framework {
   func: (arg: string) => void;
 }
 
+interface topContributors {
+  name: string,
+  contributions: number
+}
+
 interface results {
   _id: string,
   courseCode: string,
@@ -54,6 +59,11 @@ interface results {
   tags: string[],
   likes: number,
   uploaded_by: string
+}
+
+interface BlocksProps {
+  courseCode: string;
+  courseTitle: string;
 }
 
 
@@ -152,7 +162,9 @@ const page = () => {
   const [course, setCourse] = useState<string>("");
   const [found, setFound] = useState<boolean>(false)
   const [year, setYear] = useState<string>("");
-  const [result,setResult] = useState<results[]>([])
+  const [result, setResult] = useState<results[]>([])
+  const [topContributorsData, setTopContributorsData] = useState<topContributors[]>([])
+  const [topResources, setTopResources] = useState<results[]>([])
 
   const handleTags = (arg1: boolean, arg2: string) => {
     if (arg1 === true) {
@@ -205,6 +217,40 @@ const page = () => {
 
   }, [filters, courseCode, course, year, semesterFilter]);
 
+
+  useEffect(() => {
+    const fetchTopContributors = async () => {
+      try {
+        const token = localStorage.getItem('authToken')
+        const res = await axios.get('http://localhost:5000/api/v1/user/topContributors', { headers: { 'Authorization': `Bearer ${token}` } });
+        console.log(res.data);
+        setTopContributorsData(res.data.topContributors)
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchTopContributors();
+
+  }, []);
+
+
+  useEffect(() => {
+    const fetchTopResources = async () => {
+      try {
+        const token = localStorage.getItem('authToken')
+        let k = 6
+        const res = await axios.get(`http://localhost:5000/api/v1/resource/top/${k}`  , { headers: { 'Authorization': `Bearer ${token}` } });
+        console.log(res.data);
+        setTopResources(res.data.resources)
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchTopResources();
+
+  }, []);
 
   const [isPageLoading, setIsPageLoading] = useState(true);
 
@@ -314,12 +360,17 @@ const page = () => {
 
                         <p className="text-2xl font-bold my-8 px-20 ">Top Resources</p>
                         <div className='flex flex-col lg:grid lg:grid-cols-3 lg:grid-row-2 gap-8 m-5 h-full overflow-scroll' >
+                          {/* <Blocks />
                           <Blocks />
                           <Blocks />
                           <Blocks />
                           <Blocks />
-                          <Blocks />
-                          <Blocks />
+                          <Blocks /> */}
+                          {topResources.map((res) => (
+                            <Blocks courseCode={res.courseCode} courseTitle={res.courseTitle} />
+                          ))}
+
+
                         </div>
 
                       </div>
@@ -348,41 +399,58 @@ const page = () => {
                       <div className='text-center text-wrap'>
 
                         <div className='grid grid-cols-3 grid-rows-6 gap-4 bg-gray-900 text-white text-center rounded-sm p-3 shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]'>
-                          <div className='flex flex-row justify-around bg-pink-900 col-span-3 font-bold text-md p-2 '>
-                            <p>Rank</p>
-                            <p>Name</p>
-                            <p>Contributions</p>
+                          <div className='flex flex-row justify-around bg-pink-900 col-span-3 font-bold text-md p-2'>
+                            <p className="mx-2">Rank</p>
+                            <p className="mx-2">Name</p>
+                            <p className="mx-2">Contributions</p>
                           </div>
 
-                          <div className='flex flex-row justify-center gap-2 m-auto'>
-                            <Image src={crown} alt='' className='w-7 h-7 '></Image>
-                            <p className="m-auto">1</p>
-                          </div>
-                          <p>bsgbagl</p>
-                          <p>20</p>
+                            {/* <div className='flex flex-row justify-center gap-2 m-auto'>
+                              <Image src={crown} alt='' className='w-7 h-7 '></Image>
+                              <p className="m-auto">1</p>
+                            </div>
+                            <p>bsgbagl</p>
+                            <p>20</p>
 
-                          <div className='flex flex-row justify-center gap-2 item-center m-auto'>
-                            <Image src={star3} alt='' className='w-7 h-7 '></Image>
-                            <p className="m-auto">2</p>
-                          </div>
-                          <p>abnkeaon</p>
-                          <p>15</p>
+                            <div className='flex flex-row justify-center gap-2 item-center m-auto'>
+                              <Image src={star3} alt='' className='w-7 h-7 '></Image>
+                              <p className="m-auto">2</p>
+                            </div>
+                            <p>abnkeaon</p>
+                            <p>15</p>
 
-                          <div className='flex flex-row justify-center gap-2 item-center m-auto'>
-                            <Image src={trophy} alt='' className='w-7 h-7 '></Image>
-                            <p className="m-auto">3</p>
-                          </div>
-                          <p>abnkeaon</p>
-                          <p>15</p>
+                            <div className='flex flex-row justify-center gap-2 item-center m-auto'>
+                              <Image src={trophy} alt='' className='w-7 h-7 '></Image>
+                              <p className="m-auto">3</p>
+                            </div>
+                            <p>abnkeaon</p>
+                            <p>15</p>
 
-                          <p className="m-auto">4</p>
-                          <p>abnkeaon</p>
-                          <p>15</p>
+                            <p className="m-auto">4</p>
+                            <p>abnkeaon</p>
+                            <p>15</p>
 
 
-                          <p className="m-auto">5</p>
-                          <p>abnkeaon</p>
-                          <p>15</p>
+                            <p className="m-auto">5</p>
+                            <p>abnkeaon</p>
+                            <p>15</p> */}
+
+                            {topContributorsData.map((contributor, index) => (
+                            <React.Fragment key={index}>
+                              <div className="flex flex-row justify-center gap-2 items-center m-auto">
+                                {/* Render image based on rank or use a different condition */}
+                                {index === 0 && <Image src={crown} alt="" className="w-7 h-7" />}
+                                {index === 1 && <Image src={star3} alt="" className="w-7 h-7" />}
+                                {index === 2 && <Image src={trophy} alt="" className="w-7 h-7" />}
+
+                                <p className="m-auto">{index + 1}</p>
+                              </div>
+
+                              <p>{contributor.name}</p>
+                              <p>{contributor.contributions}</p>
+                            </React.Fragment>
+                          ))}
+
 
                         </div>
                       </div>
@@ -475,15 +543,15 @@ const Combobox: React.FC<framework> = ({ frameworks, func }) => {
 };
 
 
-const Blocks = () => {
+const Blocks: React.FC<BlocksProps> = ({courseCode, courseTitle}) => {
   return (
     <>
 
       <div className='relative flex flex-shrink-0 group h-40 lg:h-56 justify-center text-center overflow-hidden shadow-2xl shadow-blue-500/20  bg-[#ebd3c5] hover:ease-in hover:delay-250 hover:bg-[#8B7267] hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)] hover:transition-all hover:scale-110 rounded-3xl' style={{ boxShadow: 'rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px' }}>
         <div className='text-center flex flex-col transition-opacity opacity-100 focus:bg-slate-500 group-hover:opacity-5 absolute p-3 pl-10 pr-10 m-5' >
 
-          <p className='text-wrap'><span className='font-bold'>Course Code</span> : CS201</p>
-          <p className='text-wrap'><span className='font-bold'>Course Title</span> : Data Structures and Algorithms vabkdbbvaekd</p>
+          <p className='text-wrap'><span className='font-bold'>Course Code</span> : {courseCode}</p>
+          <p className='text-wrap'><span className='font-bold'>Course Title</span> : {courseTitle}</p>
         </div>
 
 
@@ -496,7 +564,7 @@ const Blocks = () => {
   )
 }
 
-const FoundResult: React.FC<results> = ({ _id,courseCode, courseTitle, link, year, semester, likes, tags, uploaded_by }) => {
+const FoundResult: React.FC<results> = ({ _id, courseCode, courseTitle, link, year, semester, likes, tags, uploaded_by }) => {
 
 
 

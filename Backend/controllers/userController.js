@@ -127,11 +127,31 @@ const deleteUser = async (req, res) => {
     }
 }
 
+
+// return the min(5,number of users) sorted by length of contributedResources array
+const topContributors = async (req, res) => {
+    try {
+        const topContributors = await User.find().sort({contributedResources: -1}).limit(5)
+
+        const contributorsWithContributions = topContributors.map(user => ({
+            ...user._doc,
+            contributions: user.contributedResources.length,
+        }));
+
+        res.status(200).json({message: "Top contributors fetched successfully", topContributors: contributorsWithContributions})
+    }
+    catch (err){
+        console.log("Error while getting top contributors")
+        res.status(500).json({message: err.message})
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
     getAllUsers,
     getUserById,
     updateUser,
-    deleteUser
+    deleteUser,
+    topContributors
 }

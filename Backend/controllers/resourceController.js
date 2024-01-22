@@ -96,7 +96,7 @@ const deleteAllResources = async (req, res) => {
 // find top k resource with most likes
 const getTopKResourcesForLikes = async (req, res) => {
     try {
-        const k = parseInt(req.params.k)
+        let k = parseInt(req.params.k)
         const totalResources = await Resource.countDocuments()
         k = Math.min(k, totalResources)
         const resources = await Resource.find().sort({likes : -1}).limit(k)
