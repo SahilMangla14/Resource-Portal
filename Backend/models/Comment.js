@@ -5,12 +5,12 @@ const CommentSchema = mongoose.Schema({
         type : String,
         required : [true, 'must provide text']
     },
-    resource : {
+    resourceId : {
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Resource',
         required : [true, 'must provide resource']
     },
-    user : {
+    userId : {
         type : mongoose.Schema.Types.ObjectId,
         ref : 'User',
         required : [true, 'must provide user']

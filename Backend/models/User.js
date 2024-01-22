@@ -28,14 +28,16 @@ const UserSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
-    contributedResources: {
-        type: Array,
+    contributedResources: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Resource',
         default: []
-    },
-    savedResources: {
-        type: Array,
+    }],
+    savedResources: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Resource',
         default: []
-    }
+    }]
 }, {
     timestamps: true
 })

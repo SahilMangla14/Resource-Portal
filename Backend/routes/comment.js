@@ -11,9 +11,11 @@ const {
     deleteComment,
     deleteAllComments
 } = require('../controllers/commentController.js')
+const { authenticationMiddleware } = require('../middleware/auth')
 
-router.get('/', getAllComments).get('/:id', getCommentById).get('/resource/:resourceId', getCommentByResourceId).get('/user/:userId', getCommentByUserId).get('/user/:userId/resource/:resourceId', getCommentByUserIdAndResourceId)
-router.post('/create', createComment)
+
+router.get('/', getAllComments).get('/:id',getCommentById).get('/resource/:resourceId', getCommentByResourceId).get('/user/:userId', getCommentByUserId).get('/user/:userId/resource/:resourceId', getCommentByUserIdAndResourceId)
+router.post('/create', authenticationMiddleware, createComment)
 router.put('/update/:id', updateComment)
 router.delete('/delete/:id', deleteComment).delete('/deleteAll', deleteAllComments)
 

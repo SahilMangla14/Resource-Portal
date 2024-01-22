@@ -38,6 +38,11 @@ const ResourceSchema = mongoose.Schema({
     tags: {
         type: Array,
         default: []
+    },
+    uploaded_by: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 },{
     timestamps: true

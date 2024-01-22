@@ -27,6 +27,7 @@ import { constants } from "buffer";
 import axios from 'axios'
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface obj {
   value: string;
@@ -88,7 +89,7 @@ const tags = [
   },
   {
     value: 'quiz-1',
-    label: 'Quiz 1'
+    label: 'Quiz-1'
   },
   {
     value: 'quiz-2',

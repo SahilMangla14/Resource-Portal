@@ -26,10 +26,13 @@ const getResourceById = async (req, res) => {
 
 const addResource = async (req, res) => {
     try {
+
+        const userId = req.user.id 
+        // add the id of the user who contributed this resource
+        req.body.uploaded_by = userId
         const resource = new Resource(req.body)
         await resource.save()
 
-        const userId = req.user.id 
         // add the id of this resource to the contributed resources of the user
         const user = await User.findById(userId)
         user.contributedResources.push(resource._id)
@@ -131,6 +134,70 @@ const getResourcesForCourseCode = async (req, res) => {
     }
 }
 
+// filter the courses based on the course code, year, tags, semester
+// It is possible that some of the filters are not given like course code may not be given or an empty string or course code and year are given and not tags and semester
+// Basically, any permutation of the filters is possible
+// So, we have to handle all the cases
+
+const filterResources = async (req, res) => {
+    try {
+
+        console.log("REQ", req.query)
+        const courseCode = req.query.courseCode
+        const year = req.query.year
+        const tags = req.query.tags
+        const semester = req.query.semester
+        const courseTitle = req.query.courseTitle
+        // handle all the cases
+        // for tags, if all the tags given are present in the resource, then only return that resource. Resource may have more tags than the given tags
+        // tags is an array
+
+
+        let resources = await Resource.find()
+
+        if(courseCode){
+            resources = resources.filter(resource => resource.courseCode === courseCode)
+        }
+
+        if(year){
+            resources = resources.filter(resource => resource.year === year)
+        }
+
+        if(semester){
+            resources = resources.filter(resource => resource.semester === semester)
+        }
+
+        if(courseTitle){
+            resources = resources.filter(resource => resource.courseTitle === courseTitle)
+        }
+
+        if(tags){
+            resources = resources.filter(resource => {
+                let flag = true
+                for(let i = 0; i < tags.length; i++){
+                    if(!resource.tags.includes(tags[i])){
+                        flag = false
+                        break
+                    }
+                }
+                return flag
+            })
+        }
+
+        // in the result resources, in the uploaded_by field, we have the id of the user who contributed the resource but replace id with name of the user
+        // write code
+
+        console.log(resources)
+
+        res.status(200).json({message : "Resources fetched successfully!"  ,resources})
+
+    }
+    catch(err){
+        console.log("Error in filtering resources!")
+        res.status(500).json({message : err.message})
+    }
+}
+
 module.exports = {
     getAllResources,
     getResourceById,
@@ -140,5 +207,6 @@ module.exports = {
     deleteAllResources,
     getTopKResourcesForLikes,
     getResourcesForYear,
-    getResourcesForCourseCode
+    getResourcesForCourseCode,
+    filterResources
 }

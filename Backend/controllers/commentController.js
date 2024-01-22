@@ -5,31 +5,37 @@ const User = require('../models/User.js')
 
 const createComment = async (req, res) => {
     try{
-        const {text, resource, user, author} = req.body
+        console.log("BODY",req.body)
+        const {text} = req.body
+        const resourceId = req.body.course_id
+        console.log("text: ", text)
+        console.log("resourceId: ", resourceId)
+        const userId = req.user.id
+        
+        console.log("userId: ", userId)
 
         if(!text)
             return res.status(400).json({message: "Text is required!"})
 
-        if(!resource)
+        if(!resourceId)
             return res.status(400).json({message: "Resource is required!"})
 
-        if(!user)
+        if(!userId)
             return res.status(400).json({message: "User is required!"})
 
-        if(!author)
-            return res.status(400).json({message: "Author is required!"})
-
         // check if this resource exists
-        const isResourceExist = await Resource.findById(resource)
+        const isResourceExist = await Resource.findById(resourceId)
         if(!isResourceExist)
             return res.status(404).json({message: "Resource not found!"})
 
         // check if this user exists
-        const isUserExist = await User.findById(user)
+        const isUserExist = await User.findById(userId)
         if(!isUserExist)
             return res.status(404).json({message: "User not found!"})
 
-        const comment = new Comment({text, resource, user, author})
+        const author = isUserExist.name
+
+        const comment = new Comment({text, resourceId, userId, author})
         await comment.save()
         res.status(200).json({message: "Comment created successfully!"})
     }
@@ -57,10 +63,6 @@ const getCommentById = async (req, res) => {
         const id = req.params.id
         const comment = await Comment.findById(id)
 
-        if(!comment)
-            return res.status(404).json({message: "Comment not found!"})
-
-
         res.status(200).json({message: "Comment fetched successfully!", comment})
     }
     catch(err){
@@ -74,7 +76,7 @@ const getCommentById = async (req, res) => {
 const getCommentByResourceId = async (req, res) => {
     try{
         const id = req.params.resourceId
-        const comments = await Comment.find({resource: id})
+        const comments = await Comment.find({resourceId: id})
 
         res.status(200).json({message: "Comments fetched successfully!", comments})
     }
@@ -88,7 +90,7 @@ const getCommentByResourceId = async (req, res) => {
 const getCommentByUserId = async (req, res) => {
     try{
         const id = req.params.userId
-        const comments = await Comment.find({user: id})
+        const comments = await Comment.find({userId: id})
 
         res.status(200).json({message: "Comments fetched successfully!", comments})
     }
@@ -104,7 +106,7 @@ const getCommentByUserIdAndResourceId = async (req, res) => {
     try{
         const userId = req.params.userId
         const resourceId = req.params.resourceId
-        const comments = await Comment.find({user: userId, resource: resourceId})
+        const comments = await Comment.find({userId: userId, resourceId: resourceId})
 
         res.status(200).json({message: "Comments fetched successfully!", comments})
     }
