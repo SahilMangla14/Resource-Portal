@@ -192,6 +192,9 @@ const add = () => {
         }
       });
 
+      const data = await getUserDetails();
+      setUserDetails(data);
+
       console.log(response.data);
       notifySuccess(response.data.message)
     }
@@ -201,6 +204,7 @@ const add = () => {
         // redirect to login page
         router.push('/login')
       }
+      
       notifyError(err.response.data.message)
     }
 

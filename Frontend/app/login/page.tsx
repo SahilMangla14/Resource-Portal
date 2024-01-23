@@ -108,6 +108,7 @@ const Login = () => {
             console.log(error)
             // notifyError(error)
             setError(error.message);
+            notifyError(error.response.data.message)
         }
         setLoading(false);
     }
