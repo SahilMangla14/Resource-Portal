@@ -45,7 +45,7 @@ import { SiInformatica } from "react-icons/si";
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios'
-
+import 'react-toastify/dist/ReactToastify.css';
 
 const formSchema = z.object({
     username: z.string().min(3, {
@@ -117,7 +117,7 @@ const Navbar = () => {
         };
 
         fetchData();
-    }, []); 
+    }, []);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -177,7 +177,7 @@ const Navbar = () => {
             const token = localStorage.getItem('authToken')
             const res = await axios.put('http://localhost:5000/api/v1/user/updateUser', data, { headers: { 'Authorization': `Bearer ${token}` } })
             console.log("Password changed successfully", res.data)
-            notifySuccess(res.data.message)
+            notifySuccess("Password Updated Successfully")
         }
         catch (err: any) {
             console.log(err)
@@ -188,6 +188,26 @@ const Navbar = () => {
             notifyError(err.response.data.message)
         }
     };
+
+    const handleLogout = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                router.push('/login');
+                return;
+            }
+
+            const response = await axios.get('http://localhost:5000/api/v1/user/logout', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            console.log(response.data);
+            localStorage.removeItem('authToken');
+            router.push('/login');
+        } catch (error) {
+            console.log(error);
+            // Handle error if needed
+        }
+    }
 
     return (
         <>
@@ -234,7 +254,7 @@ const Navbar = () => {
                                     </AvatarFallback>
                                 </Avatar>
                                 <SheetTitle className="m-auto text-white text-2xl">
-                                    {userDetails?.name? userDetails.name : "Username"}
+                                    {userDetails?.name ? userDetails.name : "Username"}
                                 </SheetTitle>
                                 <Separator className="bg-gray-500" />
                                 <SheetDescription className="p-8">
@@ -399,12 +419,14 @@ const Navbar = () => {
                                         </Link>
 
                                         <Separator className="bg-gray-700" />
-                                        <div className="flex flex-row p-3 hover:scale-105  opacity-80 hover:opacity-100 hover:cursor-grab">
-                                            <Image src={logout} alt="" className=" w-8 h-8 " />
-                                            <p className="m-auto font-bold text-lg text-gray-100 ">
-                                                Log out
-                                            </p>
-                                        </div>
+                                        <button onClick={handleLogout}>
+                                            <div className="flex flex-row p-3 hover:scale-105  opacity-80 hover:opacity-100 hover:cursor-grab">
+                                                <Image src={logout} alt="" className=" w-8 h-8 " />
+                                                <p className="m-auto font-bold text-lg text-gray-100 ">
+                                                    Log out
+                                                </p>
+                                            </div>
+                                        </button>
 
                                     </div>
                                 </SheetDescription>

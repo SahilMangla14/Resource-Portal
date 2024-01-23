@@ -185,7 +185,7 @@ const filterResources = async (req, res) => {
         }
 
         // in the result resources, in the uploaded_by field, we have the id of the user who contributed the resource but replace id with name of the user
-        // write code
+        
 
         console.log(resources)
 

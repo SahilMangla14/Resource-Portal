@@ -8,7 +8,7 @@ import '@fontsource/ubuntu/400.css';
 import { useEffect, useState } from 'react';
 import LoadingIndicator from '@/components/LoadingIndicator'
 
-export default function Component() {
+export default function Page() {
     const [isPageLoading, setIsPageLoading] = useState(true);
 
     useEffect(() => {

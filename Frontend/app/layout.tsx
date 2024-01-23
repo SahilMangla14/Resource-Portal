@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
     title: 'InfoNest',
     description: 'University resource portal',
-}
+}   
 
 export default function RootLayout({
     children,

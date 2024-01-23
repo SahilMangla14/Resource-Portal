@@ -12,7 +12,7 @@ const registerUser = async (req, res) => {
 
         const newUser = new User(req.body)
         await newUser.save()
-        
+
         const data = await User.findOne({email})
         return res.status(201).json({message: "User registered successfully", data})
     }
@@ -42,6 +42,11 @@ const loginUser = async (req, res) => {
         }
         const id = user._id
         const token = jwt.sign({id, email}, process.env.JWT_SECRET, {expiresIn: '1d'})
+        res.cookie('_auth_resource_tkn', token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
+            path: '/',
+        });
         res.status(200).json({message: "User logged in successfully", token})
     }
     catch (err){
@@ -65,7 +70,7 @@ const getUserById = async (req, res) => {
     try{
         const id = req.user.id
         const user = await User.findById(id)
-        
+
         if(!user){
             console.log("User not found")
             res.status(404).json({message: "User not found"})
@@ -83,7 +88,7 @@ const updateUser = async (req, res) => {
     try {
         const id = req.user.id
         const user = await User.findById(id)
-        
+
         if(!user){
             console.log("User not found")
             res.status(404).json({message: "User not found"})
@@ -112,7 +117,7 @@ const deleteUser = async (req, res) => {
     try {
         const id = req.user.id
         const user = await User.findById(id)
-        
+
         if(!user){
             console.log("User not found")
             res.status(404).json({message: "User not found"})
@@ -146,6 +151,17 @@ const topContributors = async (req, res) => {
     }
 }
 
+const logoutUser = async (req, res) => {
+    try{
+        res.clearCookie('_auth_resource_tkn');
+        res.status(200).json({message: "User logged out successfully"})
+    }
+    catch (err){    
+        console.log("Error while logging out user")
+        res.status(500).json({message: err.message})
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
@@ -153,5 +169,6 @@ module.exports = {
     getUserById,
     updateUser,
     deleteUser,
-    topContributors
+    topContributors,
+    logoutUser
 }

@@ -3,9 +3,7 @@ import SearchBar from "@/components/SearchBar"
 import Link from "next/link"
 
 
-
-
-export default function Component() {
+export default async function Component() {
 
 
   return (

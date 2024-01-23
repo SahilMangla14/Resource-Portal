@@ -10,6 +10,8 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
+
+
 import {
   Popover,
   PopoverContent,
@@ -27,6 +29,7 @@ import LoadingIndicator from "@/components/LoadingIndicator";
 import axios from 'axios'
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useRouter } from 'next/navigation';
 
 interface filterprop {
   label: string,
@@ -62,6 +65,7 @@ interface results {
 }
 
 interface BlocksProps {
+  _id: string,
   courseCode: string;
   courseTitle: string;
 }
@@ -165,6 +169,9 @@ const page = () => {
   const [result, setResult] = useState<results[]>([])
   const [topContributorsData, setTopContributorsData] = useState<topContributors[]>([])
   const [topResources, setTopResources] = useState<results[]>([])
+
+  const router = useRouter()
+
 
   const handleTags = (arg1: boolean, arg2: string) => {
     if (arg1 === true) {
@@ -367,7 +374,7 @@ const page = () => {
                           <Blocks />
                           <Blocks /> */}
                           {topResources.map((res) => (
-                            <Blocks courseCode={res.courseCode} courseTitle={res.courseTitle} />
+                            <Blocks _id={res._id} courseCode={res.courseCode} courseTitle={res.courseTitle} />
                           ))}
 
 
@@ -437,7 +444,7 @@ const page = () => {
 
                             {topContributorsData.map((contributor, index) => (
                             <React.Fragment key={index}>
-                              <div className="flex flex-row justify-center gap-2 items-center m-auto">
+                              <div className="flex flex-row justify-center items-center m-auto">
                                 {/* Render image based on rank or use a different condition */}
                                 {index === 0 && <Image src={crown} alt="" className="w-7 h-7" />}
                                 {index === 1 && <Image src={star3} alt="" className="w-7 h-7" />}
@@ -543,7 +550,11 @@ const Combobox: React.FC<framework> = ({ frameworks, func }) => {
 };
 
 
-const Blocks: React.FC<BlocksProps> = ({courseCode, courseTitle}) => {
+const Blocks: React.FC<BlocksProps> = ({_id, courseCode, courseTitle}) => {
+
+  const router = useRouter()
+  // console.log(_id)
+
   return (
     <>
 
@@ -555,7 +566,7 @@ const Blocks: React.FC<BlocksProps> = ({courseCode, courseTitle}) => {
         </div>
 
 
-        <button type="button" className="text-[#2E2622] cursor-grab transition-opacity opacity-0 group-hover:opacity-100  bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-3xl text-sm px-5 py-2.5 text-center   m-auto">Get Resources</button>
+        <button type="button" className="text-[#2E2622] cursor-grab transition-opacity opacity-0 group-hover:opacity-100  bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-3xl text-sm px-5 py-2.5 text-center   m-auto" onClick={()=>{router.push(`/course/${_id}`)}}>Get Resources</button>
 
 
       </div>
