@@ -202,7 +202,7 @@ const page = () => {
 
           // console.log("DATA", data);
           const token = localStorage.getItem('authToken')
-          const res = await axios.get('http://localhost:5000/api/v1/resource/filterResources', { params: data, headers: { 'Authorization': `Bearer ${token}` } });
+          const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/filterResources`, { params: data, headers: { 'Authorization': `Bearer ${token}` } });
           // console.log(res.data);
           setResult(res.data.resources)
         } else {
@@ -229,7 +229,7 @@ const page = () => {
     const fetchTopContributors = async () => {
       try {
         const token = localStorage.getItem('authToken')
-        const res = await axios.get('http://localhost:5000/api/v1/user/topContributors', { headers: { 'Authorization': `Bearer ${token}` } });
+        const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/topContributors`, { headers: { 'Authorization': `Bearer ${token}` } });
         // console.log("TOP CONTRIBUTORS", res.data);
         setTopContributorsData(res.data.topContributors)
       } catch (err) {
@@ -247,7 +247,7 @@ const page = () => {
       try {
         const token = localStorage.getItem('authToken')
         let k = 6
-        const res = await axios.get(`http://localhost:5000/api/v1/resource/top/${k}`  , { headers: { 'Authorization': `Bearer ${token}` } });
+        const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/top/${k}`  , { headers: { 'Authorization': `Bearer ${token}` } });
         // console.log(res.data);
         setTopResources(res.data.resources)
       } catch (err) {

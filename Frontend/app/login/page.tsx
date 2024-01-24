@@ -91,7 +91,7 @@ const Login = () => {
             // console.log("EMAIL ", email, " PASSWORD ", password);
 
               //login
-              const res = await axios.post('http://localhost:5000/api/v1/user/login', {
+              const res = await axios.post(`${process.env.BACKEND_URL}/api/v1/user/login`, {
                 email,
                 password,
               });

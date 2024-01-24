@@ -1,4 +1,5 @@
 const User = require('../models/User.js')
+const Resource = require('../models/Resource.js')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 
@@ -161,6 +162,79 @@ const topContributors = async (req, res) => {
     }
 }
 
+// check wheter the given course is present in savedResources or not
+// savedResources is an array of resource ids
+// if present the set isBookmarked to true else false
+const isBookmarked = async (req, res) => {
+    const resourceId = req.params.id
+    const userId = req.user.id
+    try {
+        const user = await User.findById(userId)
+        if(!user){
+            console.log("User not found")
+            res.status(404).json({message: "User not found"})
+        }
+        const isBookmarked = user.savedResources.includes(resourceId)
+        res.status(200).json({message: "Is bookmarked fetched successfully", isBookmarked})
+    }
+    catch (err){
+        console.log("Error while getting is bookmarked")
+        res.status(500).json({message: err.message})
+    }
+}
+
+
+// save the given course in savedResources array
+// savedResources is an array of resource ids
+const saveResource = async (req, res) => {
+    const resourceId = req.params.id
+    const userId = req.user.id
+    try {
+        const user = await User.findById(userId)
+        if(!user){
+            console.log("User not found")
+            res.status(404).json({message: "User not found"})
+        }
+        const savedResources = user.savedResources
+        // if not present then push it
+        if(!savedResources.includes(resourceId)){
+            savedResources.push(resourceId)
+        }
+        const updatedUser = await User.findByIdAndUpdate(userId, {savedResources}, {new: true})
+        res.status(200).json({message: "Resource saved successfully", updatedUser})
+    }
+    catch (err){
+        console.log("Error while saving resource")
+        res.status(500).json({message: err.message})
+    }
+}
+
+// remove from save resource
+// check if the resource exists in savedResources array
+// if exists then remove it
+const removeSavedResource = async (req, res) => {
+    const resourceId = req.params.id
+    const userId = req.user.id
+    try {
+        const user = await User.findById(userId)
+        if(!user){
+            console.log("User not found")
+            res.status(404).json({message: "User not found"})
+        }
+        const savedResources = user.savedResources
+        const index = savedResources.indexOf(resourceId)
+        if(index > -1){
+            savedResources.splice(index, 1)
+        }
+        const updatedUser = await User.findByIdAndUpdate(userId, {savedResources}, {new: true})
+        res.status(200).json({message: "Resource removed successfully", updatedUser})
+    }
+    catch (err){
+        console.log("Error while removing resource")
+        res.status(500).json({message: err.message})
+    }
+}
+
 const logoutUser = async (req, res) => {
     try{
         res.clearCookie('_auth_resource_tkn');
@@ -168,6 +242,40 @@ const logoutUser = async (req, res) => {
     }
     catch (err){    
         console.log("Error while logging out user")
+        res.status(500).json({message: err.message})
+    }
+}
+
+// get saved resources
+const getSavedResources = async (req, res) => {
+    const userId = req.user.id 
+    try {
+        const user = await User.findById(userId)
+        if(!user){
+            console.log("User not found")
+            res.status(404).json({message: "User not found"})
+        }
+        const savedResources = user.savedResources
+        // console.log("Saved Resources ", savedResources)
+        // get all the saved resources
+        const savedResourcesData = await Resource.find({_id: {$in: user.savedResources}})
+        // console.log("Saved Resourcd Data ", savedResourcesData)
+
+        const updatedResourceData= await Promise.all(
+            savedResourcesData.map(async (resource) => {
+                const uploadedUser = await User.findById(resource.uploaded_by);
+                return {
+                    ...resource._doc,
+                    uploadedBy: uploadedUser ? uploadedUser.name : "Unknown",
+                };
+            })
+        );
+
+        // console.log("Saved Resources Data ", resourceDataWithUploadedBy)
+        res.status(200).json({message: "Saved resources fetched successfully", updatedResourceData})
+    }
+    catch (err){
+        console.log("Error while getting saved resources")
         res.status(500).json({message: err.message})
     }
 }
@@ -180,5 +288,9 @@ module.exports = {
     updateUser,
     deleteUser,
     topContributors,
+    isBookmarked,
+    saveResource,
+    removeSavedResource,
+    getSavedResources,
     logoutUser
 }

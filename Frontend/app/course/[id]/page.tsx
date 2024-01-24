@@ -10,6 +10,7 @@ import axios from 'axios'
 import { get } from 'http';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { set } from 'react-hook-form';
 
 type Course = {
     image: StaticImageData;
@@ -89,6 +90,45 @@ export default function CoursePage({ params }: any) {
     const [dislikes, setDislikes] = useState(0);
     const [comments, setComments] = useState<Comment[]>([])
     const [course, setCourse] = useState<Course>(InitialCourse)
+    const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
+
+    const toggleBookmark = async () => {
+        // if isBookmarked true, then make a delete request to remove from saved Resources
+        // else make a post request to add to saved Resources
+        
+        if(isBookmarked){
+            try{
+                const res = await axios.delete(`${process.env.BACKEND_URL}/api/v1/user/removeSavedResource/${params.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                })
+                // console.log(res.data)
+                notifySuccess("Resource removed from bookmarks")
+                setIsBookmarked(false)
+            }
+            catch(err){
+                notifyError("Error removing resource from bookmarks")
+                console.log(err)
+            }
+        }
+        else{
+            try{
+                const res = await axios.post(`${process.env.BACKEND_URL}/api/v1/user/saveResource/${params.id}`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                })
+                // console.log(res.data)
+                notifySuccess("Resource added to bookmarks")
+                setIsBookmarked(true)
+            }
+            catch(err){
+                notifyError("Error adding resource to bookmarks")
+                console.log(err)
+            }
+        }
+};
     // const {register, handleSubmit, reset } = useForm();
 
 
@@ -113,7 +153,7 @@ export default function CoursePage({ params }: any) {
         try {
             // console.log(commentValue)
             const token = localStorage.getItem('authToken')
-            const res = await axios.post('http://localhost:5000/api/v1/comment/create', { text: commentValue, course_id: params.id }, {
+            const res = await axios.post(`${process.env.BACKEND_URL}/api/v1/comment/create`, { text: commentValue, course_id: params.id }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -122,7 +162,7 @@ export default function CoursePage({ params }: any) {
 
             notifySuccess('Comment added successfully')
 
-            const updatedCommentsRes = await axios.get(`http://localhost:5000/api/v1/comment/resource/${params.id}`, {
+            const updatedCommentsRes = await axios.get(`${process.env.BACKEND_URL}/api/v1/comment/resource/${params.id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
@@ -143,7 +183,7 @@ export default function CoursePage({ params }: any) {
         // get comments for this course
         const getComments = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/v1/comment/resource/${params.id}`, {
+                const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/comment/resource/${params.id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
@@ -160,12 +200,33 @@ export default function CoursePage({ params }: any) {
 
     }, [])
 
+    useEffect(() => {
+        // check whether the course is bookmarked or not
+        const checkBookmark = async () => {
+            try {
+                const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/isBookmarked/${params.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                })
+                // console.log(res.data)
+                // console.log(res.data.isBookmarked)
+                setIsBookmarked(res.data.isBookmarked)
+            }
+            catch (err) {
+                console.log(err)
+            }
+        }
+
+        checkBookmark()
+    },[])
+
 
     // setCourse from backend
     useEffect(() => {
         const getCourse = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/api/v1/resource/${params.id}`, {
+                const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/${params.id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
@@ -207,6 +268,12 @@ export default function CoursePage({ params }: any) {
                                 {/* <Link href={course.driveLink}> */}
                                 <a className="mt-2 inline-block bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded transition duration-500" href={course.link}>Go to Course</a>
                                 {/* </Link> */}
+                                <button
+                                    className={`mx-5 px-4 py-2 rounded text-white ${isBookmarked ? 'bg-gray-500' : 'bg-blue-500'}`}
+                                    onClick={toggleBookmark}
+                                >
+                                    {isBookmarked ? 'Unbookmark' : 'Bookmark'}
+                                </button>
                             </div>
                         </div>
                         <div className="mt-8">

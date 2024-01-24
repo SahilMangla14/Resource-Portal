@@ -70,7 +70,7 @@ const SignUp = () => {
       setError('');
       setLoading(true);
 
-      // const res= await fetch('http://localhost:5000/api/v1/user/register',{
+      // const res= await fetch(`${process.env.BACKEND_URL}/api/v1/user/register`,{
       //   method:'POST',
       //   headers:{
       //     'Content-Type':'application/json'
@@ -87,7 +87,7 @@ const SignUp = () => {
 
       // notifySuccess('Successfully signed up')
 
-      const res=await axios.post('http://localhost:5000/api/v1/user/register',{
+      const res=await axios.post(`${process.env.BACKEND_URL}/api/v1/user/register`,{
         name:nameRef.current?.value,
         email:emailRef.current?.value,
         password:passwordRef.current?.value

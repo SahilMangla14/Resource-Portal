@@ -91,7 +91,7 @@ const Navbar = () => {
 
     const getUserDetails = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/v1/user/getParticularUser', {
+            const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             });
             // console.log("HELLO", response.data.user);
@@ -154,7 +154,7 @@ const Navbar = () => {
                 status: values.status
             }
             const token = localStorage.getItem('authToken')
-            const res = await axios.put('http://localhost:5000/api/v1/user/updateUser', data, { headers: { 'Authorization': `Bearer ${token}` } })
+            const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/user/updateUser`, data, { headers: { 'Authorization': `Bearer ${token}` } })
 
             // console.log(res.data)
             notifySuccess(res.data.message)
@@ -175,7 +175,7 @@ const Navbar = () => {
                 password: values.password
             }
             const token = localStorage.getItem('authToken')
-            const res = await axios.put('http://localhost:5000/api/v1/user/updateUser', data, { headers: { 'Authorization': `Bearer ${token}` } })
+            const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/user/updateUser`, data, { headers: { 'Authorization': `Bearer ${token}` } })
             // console.log("Password changed successfully", res.data)
             notifySuccess("Password Updated Successfully")
         }
@@ -197,7 +197,7 @@ const Navbar = () => {
                 return;
             }
 
-            const response = await axios.get('http://localhost:5000/api/v1/user/logout', {
+            const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/logout`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             // console.log(response.data);

@@ -142,7 +142,7 @@ const add = () => {
   }
   const getUserDetails = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/v1/user/getParticularUser', {
+      const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
       });
       // console.log("HELLO", response.data.user);
@@ -186,7 +186,7 @@ const add = () => {
       };
 
       const token = localStorage.getItem('authToken');
-      const response = await axios.post('http://localhost:5000/api/v1/resource/add', resourceData, {
+      const response = await axios.post(`${process.env.BACKEND_URL}/api/v1/resource/add`, resourceData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
