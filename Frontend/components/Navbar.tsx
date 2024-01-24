@@ -94,7 +94,7 @@ const Navbar = () => {
             const response = await axios.get('http://localhost:5000/api/v1/user/getParticularUser', {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             });
-            console.log("HELLO", response.data.user);
+            // console.log("HELLO", response.data.user);
             return response.data.user;
         } catch (error) {
             console.log(error);
@@ -113,7 +113,7 @@ const Navbar = () => {
 
             const data = await getUserDetails();
             setUserDetails(data);
-            console.log("USER DETAILS", userDetails);
+            // console.log("USER DETAILS", userDetails);
         };
 
         fetchData();
@@ -156,11 +156,11 @@ const Navbar = () => {
             const token = localStorage.getItem('authToken')
             const res = await axios.put('http://localhost:5000/api/v1/user/updateUser', data, { headers: { 'Authorization': `Bearer ${token}` } })
 
-            console.log(res.data)
+            // console.log(res.data)
             notifySuccess(res.data.message)
         }
         catch (err: any) {
-            console.log(err)
+            // console.log(err)
             if (err.response.data.message === 'Unauthorized' || err.response.data.message === "No token provided") {
                 // redirect to login page
                 router.push('/login')
@@ -176,11 +176,11 @@ const Navbar = () => {
             }
             const token = localStorage.getItem('authToken')
             const res = await axios.put('http://localhost:5000/api/v1/user/updateUser', data, { headers: { 'Authorization': `Bearer ${token}` } })
-            console.log("Password changed successfully", res.data)
+            // console.log("Password changed successfully", res.data)
             notifySuccess("Password Updated Successfully")
         }
         catch (err: any) {
-            console.log(err)
+            // console.log(err)
             if (err.response.data.message === 'Unauthorized' || err.response.data.message === "No token provided") {
                 // redirect to login page
                 router.push('/login')
@@ -200,7 +200,7 @@ const Navbar = () => {
             const response = await axios.get('http://localhost:5000/api/v1/user/logout', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            console.log(response.data);
+            // console.log(response.data);
             localStorage.removeItem('authToken');
             router.push('/login');
         } catch (error) {

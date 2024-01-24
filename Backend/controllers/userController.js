@@ -103,7 +103,7 @@ const updateUser = async (req, res) => {
         const newUser = {...user._doc, ...req.body}
 
         const updatedUser = await User.findByIdAndUpdate(id, req.body, {new: true})
-        console.log(updatedUser)
+        // console.log(updatedUser)
         res.status(200).json({message: "User updated successfully", updatedUser})
     }
     catch(err){

@@ -111,14 +111,14 @@ export default function CoursePage({ params }: any) {
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         try {
-            console.log(commentValue)
+            // console.log(commentValue)
             const token = localStorage.getItem('authToken')
             const res = await axios.post('http://localhost:5000/api/v1/comment/create', { text: commentValue, course_id: params.id }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
-            console.log(res)
+            // console.log(res)
 
             notifySuccess('Comment added successfully')
 
@@ -127,13 +127,13 @@ export default function CoursePage({ params }: any) {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
             });
-            console.log(updatedCommentsRes.data);
+            // console.log(updatedCommentsRes.data);
             setComments(updatedCommentsRes.data.comments);
 
             setCommentValue('')
         }
         catch (err) {
-            console.log(err)
+            // console.log(err)
             notifyError('Error adding comment')
         }
 
@@ -148,7 +148,7 @@ export default function CoursePage({ params }: any) {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
-                console.log(res.data)
+                // console.log(res.data)
                 setComments(res.data.comments)
             }
             catch (err) {
@@ -170,7 +170,7 @@ export default function CoursePage({ params }: any) {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
-                console.log(res.data)
+                // console.log(res.data)
 
                 const newData = res.data.resource
                 newData.image = img

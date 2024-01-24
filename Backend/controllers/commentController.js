@@ -5,14 +5,14 @@ const User = require('../models/User.js')
 
 const createComment = async (req, res) => {
     try{
-        console.log("BODY",req.body)
+        // console.log("BODY",req.body)
         const {text} = req.body
         const resourceId = req.body.course_id
-        console.log("text: ", text)
-        console.log("resourceId: ", resourceId)
+        // console.log("text: ", text)
+        // console.log("resourceId: ", resourceId)
         const userId = req.user.id
         
-        console.log("userId: ", userId)
+        // console.log("userId: ", userId)
 
         if(!text)
             return res.status(400).json({message: "Text is required!"})

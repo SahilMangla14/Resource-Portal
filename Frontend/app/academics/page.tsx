@@ -183,7 +183,7 @@ const page = () => {
   }
 
   const handleSemesterTag = (value: string) => {
-    console.log("VALUE", value)
+    // console.log("VALUE", value)
     setSemesterFilter(value)
   }
 
@@ -200,10 +200,10 @@ const page = () => {
             semester: semesterFilter !== "" ? semesterFilter : undefined
           };
 
-          console.log("DATA", data);
+          // console.log("DATA", data);
           const token = localStorage.getItem('authToken')
           const res = await axios.get('http://localhost:5000/api/v1/resource/filterResources', { params: data, headers: { 'Authorization': `Bearer ${token}` } });
-          console.log(res.data);
+          // console.log(res.data);
           setResult(res.data.resources)
         } else {
           setFound(false);
@@ -215,12 +215,12 @@ const page = () => {
 
     fetchData();
 
-    console.log("SET FOUND", found)
-    console.log("filters", filters);
-    console.log("courseCode", courseCode);
-    console.log("course", course);
-    console.log("year", year);
-    console.log("semesterFilter", semesterFilter);
+    // console.log("SET FOUND", found)
+    // console.log("filters", filters);
+    // console.log("courseCode", courseCode);
+    // console.log("course", course);
+    // console.log("year", year);
+    // console.log("semesterFilter", semesterFilter);
 
   }, [filters, courseCode, course, year, semesterFilter]);
 
@@ -230,7 +230,7 @@ const page = () => {
       try {
         const token = localStorage.getItem('authToken')
         const res = await axios.get('http://localhost:5000/api/v1/user/topContributors', { headers: { 'Authorization': `Bearer ${token}` } });
-        console.log("TOP CONTRIBUTORS", res.data);
+        // console.log("TOP CONTRIBUTORS", res.data);
         setTopContributorsData(res.data.topContributors)
       } catch (err) {
         console.error(err);
@@ -248,7 +248,7 @@ const page = () => {
         const token = localStorage.getItem('authToken')
         let k = 6
         const res = await axios.get(`http://localhost:5000/api/v1/resource/top/${k}`  , { headers: { 'Authorization': `Bearer ${token}` } });
-        console.log(res.data);
+        // console.log(res.data);
         setTopResources(res.data.resources)
       } catch (err) {
         console.error(err);
@@ -524,7 +524,7 @@ const Combobox: React.FC<framework> = ({ frameworks, func }) => {
                 key={framework.value}
                 value={framework.value}
                 onSelect={(currentValue) => {
-                  console.log(currentValue);
+                  // console.log(currentValue);
                   const newValue = currentValue === value ? "" : currentValue;
                   setValue(newValue);
                   setOpen(false);

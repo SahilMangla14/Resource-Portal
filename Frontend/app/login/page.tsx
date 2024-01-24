@@ -88,7 +88,7 @@ const Login = () => {
             await handleForgotPassword();
           }
           else {
-            console.log("EMAIL ", email, " PASSWORD ", password);
+            // console.log("EMAIL ", email, " PASSWORD ", password);
 
               //login
               const res = await axios.post('http://localhost:5000/api/v1/user/login', {
@@ -96,7 +96,7 @@ const Login = () => {
                 password,
               });
 
-              console.log(res.data);
+              // console.log(res.data);
 
               // store token in local storage
               localStorage.setItem('authToken', res.data.token);
@@ -105,7 +105,7 @@ const Login = () => {
               router.push('/')
           }
         } catch(error: any) {
-            console.log(error)
+            // console.log(error)
             // notifyError(error)
             setError(error.message);
             notifyError(error.response.data.message)

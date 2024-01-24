@@ -99,7 +99,7 @@ const SignUp = () => {
 
       router.push('/login')
     } catch (error:any) {
-      console.log(error)
+      // console.log(error)
       notifyError(error.response.data.message)
       setError(error.message);
     }

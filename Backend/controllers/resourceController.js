@@ -142,7 +142,7 @@ const getResourcesForCourseCode = async (req, res) => {
 const filterResources = async (req, res) => {
     try {
 
-        console.log("REQ", req.query)
+        // console.log("REQ", req.query)
         const courseCode = req.query.courseCode
         const year = req.query.year
         const tags = req.query.tags
@@ -187,7 +187,7 @@ const filterResources = async (req, res) => {
         // in the result resources, in the uploaded_by field, we have the id of the user who contributed the resource but replace id with name of the user
         
 
-        console.log(resources)
+        // console.log(resources)
 
         res.status(200).json({message : "Resources fetched successfully!"  ,resources})
 
