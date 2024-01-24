@@ -230,7 +230,7 @@ const page = () => {
       try {
         const token = localStorage.getItem('authToken')
         const res = await axios.get('http://localhost:5000/api/v1/user/topContributors', { headers: { 'Authorization': `Bearer ${token}` } });
-        console.log(res.data);
+        console.log("TOP CONTRIBUTORS", res.data);
         setTopContributorsData(res.data.topContributors)
       } catch (err) {
         console.error(err);

@@ -136,7 +136,17 @@ const deleteUser = async (req, res) => {
 // return the min(5,number of users) sorted by length of contributedResources array
 const topContributors = async (req, res) => {
     try {
-        const topContributors = await User.find().sort({contributedResources: -1}).limit(5)
+        // const topContributors = await User.find().sort({contributedResources: -1}).limit(5)
+
+        const users = await User.find();
+        
+        // Sort users based on the length of contributedResources array
+        const sortedUsers = users.sort((a, b) => b.contributedResources.length - a.contributedResources.length);
+        
+        // Take the top 5 contributors
+        const topContributors = sortedUsers.slice(0, 5);
+        
+        // console.log(topContributors)
 
         const contributorsWithContributions = topContributors.map(user => ({
             ...user._doc,
