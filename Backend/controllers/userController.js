@@ -3,6 +3,8 @@ const Resource = require('../models/Resource.js')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
 
+
+
 const registerUser = async (req, res) => {
     const {name,email,password} = req.body
     try {
@@ -69,7 +71,9 @@ const getAllUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try{
-        const id = req.user.id
+        let id = req.user.id
+        
+        if(req.query.user) id=req.query.user
         const user = await User.findById(id)
 
         if(!user){

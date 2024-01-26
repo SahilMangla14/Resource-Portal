@@ -61,7 +61,8 @@ interface results {
   link: string,
   tags: string[],
   likes: number,
-  uploaded_by: string
+  uploaded_by: string,
+  handleLikes:({_id,likes}:{_id:string,likes:number})=>void
 }
 
 interface BlocksProps {
@@ -159,7 +160,7 @@ const coursename = [
 // ]
 
 
-const page = () => {
+const page = ({params}:any) => {
   const [filters, setFilters] = useState<string[]>([]);
   const [semesterFilter, setSemesterFilter] = useState<string>("");
   const [courseCode, setCourseCode] = useState<string>("");
@@ -169,6 +170,7 @@ const page = () => {
   const [result, setResult] = useState<results[]>([])
   const [topContributorsData, setTopContributorsData] = useState<topContributors[]>([])
   const [topResources, setTopResources] = useState<results[]>([])
+  const [render,setRender]=useState<boolean>(false)
 
   const router = useRouter()
 
@@ -222,7 +224,7 @@ const page = () => {
     // console.log("year", year);
     // console.log("semesterFilter", semesterFilter);
 
-  }, [filters, courseCode, course, year, semesterFilter]);
+  }, [filters, courseCode, course, year, semesterFilter,render]);
 
 
   useEffect(() => {
@@ -269,6 +271,17 @@ const page = () => {
     return () => clearTimeout(loadingTimeout);
   }, []);
 
+  const handleLikes=async ({_id,likes}:{_id:string,likes:number})=>{
+  try{
+
+    const token = localStorage.getItem('authToken')
+    const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/update/${_id}`  ,{likes:likes}, { headers: { 'Authorization': `Bearer ${token}` } });
+    setRender((prev)=>!prev)
+  }catch (err) {
+    console.error(err);
+  }
+  }
+
 
   return (
 
@@ -309,7 +322,7 @@ const page = () => {
 
                   <p className="text-white px-5 font-bold my-5 bg-gray-950">Tags</p>
                   <div className="grid grid-col-2 gap-2">
-                    {tags.map((tag) => (<ToggleButton label={tag} func={handleTags} />))}
+                    {tags.map((tag,index) => (<ToggleButton label={tag} key={index} func={handleTags} />))}
                   </div>
 
                 </div>
@@ -326,6 +339,7 @@ const page = () => {
                   <div className="flex flex-row">
                     <p className="my-auto p-3">Course Code</p>
                     <Combobox
+                      
                       frameworks={coursecode}
                       func={(event) => setCourseCode(event)}
 
@@ -374,7 +388,7 @@ const page = () => {
                           <Blocks />
                           <Blocks /> */}
                           {topResources.map((res) => (
-                            <Blocks _id={res._id} courseCode={res.courseCode} courseTitle={res.courseTitle} />
+                            <Blocks key={res._id} _id={res._id} courseCode={res.courseCode} courseTitle={res.courseTitle} />
                           ))}
 
 
@@ -387,8 +401,8 @@ const page = () => {
                       <div className='flex flex-col  w-full '>
                         <p className="text-2xl font-bold my-8 px-20 ">Results</p>
                         <div className='flex flex-col gap-0 m-5 h-full overflow-scroll' >
-                          {result.map((res) => (
-                            <FoundResult _id={res._id} courseCode={res.courseCode} courseTitle={res.courseTitle} link={res.link} year={res.year} semester={res.semester} likes={res.likes} tags={res.tags} uploaded_by={res.uploaded_by} />
+                          {result&&result.map((res) => (
+                            <FoundResult key={res._id}  _id={res._id} handleLikes={handleLikes} courseCode={res.courseCode} courseTitle={res.courseTitle} link={res.link} year={res.year} semester={res.semester} likes={res.likes} tags={res.tags} uploaded_by={res.uploaded_by} />
                           ))}
                         </div>
                       </div>
@@ -412,35 +426,6 @@ const page = () => {
                             <p className="mx-2">Contributions</p>
                           </div>
 
-                            {/* <div className='flex flex-row justify-center gap-2 m-auto'>
-                              <Image src={crown} alt='' className='w-7 h-7 '></Image>
-                              <p className="m-auto">1</p>
-                            </div>
-                            <p>bsgbagl</p>
-                            <p>20</p>
-
-                            <div className='flex flex-row justify-center gap-2 item-center m-auto'>
-                              <Image src={star3} alt='' className='w-7 h-7 '></Image>
-                              <p className="m-auto">2</p>
-                            </div>
-                            <p>abnkeaon</p>
-                            <p>15</p>
-
-                            <div className='flex flex-row justify-center gap-2 item-center m-auto'>
-                              <Image src={trophy} alt='' className='w-7 h-7 '></Image>
-                              <p className="m-auto">3</p>
-                            </div>
-                            <p>abnkeaon</p>
-                            <p>15</p>
-
-                            <p className="m-auto">4</p>
-                            <p>abnkeaon</p>
-                            <p>15</p>
-
-
-                            <p className="m-auto">5</p>
-                            <p>abnkeaon</p>
-                            <p>15</p> */}
 
                             {topContributorsData.map((contributor, index) => (
                             <React.Fragment key={index}>
@@ -575,26 +560,24 @@ const Blocks: React.FC<BlocksProps> = ({_id, courseCode, courseTitle}) => {
   )
 }
 
-const FoundResult: React.FC<results> = ({ _id, courseCode, courseTitle, link, year, semester, likes, tags, uploaded_by }) => {
+const FoundResult: React.FC<results> = ({ _id, handleLikes,courseCode, courseTitle, link, year, semester, likes, tags, uploaded_by }) => {
 
 
 
   return (
 
-    <Link
-      className="flex flex-row items-start p-4 border rounded-md hover:bg-gray-100 transition-colors bg-gray-50"
-      href={`/course/${_id}`}
-    >
+      <div className="flex flex-row items-start p-4 border rounded-md hover:bg-gray-100 transition-colors bg-gray-50">
+    
       <div className="flex flex-col items-center mr-4">
         {/* <Button className="mb-2"> */}
         {/* <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-[#3E3232] hover:bg-[#8D7B68] focus:ring-4 focus:outline-none focus:ring-[#C8B6A6] font-medium rounded-lg text-sm px-4 py-2"> */}
-        <ArrowUpIcon className="h-6 w-6" />
+        <ArrowUpIcon className="h-6 w-6 hover:scale-105 z-1" onClick={()=>handleLikes({_id,likes: likes + 1})} />
         {/* </button> */}
         {/* </Button> */}
         {/* <Button> */}
         {/* <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-[#3E3232] hover:bg-[#8D7B68] focus:ring-4 focus:outline-none focus:ring-[#C8B6A6] font-medium rounded-lg text-sm px-4 py-2"> */}
 
-        <ArrowDownIcon className="h-6 w-6" />
+        <ArrowDownIcon className="h-6 w-6" onClick={()=>likes>0? handleLikes({_id,likes:likes-1}):null}/>
         {/* </button> */}
         {/* </Button> */}
       </div>
@@ -602,6 +585,10 @@ const FoundResult: React.FC<results> = ({ _id, courseCode, courseTitle, link, ye
         <span className="text-lg font-semibold">{likes}</span>
         <span className="text-sm text-gray-500 ml-2">upvotes</span>
       </div>
+    <Link
+     className="flex flex-row items-start p-4 border rounded-md hover:bg-gray-100 transition-colors bg-gray-50"
+      href={`/course/${_id}`}
+    >
       <div className="flex-grow">
         <h2 className="text-lg font-semibold mb-1">{courseCode} - {courseTitle} <span className="text-gray-400">{year}-{semester}</span></h2>
         <p className="text-sm text-red-950">{link}</p>
@@ -611,8 +598,8 @@ const FoundResult: React.FC<results> = ({ _id, courseCode, courseTitle, link, ye
 
         {
           tags.map((tag) => (
-
-            <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+              
+            <span key={_id} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
               #{tag}
             </span>
           ))
@@ -620,7 +607,7 @@ const FoundResult: React.FC<results> = ({ _id, courseCode, courseTitle, link, ye
 
       </div>
     </Link>
-
+    </div>
   )
 }
 

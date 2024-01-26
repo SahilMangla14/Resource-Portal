@@ -8,6 +8,7 @@ const createComment = async (req, res) => {
         // console.log("BODY",req.body)
         const {text} = req.body
         const resourceId = req.body.course_id
+        const parent=req.body.parent
         // console.log("text: ", text)
         // console.log("resourceId: ", resourceId)
         const userId = req.user.id
@@ -35,7 +36,10 @@ const createComment = async (req, res) => {
 
         const author = isUserExist.name
 
-        const comment = new Comment({text, resourceId, userId, author})
+        let comment = new Comment({text, resourceId, userId, author})
+        if(parent){
+            comment=new Comment({text,resourceId,userId,author,parent})
+        }
         await comment.save()
         res.status(200).json({message: "Comment created successfully!"})
     }
@@ -49,7 +53,7 @@ const createComment = async (req, res) => {
 const getAllComments = async (req, res) => {
     try{
         const comments = await Comment.find()
-        res.status(200).json({message: "Comments fetched successfully!", comments})
+        res.status(200).json({message: "Comments fetched successfully!", comments,user:req.user.id})
     }
     catch(err){
         console.log("Error while fetching comments")
@@ -76,9 +80,10 @@ const getCommentById = async (req, res) => {
 const getCommentByResourceId = async (req, res) => {
     try{
         const id = req.params.resourceId
+        
         const comments = await Comment.find({resourceId: id})
 
-        res.status(200).json({message: "Comments fetched successfully!", comments})
+        res.status(200).json({message: "Comments fetched successfully!", comments,user:req.user.id})
     }
     catch(err){
         console.log("Error while fetching comments by resource id")
@@ -119,17 +124,50 @@ const getCommentByUserIdAndResourceId = async (req, res) => {
 // update Comment
 const updateComment = async (req, res) => {
     try{
-        const id = req.params.id
+        const id = req.body.comment_id
+        console.log("id :",id)
+       
+        const userId=req.user.id
+        
         const comment = await Comment.findById(id)
-
-        if(!comment)
+        const user=await User.findById(userId)
+        if(!comment){
+            
             return res.status(404).json({message: "Comment not found!"})
+        }
+        if(req.body.likedBy){
+            if(!comment.likedBy.includes(userId)){
+                const result = await Comment.findByIdAndUpdate(id, { $push: { likedBy: userId } },{new:true})
+                
+                res.status(200).json({message: "Comment updated successfully!", result})
+            }
+            else{
+                const result = await Comment.findByIdAndUpdate(id, { $pull: { likedBy: userId } },{new:true})
+                
+                res.status(200).json({message: "Comment updated successfully!", result})
+            }
+        }
+        else if(req.body.dislikedBy){
+            if(!comment.dislikedBy.includes(userId)){
+                const result = await Comment.findByIdAndUpdate(id, { $push: { dislikedBy: userId } },{new:true})
+                
+                res.status(200).json({message: "Comment updated successfully!", result})
+            }
+            else{
+                const result = await Comment.findByIdAndUpdate(id, { $pull: { dislikedBy: userId } },{new:true})
+                
+                res.status(200).json({message: "Comment updated successfully!", result})
+            }
+        }
+        else{
 
-        const result = await Comment.findByIdAndUpdate(id, req.body)
-        res.status(200).json({message: "Comment updated successfully!", result})
+            const result = await Comment.findByIdAndUpdate(id,  req.body,{new:true})
+            res.status(200).json({message: "Comment updated successfully!", result})
+        }
     }
     catch(err){
         console.log("Error while updating comment")
+        console.log(err.message)
         res.status(500).json({message: err.message})
     }
 }
@@ -137,15 +175,24 @@ const updateComment = async (req, res) => {
 
 // delete Comment
 const deleteComment = async (req, res) => {
+    
     try{
         const id = req.params.id
-        const comment = await Comment.findById(id)
+        const userid=req.user.id
 
+        const comment = await Comment.findById(id)
+        console.log(req.params)
         if(!comment)
             return res.status(404).json({message: "Comment not found!"})
+        else if(comment.userId!=userid){
+            return res.status(404).json({message: ""})
+        }
+        else{
 
-        const result = await Comment.findByIdAndDelete(id)
-        res.status(200).json({message: "Comment deleted successfully!", result})
+            const result = await Comment.findByIdAndDelete(id)
+            res.status(200).json({message: "Comment deleted successfully!", result})
+        }
+
     }
     catch(err){
         console.log("Error while deleting comment")

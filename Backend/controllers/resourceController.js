@@ -48,7 +48,8 @@ const addResource = async (req, res) => {
 
 const updateResource = async (req, res) => {
     try {
-        const id = req.params.id
+        let id = req.params.id
+        
         
         const isExist = await Resource.findById(id)
 
