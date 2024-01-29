@@ -146,22 +146,44 @@ const topContributors = async (req, res) => {
         const users = await User.find();
         
         // Sort users based on the length of contributedResources array
-        const sortedUsers = users.sort((a, b) => b.contributedResources.length - a.contributedResources.length);
+        const calculateTotalLikes = async (contributedResources) => {
+            let totalLikes = 0;
+            for (const element of contributedResources) {
+                let res = await Resource.findById(element);
+                if(res) 
+                totalLikes += res.likes;
+            }
+            return totalLikes;
+        };
+        
+        // Sort users based on the total likes of their contributed resources
+        const sortedUsers = await Promise.all(users.map(async (user) => {
+            
+            const totalLikes = await calculateTotalLikes(user.contributedResources);
+            
+            return { ...user._doc, totalLikes };
+        }));
+        // console.log(sortedUsers)
+        sortedUsers.sort((a, b) => {
+            if(b.totalLikes!=a.totalLikes) return b.totalLikes-a.totalLikes
+            else return b.contributedResources.length-a.contributedResources.length;
+        });
         
         // Take the top 5 contributors
-        const topContributors = sortedUsers.slice(0, 5);
+        // const topContributors = sortedUsers.slice(0, 5);
         
         // console.log(topContributors)
+        // sortedUsers.forEach(e=>console.log(e.name,e.totalLikes))
+        // const contributorsWithContributions = sortedUsers.map(user => ({
+        //     ...user._doc,
+        //     contributions: user.contributedResources.length,
+        // }));
 
-        const contributorsWithContributions = topContributors.map(user => ({
-            ...user._doc,
-            contributions: user.contributedResources.length,
-        }));
-
-        res.status(200).json({message: "Top contributors fetched successfully", topContributors: contributorsWithContributions})
+        res.status(200).json({message: "Top contributors fetched successfully", sortedUsers})
     }
     catch (err){
         console.log("Error while getting top contributors")
+        console.log(err.message)
         res.status(500).json({message: err.message})
     }
 }

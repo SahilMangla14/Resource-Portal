@@ -75,6 +75,17 @@ const deleteResource = async (req, res) => {
             return res.status(404).json({message : "Resource not found!"})
 
         const resource = await Resource.findByIdAndDelete(id)
+        const users = await User.find({ contributedResources: id });
+        
+        // Update the contributedResources array for each user
+        users.forEach(async (user) => {
+            const index = user.contributedResources.indexOf(id);
+            if (index !== -1) {
+                user.contributedResources.splice(index, 1); // Remove the resourceId from contributedResources array
+                await user.save(); // Save the user to update the database
+            }
+        });
+       
         res.status(200).json({message : "Resource deleted successfully!"  ,resource})
     }
     catch(err) {
@@ -131,6 +142,18 @@ const getResourcesForCourseCode = async (req, res) => {
     }
     catch(err) {
         console.log("Error in getting resources for a particular course code!")
+        res.status(500).json({message : err.message})
+    }
+}
+
+const getResourcesForUser = async (req, res) => {
+    try {
+        const uploaded_by=req.user.id
+        const resources = await Resource.find({uploaded_by})
+        res.status(200).json({message : "Resources fetched successfully!"  ,resources})
+    }
+    catch(err) {
+        console.log("Error in getting resources for this user!")
         res.status(500).json({message : err.message})
     }
 }
@@ -209,5 +232,6 @@ module.exports = {
     getTopKResourcesForLikes,
     getResourcesForYear,
     getResourcesForCourseCode,
+    getResourcesForUser,
     filterResources
 }

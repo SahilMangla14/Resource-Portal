@@ -28,6 +28,7 @@ import axios from 'axios'
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Link from "next/link";
 
 interface obj {
   value: string;
@@ -37,6 +38,17 @@ interface obj {
 interface framework {
   frameworks: obj[];
   func: (arg: string) => void;
+  defaultValue:string
+}
+
+interface Course {
+  _id:string;
+  courseCode:string;
+  courseTitle:string;
+  link:string;
+  handleDelete:(id:string)=>void;
+  handleEdit:(id:string)=>void;
+
 }
 
 const coursecode = [
@@ -121,6 +133,8 @@ const tags = [
   },
 ]
 
+
+
 const add = () => {
   const [courseCode, setCourseCode] = useState<string>("");
   const [course, setCourse] = useState<string>("");
@@ -132,6 +146,10 @@ const add = () => {
   const [link, setLink] = useState<string>("")
   const [userDetails, setUserDetails] = useState<any>({});
   const router = useRouter();
+  const [userResources,setUserResources]=useState<Course[]>([]);
+  const [render,setRender]=useState<boolean>(false)
+  const [updating,setUpdating]=useState<string>('')
+  const [rank,setRank]=useState<number>(0)
 
   const notifySuccess = (message: string) => {
     toast.success(message);
@@ -164,14 +182,70 @@ const add = () => {
 
       const data = await getUserDetails();
       setUserDetails(data);
+
+      try{
+
+        const response=await axios.get(`${process.env.BACKEND_URL}/api/v1/user/topContributors`, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        console.log(response.data.sortedUsers)
+        response.data.sortedUsers.forEach((element:any,index:number)=>{
+          if(element._id===data._id) setRank(index+1)
+        })
+      }catch(e){
+        console.log(e)
+      }
       // console.log("USER DETAILS", userDetails);
     };
 
     fetchData();
   }, []);
 
+
+
+  useEffect(()=>{
+    const fetchUploaded=async()=>{
+      const token = localStorage.getItem('authToken');
+      const response=await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/course`,{
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+      })
+      setUserResources(response.data.resources);
+    }
+    fetchUploaded();
+  },[render])
+
+  const handleDelete=async(id:string)=>{
+    const token = localStorage.getItem('authToken');
+    const response=await axios.delete(`${process.env.BACKEND_URL}/api/v1/resource/delete/${id}`,{
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+    })
+    setRender((prev)=>!prev)
+  }
+
+  const handleEdit=async(id:string)=>{
+    const token=localStorage.getItem('authToken');
+    const response=await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/${id}`,{
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+    })
+    const data=response.data.resource
+    setCourseCode(data.courseCode)
+    setCourse(data.courseTitle)
+    setTagsList(data.tags)
+    setInstructor(data.instructor)
+    setYear(data.year)
+    setLink(data.link)
+    setDescription(data.description)
+    setSemester(data.semester)
+    setUpdating(id)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if(updating.length!==0){
+      handleDelete(updating)
+      setUpdating('')
+    }
 
     try {
       const resourceData = {
@@ -192,9 +266,11 @@ const add = () => {
         }
       });
 
+      
+
       const data = await getUserDetails();
       setUserDetails(data);
-
+      setRender((prev)=>!prev);
       // console.log(response.data);
       notifySuccess(response.data.message)
     }
@@ -225,7 +301,7 @@ const add = () => {
                 <Combobox
                   frameworks={coursecode}
                   func={(event) => setCourseCode(event)}
-
+                  defaultValue={courseCode}
                 />
               </div>
 
@@ -234,6 +310,7 @@ const add = () => {
                 <Combobox
                   frameworks={coursename}
                   func={(event) => setCourse(event)}
+                  defaultValue={course}
                 />
               </div>
 
@@ -242,6 +319,7 @@ const add = () => {
                 <Combobox
                   frameworks={tags}
                   func={(event) => setTagsList((prev) => [...prev, event])}
+                  defaultValue=""
                 />
               </div>
 
@@ -318,47 +396,31 @@ const add = () => {
             <div className="w-[40%] h-full bg-slate-100 p-3 flex flex-col justify-center gap-3 rounded-xl items-center flex-wrap text-wrap">
               <p className="font-serif text-3xl opacity-80 text-shadow font-extrabold text-yellow-800">Resources Uploaded</p>
               <div className=" rounded-full w-[60%] bg-orange-300 shadow-2xl shadow-orange-300 text-white text-shadow text-wrap font-bold flex justify-center text-center items-center" style={{ aspectRatio: '1 / 1' }}><p className="text-3xl">
-                {userDetails?.contributedResources?.length}
+                {userResources.length}
               </p></div>
             </div>
 
             <div className="w-[40%] h-full bg-slate-100 p-3 flex flex-col justify-center gap-3 rounded-xl items-center flex-wrap text-wrap">
               <p className="font-serif text-4xl opacity-80 text-shadow font-extrabold text-yellow-800">Rank</p>
-              <div className=" rounded-full w-[60%] bg-orange-300 shadow-2xl shadow-orange-300 text-white text-shadow text-wrap font-bold flex justify-center text-center items-center" style={{ aspectRatio: '1 / 1' }}><p className="text-3xl">5</p></div>
+              <div className=" rounded-full w-[60%] bg-orange-300 shadow-2xl shadow-orange-300 text-white text-shadow text-wrap font-bold flex justify-center text-center items-center" style={{ aspectRatio: '1 / 1' }}><p className="text-3xl">{rank}</p></div>
             </div>
           </div>
-          <div className="bg-black max-w-fit min-h-fit m-10 flex-wrap text-wrap rounded-xl">
+          <div className="bg-black min-w-fit w-[80%] min-h-fit m-10 flex-wrap text-wrap rounded-xl">
             <div className="bg-pink-900 flex flex-row justify-between">
 
               <p className="text-white bg-pink-900 text-xl font-extrabold p-2">Recent</p>
               <input className="w-[25%] bg-white rounded-3xl m-2 p-1" placeholder="Search" />
             </div>
+
             <div className=" flex flex-col gap-y-0.5 bg-black">
-              <div className="flex flex-row rounded-md bg-black min-h-fit px-0.5 group">
-                <div className=" w-[15%]  text-white bg-gray-600 flex justify-center group-hover:bg-gray-800 items-center font-semibold text-center"><p className="text-white">HS452</p></div>
-                <div className="flex flex-col h-[90%] bg-white text-gray-800 group-hover:text-gray-900 p-1">
-                  <p className="text-md">Course title</p>
-                  <p className="text-sm text-cyan-800 hover:text-cyan-950 text-wrap">Link provided vaeukna nsbljrrghonealvjdobveafln ohevanlj hoeanvl</p>
-                  <div className="opacity-0 group-hover:opacity-100 w-full mr-0 h-[5%] flex flex-row justify-end gap-5">
-                    <Image src={edit} alt='' className="w-5 h-5 hover:bg-gray-100 hover:scale-105" />
-                    <Image src={del} alt='' className="h-5 w-5 hover:bg-gray-100 hover:scale-105" />
-
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-row rounded-md bg-black min-h-fit px-0.5 group">
-                <div className=" w-[15%]  text-white bg-gray-600 flex justify-center group-hover:bg-gray-800 items-center font-semibold text-center"><p className="text-white">HS452</p></div>
-                <div className="flex flex-col h-[90%] bg-white text-gray-800 hover:text-gray-900 p-1">
-                  <p className="text-md">Course title</p>
-                  <p className="text-sm text-cyan-800 hover:text-cyan-950 text-wrap">Link provided vaeukna nsbljrrghonealvjdobveafln ohevanlj hoeanvl</p>
-                  <div className="opacity-0 group-hover:opacity-100 w-full mr-0 h-[5%] flex flex-row justify-end gap-5">
-                    <Image src={edit} alt='' className="w-5 h-5 hover:bg-gray-100 hover:scale-105" />
-                    <Image src={del} alt='' className="h-5 w-5 hover:bg-gray-100 hover:scale-105" />
-
-                  </div>
-                </div>
-              </div>
+              {
+                userResources.map(resource=>{
+                  return(
+                    <Recent key={resource._id} _id={resource._id} courseCode={resource.courseCode} courseTitle={resource.courseTitle} link={resource.link} handleDelete={handleDelete} handleEdit={handleEdit}/>
+                  )
+                })
+              }
+              
 
             </div>
           </div>
@@ -380,9 +442,10 @@ const add = () => {
 
 export default add;
 
-const Combobox: React.FC<framework> = ({ frameworks, func }) => {
+const Combobox: React.FC<framework> = ({ frameworks, func,defaultValue }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>(defaultValue);
+  if(defaultValue!==''&&value!==defaultValue) setValue(defaultValue)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -432,3 +495,30 @@ const Combobox: React.FC<framework> = ({ frameworks, func }) => {
 
   );
 };
+
+const Recent: React.FC<Course>=({_id,courseCode,courseTitle,link,handleDelete,handleEdit})=>{
+
+  const stopPropagation = (e:any) => {
+    e.preventDefault();
+  };
+  return (
+    <Link href={`../course/[id]`} as={`../course/${_id}`} >
+
+    <div className="flex flex-row rounded-md bg-black min-h-fit h-full px-0.5 group">
+                <div className=" w-[15%]  text-white bg-gray-600 flex justify-center group-hover:bg-gray-800 items-center font-semibold text-center"><p className="text-white">{courseCode}</p></div>
+                <div className="flex flex-col w-[85%] h-[90%] bg-white text-gray-800 group-hover:text-gray-900 p-1">
+                  <p className="text-md">{courseTitle}</p>
+                  <p className="text-sm text-cyan-800 hover:text-cyan-950 text-wrap">{link}</p>
+                  <div className="opacity-0 group-hover:opacity-100 w-full mr-0 h-[5%] flex flex-row justify-end gap-5">
+                    <Image src={edit} onClick={(e) => { stopPropagation(e); handleEdit(_id); }} alt='' className="w-5 h-5 hover:bg-gray-100 hover:scale-105" />
+                    
+
+                    <Image src={del} onClick={(e) => { stopPropagation(e); handleDelete(_id); }}  alt='' className="h-5 w-5 hover:bg-gray-100 hover:scale-105" />
+                    
+
+                  </div>
+                </div>
+              </div>
+    </Link>
+  )
+}

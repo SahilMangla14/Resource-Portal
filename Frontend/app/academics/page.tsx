@@ -49,7 +49,7 @@ interface framework {
 
 interface topContributors {
   name: string,
-  contributions: number
+  contributedResources: string[]
 }
 
 interface results {
@@ -233,7 +233,7 @@ const page = ({params}:any) => {
         const token = localStorage.getItem('authToken')
         const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/topContributors`, { headers: { 'Authorization': `Bearer ${token}` } });
         // console.log("TOP CONTRIBUTORS", res.data);
-        setTopContributorsData(res.data.topContributors)
+        setTopContributorsData(res.data.sortedUsers.slice(0,5))
       } catch (err) {
         console.error(err);
       }
@@ -439,7 +439,7 @@ const page = ({params}:any) => {
                               </div>
 
                               <p>{contributor.name}</p>
-                              <p>{contributor.contributions}</p>
+                              <p>{contributor.contributedResources.length}</p>
                             </React.Fragment>
                           ))}
 
