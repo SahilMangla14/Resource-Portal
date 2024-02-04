@@ -242,11 +242,8 @@ const add = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if(updating.length!==0){
-      handleDelete(updating)
-      setUpdating('')
-    }
-
+    
+      
     try {
       const resourceData = {
         courseCode,
@@ -260,13 +257,25 @@ const add = () => {
       };
 
       const token = localStorage.getItem('authToken');
-      const response = await axios.post(`${process.env.BACKEND_URL}/api/v1/resource/add`, resourceData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      let response={data:{message:''}};
+      if(updating.length!==0){
+         response = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/update/${updating}`, resourceData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setUpdating('')
+      }
+      else{
 
-      
+        response = await axios.post(`${process.env.BACKEND_URL}/api/v1/resource/add`, resourceData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
+   
+      window.location.reload();
 
       const data = await getUserDetails();
       setUserDetails(data);

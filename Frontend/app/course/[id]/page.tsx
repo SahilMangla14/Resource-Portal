@@ -264,7 +264,9 @@ export default function CoursePage({ params }: any) {
                 else return b.likedBy.length-a.likedBy.length
             })
 
-            setComments(sortedComments)
+            const filteredComments=sortedComments.filter((c:Comment)=>!c.parent||c.parent.length===0)
+
+            setComments(filteredComments)
             
 
             // setComments(updatedCommentsRes.data.comments);
