@@ -35,6 +35,14 @@ const ResourceSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
+    peopleWhoLiked: {
+        type: Map,
+        default: new Map()
+    },
+    peopleWhoDisliked: {
+        type: Map,
+        default: new Map()
+    },
     tags: {
         type: Array,
         default: []

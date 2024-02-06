@@ -51,7 +51,6 @@ const updateResource = async (req, res) => {
     try {
         let id = req.params.id
         
-        
         const isExist = await Resource.findById(id)
 
         if(!isExist)
@@ -66,6 +65,64 @@ const updateResource = async (req, res) => {
     }
 }
 
+const LikeResource = async (req, res) => {
+    try {
+        let id = req.params.id
+        const resource = await Resource.findById(id)
+        if(!resource)
+            return res.status(404).json({message : "Resource not found!"})
+
+        const userId = req.user.id
+        if(resource.peopleWhoLiked.has(userId)){
+            return res.status(200).json({message : "You have already liked this resource!"})
+        }
+        else{
+            // update the userwholiked map
+            resource.peopleWhoLiked.set(userId, true)
+            if(resource.peopleWhoDisliked.has(userId)){
+                resource.peopleWhoDisliked.delete(userId)
+            }
+            resource.likes++
+            await resource.save()
+            res.status(200).json({message : "Resource updated successfully!"  ,resource})
+        }
+    }
+    catch(err) {
+        console.log("Error in liking resource!")
+        res.status(500).json({message :"Error in liking resource!"})
+    }
+}
+
+const DislikeResource = async (req, res) => {
+    try {
+        console.log("Disliking resource")
+        let id = req.params.id
+        const resource = await Resource.findById(id)
+        if(!resource)
+            return res.status(404).json({message : "Resource not found!"})
+
+        const userId = req.user.id
+        if(resource.peopleWhoDisliked.has(userId)){
+            return res.status(200).json({message : "You have already disliked this resource!"})
+        }
+        else{
+            // update the userwhodisliked map
+            resource.peopleWhoDisliked.set(userId, true)
+            if(resource.peopleWhoLiked.has(userId)){
+                resource.peopleWhoLiked.delete(userId)
+            }
+            resource.likes--
+            await resource.save()
+
+            console.log(resource)
+            res.status(200).json({message : "Resource updated successfully!"  ,resource})
+        }
+    }
+    catch(err) {
+        console.log("Error in disliking resource!")
+        res.status(500).json({message :"Error in disliking resource!"})
+    }
+}
 
 const deleteResource = async (req, res) => {
     try {
@@ -241,7 +298,7 @@ const filterResources = async (req, res) => {
         // in the result resources, in the uploaded_by field, we have the id of the user who contributed the resource but replace id with name of the user
 
 
-        console.log(resources)
+        console.log("************************************************",resources)
 
         res.status(200).json({message : "Resources fetched successfully!"  ,resources})
 
@@ -263,5 +320,7 @@ module.exports = {
     getResourcesForYear,
     getResourcesForCourseCode,
     getResourcesForUser,
-    filterResources
+    filterResources,
+    LikeResource,
+    DislikeResource
 }

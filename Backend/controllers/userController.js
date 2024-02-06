@@ -188,6 +188,21 @@ const deleteUser = async (req, res) => {
         // delete comments by the user
         await Comment.deleteMany({ userId: id })
 
+        // delete from who liked and who disliked in resources
+        const resources = await Resource.find()
+        resources.forEach(async (resource) => {
+            if (resource.peopleWhoLiked.has(id)) {
+                resource.peopleWhoLiked.delete(id)
+                resource.likes = resource.peopleWhoLiked.size
+                await resource.save()
+            }
+            if (resource.peopleWhoDisliked.has(id)) {
+                resource.peopleWhoDisliked.delete(id)
+                resource.likes -= resource.peopleWhoDisliked.size
+                await resource.save()
+            }
+        })
+
         res.status(200).json({ message: "User deleted successfully", deletedUser })
     }
     catch (err) {

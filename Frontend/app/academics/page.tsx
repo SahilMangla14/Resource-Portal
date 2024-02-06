@@ -63,6 +63,7 @@ interface results {
   likes: number,
   uploaded_by: string,
   handleLikes:({_id,likes}:{_id:string,likes:number})=>void
+  handleDislikes:({_id,likes}:{_id:string,likes:number})=>void
 }
 
 interface BlocksProps {
@@ -298,12 +299,24 @@ const page = ({params}:any) => {
   const handleLikes=async ({_id,likes}:{_id:string,likes:number})=>{
   try{
     const token = localStorage.getItem('authToken')
-    const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/update/${_id}`  ,{likes:likes}, { headers: { 'Authorization': `Bearer ${token}` } });
+    const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/like/${_id}`  ,{likes:likes}, { headers: { 'Authorization': `Bearer ${token}` } });
     console.log(res.data);
     setRender((prev)=>!prev)
   }catch (err) {
     console.error(err);
   }
+  }
+
+  const handleDislikes = async ({_id,likes}:{_id:string,likes:number})=>{
+    try{
+      console.log("HEY THERE")
+      const token = localStorage.getItem('authToken')
+      const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/dislike/${_id}`  ,{likes:likes}, { headers: { 'Authorization': `Bearer ${token}` } });
+      console.log(res.data);
+      setRender((prev)=>!prev)
+    }catch (err) {
+      console.error(err);
+    }
   }
 
 
@@ -428,7 +441,7 @@ const page = ({params}:any) => {
                         <p className="text-2xl font-bold my-8 px-20 ">Results</p>
                         <div className='flex flex-col gap-0 m-5 h-full overflow-scroll' >
                           {result&&result.map((res) => (
-                            <FoundResult key={res._id}  _id={res._id} handleLikes={handleLikes} courseCode={res.courseCode} courseTitle={res.courseTitle} link={res.link} year={res.year} semester={res.semester} likes={res.likes} tags={res.tags} uploaded_by={res.uploaded_by} />
+                            <FoundResult key={res._id}  _id={res._id} handleLikes={handleLikes} handleDislikes={handleDislikes} courseCode={res.courseCode} courseTitle={res.courseTitle} link={res.link} year={res.year} semester={res.semester} likes={res.likes} tags={res.tags} uploaded_by={res.uploaded_by} />
                           ))}
                         </div>
                       </div>
@@ -578,7 +591,7 @@ const Blocks: React.FC<BlocksProps> = ({_id, courseCode, courseTitle}) => {
 }
 
 
-const FoundResult: React.FC<results> = ({ _id, handleLikes,courseCode, courseTitle, link, year, semester, likes, tags, uploaded_by }) => {
+const FoundResult: React.FC<results> = ({ _id, handleLikes, handleDislikes, courseCode, courseTitle, link, year, semester, likes, tags, uploaded_by }) => {
 
 
 
@@ -595,7 +608,7 @@ const FoundResult: React.FC<results> = ({ _id, handleLikes,courseCode, courseTit
         {/* <Button> */}
         {/* <button type="submit" className="text-white absolute end-2.5 bottom-2.5 bg-[#3E3232] hover:bg-[#8D7B68] focus:ring-4 focus:outline-none focus:ring-[#C8B6A6] font-medium rounded-lg text-sm px-4 py-2"> */}
 
-        <ArrowDownIcon className="h-6 w-6" onClick={()=>likes>0? handleLikes({_id,likes:likes-1}):null}/>
+        <ArrowDownIcon className="h-6 w-6 hover:scale-105 z-1" onClick={()=>handleDislikes({_id,likes:likes-1})}/>
         {/* </button> */}
         {/* </Button> */}
       </div>

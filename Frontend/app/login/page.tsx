@@ -53,7 +53,6 @@ const Login = () => {
     }
   };
   const responseGoogle = async (response: any) => {
-    // console.log(response.tokenObj.id_token, 'kraran');
     console.log("SAHIL111222 ", response);
     const bodyObject = {
       authId: response.tokenObj.id_token
