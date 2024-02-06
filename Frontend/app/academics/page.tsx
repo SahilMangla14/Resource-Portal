@@ -189,43 +189,67 @@ const page = ({params}:any) => {
     setSemesterFilter(value)
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (filters.length > 0 || courseCode !== "" || course !== "" || year !== "" || semesterFilter !== "") {
-          setFound(true);
-          const data = {
-            tags: filters.length > 0 ? filters : undefined,
-            courseCode: courseCode !== "" ? courseCode : undefined,
-            courseTitle: course !== "" ? course : undefined,
-            year: year !== "" ? year : undefined,
-            semester: semesterFilter !== "" ? semesterFilter : undefined
-          };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (filters.length > 0 || courseCode !== "" || course !== "" || year !== "" || semesterFilter !== "") {
+  //         setFound(true);
+  //         const data = {
+  //           tags: filters.length > 0 ? filters : undefined,
+  //           courseCode: courseCode !== "" ? courseCode : undefined,
+  //           courseTitle: course !== "" ? course : undefined,
+  //           year: year !== "" ? year : undefined,
+  //           semester: semesterFilter !== "" ? semesterFilter : undefined
+  //         };
 
-          // console.log("DATA", data);
-          const token = localStorage.getItem('authToken')
-          const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/filterResources`, { params: data, headers: { 'Authorization': `Bearer ${token}` } });
-          // console.log(res.data);
-          setResult(res.data.resources)
-        } else {
-          setFound(false);
-        }
-      } catch (err) {
-        console.error(err);
+  //         // console.log("DATA", data);
+  //         const token = localStorage.getItem('authToken')
+  //         const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/filterResources`, { params: data, headers: { 'Authorization': `Bearer ${token}` } });
+  //         // console.log(res.data);
+  //         setResult(res.data.resources)
+  //       } else {
+  //         setFound(false);
+  //       }
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
+  //   fetchData();
+
+  //   // console.log("SET FOUND", found)
+  //   // console.log("filters", filters);
+  //   // console.log("courseCode", courseCode);
+  //   // console.log("course", course);
+  //   // console.log("year", year);
+  //   // console.log("semesterFilter", semesterFilter);
+
+  // }, [filters, courseCode, course, year, semesterFilter]);
+
+  const applyFilters = async () => {
+    try {
+      if (filters.length > 0 || courseCode !== "" || course !== "" || year !== "" || semesterFilter !== "") {
+        setFound(true);
+        const data = {
+          tags: filters.length > 0 ? filters : undefined,
+          courseCode: courseCode !== "" ? courseCode : undefined,
+          courseTitle: course !== "" ? course : undefined,
+          year: year !== "" ? year : undefined,
+          semester: semesterFilter !== "" ? semesterFilter : undefined
+        };
+
+        // console.log("DATA", data);
+        const token = localStorage.getItem('authToken')
+        const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/filterResources`, { params: data, headers: { 'Authorization': `Bearer ${token}` } });
+        // console.log(res.data);
+        setResult(res.data.resources)
+      } else {
+        setFound(false);
       }
-    };
-
-    fetchData();
-
-    // console.log("SET FOUND", found)
-    // console.log("filters", filters);
-    // console.log("courseCode", courseCode);
-    // console.log("course", course);
-    // console.log("year", year);
-    // console.log("semesterFilter", semesterFilter);
-
-  }, [filters, courseCode, course, year, semesterFilter,render]);
-
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     const fetchTopContributors = async () => {
@@ -273,9 +297,9 @@ const page = ({params}:any) => {
 
   const handleLikes=async ({_id,likes}:{_id:string,likes:number})=>{
   try{
-
     const token = localStorage.getItem('authToken')
     const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/update/${_id}`  ,{likes:likes}, { headers: { 'Authorization': `Bearer ${token}` } });
+    console.log(res.data);
     setRender((prev)=>!prev)
   }catch (err) {
     console.error(err);
@@ -324,7 +348,9 @@ const page = ({params}:any) => {
                   <div className="grid grid-col-2 gap-2">
                     {tags.map((tag,index) => (<ToggleButton label={tag} key={index} func={handleTags} />))}
                   </div>
-
+                    <button className="bg-blue-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-5 text-black" onClick={applyFilters}>
+                      Apply filters
+                    </button>
                 </div>
               </div>
 
@@ -536,29 +562,21 @@ const Combobox: React.FC<framework> = ({ frameworks, func }) => {
 
 
 const Blocks: React.FC<BlocksProps> = ({_id, courseCode, courseTitle}) => {
-
-  const router = useRouter()
-  // console.log(_id)
+  const router = useRouter();
 
   return (
     <>
-
       <div className='relative flex flex-shrink-0 group h-40 lg:h-56 justify-center text-center overflow-hidden shadow-2xl shadow-blue-500/20  bg-[#ebd3c5] hover:ease-in hover:delay-250 hover:bg-[#8B7267] hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.7)] hover:transition-all hover:scale-110 rounded-3xl' style={{ boxShadow: 'rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px' }}>
         <div className='text-center flex flex-col transition-opacity opacity-100 focus:bg-slate-500 group-hover:opacity-5 absolute p-3 pl-10 pr-10 m-5' >
-
           <p className='text-wrap'><span className='font-bold'>Course Code</span> : {courseCode}</p>
           <p className='text-wrap'><span className='font-bold'>Course Title</span> : {courseTitle}</p>
         </div>
-
-
-        <button type="button" className="text-[#2E2622] cursor-grab transition-opacity opacity-0 group-hover:opacity-100  bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-3xl text-sm px-5 py-2.5 text-center   m-auto" onClick={()=>{router.push(`/course/${_id}`)}}>Get Resources</button>
-
-
+        <button type="button" className="text-[#2E2622] cursor-grab transition-opacity opacity-0 group-hover:opacity-100 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:focus:ring-gray-800 font-medium rounded-3xl text-sm px-5 py-2.5 text-center m-auto" onClick={() => {router.push(`/course/${_id}`)}} style={{position: 'relative', zIndex: 1}}>Get Resources</button>
       </div>
-
     </>
-  )
+  );
 }
+
 
 const FoundResult: React.FC<results> = ({ _id, handleLikes,courseCode, courseTitle, link, year, semester, likes, tags, uploaded_by }) => {
 

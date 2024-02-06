@@ -1,4 +1,5 @@
 const Resource = require('../models/Resource.js');
+const Comment = require('../models/Comment.js');
 const User = require('../models/User.js');
 
 const getAllResources = async (req, res) => {
@@ -75,9 +76,12 @@ const deleteResource = async (req, res) => {
             return res.status(404).json({message : "Resource not found!"})
 
         const resource = await Resource.findByIdAndDelete(id)
-        const users = await User.find({ contributedResources: id });
-        
-        // Update the contributedResources array for each user
+        // const users = await User.find({ contributedResources: id });
+
+        // find users where this resouce id is present in contributed resources array
+        const users = await User.find({contributedResources : { $in : [id]}})
+
+        // update the contributedResources array for each user
         users.forEach(async (user) => {
             const index = user.contributedResources.indexOf(id);
             if (index !== -1) {
@@ -85,7 +89,24 @@ const deleteResource = async (req, res) => {
                 await user.save(); // Save the user to update the database
             }
         });
-       
+
+
+        // find users where this resouce id is present in saved resources array
+        const users2 = await User.find({savedResources : { $in : [id]}})
+
+        // update the savedResources array for each user
+        users2.forEach(async (user) => {
+            const index = user.savedResources.indexOf(id);
+            if (index !== -1) {
+                user.savedResources.splice(index, 1); // Remove the resourceId from savedResources array
+                await user.save(); // Save the user to update the database
+            }
+        });
+
+
+        // delete the comments of this resource
+        await Comment.deleteMany({resourceId : id})
+
         res.status(200).json({message : "Resource deleted successfully!"  ,resource})
     }
     catch(err) {
@@ -97,6 +118,15 @@ const deleteResource = async (req, res) => {
 const deleteAllResources = async (req, res) => {
     try {
         const resources = await Resource.deleteMany()
+
+        // make the contributed array empty for all the users
+        const users = await User.find()
+        users.forEach(async (user) => {
+            user.contributedResources = []
+            user.savedResources = []
+            await user.save()
+        })
+
         res.status(200).json({message : "All resources deleted successfully!"  ,resources})
     }
     catch(err) {
@@ -209,9 +239,9 @@ const filterResources = async (req, res) => {
         }
 
         // in the result resources, in the uploaded_by field, we have the id of the user who contributed the resource but replace id with name of the user
-        
 
-        // console.log(resources)
+
+        console.log(resources)
 
         res.status(200).json({message : "Resources fetched successfully!"  ,resources})
 

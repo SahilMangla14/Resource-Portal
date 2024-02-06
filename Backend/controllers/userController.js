@@ -1,90 +1,133 @@
 const User = require('../models/User.js')
 const Resource = require('../models/Resource.js')
+const Comment = require('../models/Comment.js')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs');
+const { OAuth2Client } = require('google-auth-library');
+const cron = require('node-cron');
+const dotenv = require('dotenv');
+dotenv.config();
 
-
-
-const registerUser = async (req, res) => {
-    const {name,email,password} = req.body
+const googleAuth = async (req, res) => {
+    const client = new OAuth2Client(process.env.CLIENT_ID);
+    const { authId } = req.body;
+    // console.log('sahil', authId)
     try {
-        const user = await User.findOne({email})
-        if(user){
-            return res.status(400).json({message: "User already exists"})
-        }
+        //check if passed token is valid
+        const ticket = await client.verifyIdToken({
+            idToken: authId,
+            audience: process.env.CLIENT_ID
+        });
+        //get metadata from the id token, to be saved in the db
+        const { name, email, picture } = ticket.getPayload();
 
-        const newUser = new User(req.body)
-        await newUser.save()
-
-        const data = await User.findOne({email})
-        return res.status(201).json({message: "User registered successfully", data})
-    }
-    catch (err){
-        console.log("Error while registering user")
-        res.status(500).json({message: err.message})
-    }
-}
-
-
-const loginUser = async (req, res) => {
-    try{
-        const {email,password} = req.body
-        if(!email || !password){
-            console.log("Email or password is missing")
-            return res.status(400).json({message: "Email or password is missing"})
+        //check if user already exists
+        const user = await User.findOne({email});
+        let id = 'sahil';
+        if (!user) {
+            const newUser = await User.create({
+                name,
+                email,
+            });
+            id = newUser._id;
+        } else {
+            id = user._id;
         }
-        const user = await User.findOne({email})
-        if(!user){
-            console.log("User not found")
-            return res.status(404).json({message: "User not found"})
-        }
-        const isPasswordCorrect = await bcrypt.compare(password, user.password)
-        if(!isPasswordCorrect){
-            console.log("Password is incorrect")
-            return res.status(401).json({message: "Password is incorrect"})
-        }
-        const id = user._id
-        const token = jwt.sign({id, email}, process.env.JWT_SECRET, {expiresIn: '1d'})
+        const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1d' })
         res.cookie('_auth_resource_tkn', token, {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
             path: '/',
         });
-        res.status(200).json({message: "User logged in successfully", token})
+        res.status(200).json({ message: "User logged in successfully", token, user })
     }
-    catch (err){
+    catch (err) {
         console.log("Error while logging in user")
-        res.status(500).json({message: "Error while logging in user"})
+        res.status(500).json({ message: "Error in google login" })
+    }
+}
+
+
+const registerUser = async (req, res) => {
+    const { name, email, password } = req.body
+    try {
+        const user = await User.findOne({ email })
+        if (user) {
+            return res.status(400).json({ message: "User already exists" })
+        }
+
+        const newUser = new User(req.body)
+        await newUser.save()
+
+        const data = await User.findOne({ email })
+        return res.status(201).json({ message: "User registered successfully", data })
+    }
+    catch (err) {
+        console.log("Error while registering user")
+        res.status(500).json({ message: err.message })
+    }
+}
+
+
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body
+        if (!email || !password) {
+            console.log("Email or password is missing")
+            return res.status(400).json({ message: "Email or password is missing" })
+        }
+        const user = await User.findOne({ email })
+        if (!user) {
+            console.log("User not found")
+            return res.status(404).json({ message: "User not found" })
+        }
+        const isPasswordCorrect = await bcrypt.compare(password, user.password)
+        if (!isPasswordCorrect) {
+            console.log("Password is incorrect")
+            return res.status(401).json({ message: "Password is incorrect" })
+        }
+        const id = user._id
+        const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1d' })
+        res.cookie('_auth_resource_tkn', token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
+            path: '/',
+        });
+        res.status(200).json({ message: "User logged in successfully", token })
+    }
+    catch (err) {
+        console.log("Error while logging in user")
+        res.status(500).json({ message: "Error while logging in user" })
     }
 }
 
 const getAllUsers = async (req, res) => {
     try {
         const users = await User.find()
-        res.status(200).json({message: "All users fetched successfully", users})
+        res.status(200).json({ message: "All users fetched successfully", users })
     }
-    catch (err){
+    catch (err) {
         console.log("Error while getting all users")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
 const getUserById = async (req, res) => {
-    try{
+    try {
         let id = req.user.id
-        
-        if(req.query.user) id=req.query.user
+
+        if (req.query.user) id = req.query.user
         const user = await User.findById(id)
 
-        if(!user){
+        if (!user) {
             console.log("User not found")
-            res.status(404).json({message: "User not found"})
+            res.status(404).json({ message: "User not found" })
         }
-        res.status(200).json({message: "User fetched successfully", user})
+        res.status(200).json({ message: "User fetched successfully", user })
     }
-    catch (err){
+    catch (err) {
         console.log("Error while getting user by id")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -94,26 +137,35 @@ const updateUser = async (req, res) => {
         const id = req.user.id
         const user = await User.findById(id)
 
-        if(!user){
+        if (!user) {
             console.log("User not found")
-            res.status(404).json({message: "User not found"})
+            res.status(404).json({ message: "User not found" })
         }
 
         // check if req.body contains password and if contains password then hash it
-        if(req.body.password){
+        if (req.body.password) {
             const hashedPassword = await bcrypt.hash(req.body.password, 10);
             req.body.password = hashedPassword;
         }
 
-        const newUser = {...user._doc, ...req.body}
+        // if username is updated, update the author field of all comments where the userId matches
+        if(req.body.name){
+            const comments = await Comment.find({userId:id})
+            comments.forEach(async (comment)=>{
+                comment.author = req.body.name
+                await comment.save()
+            })
+        }
 
-        const updatedUser = await User.findByIdAndUpdate(id, req.body, {new: true})
+        const newUser = { ...user._doc, ...req.body }
+
+        const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true })
         // console.log(updatedUser)
-        res.status(200).json({message: "User updated successfully", updatedUser})
+        res.status(200).json({ message: "User updated successfully", updatedUser })
     }
-    catch(err){
+    catch (err) {
         console.log("Error while updating user")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -123,25 +175,84 @@ const deleteUser = async (req, res) => {
         const id = req.user.id
         const user = await User.findById(id)
 
-        if(!user){
+        if (!user) {
             console.log("User not found")
-            res.status(404).json({message: "User not found"})
+            res.status(404).json({ message: "User not found" })
         }
 
         const deletedUser = await User.findByIdAndDelete(id)
-        res.status(200).json({message: "User deleted successfully", deletedUser})
+
+        // delete resources contributed by the user
+        await Resource.deleteMany({ uploaded_by: id })
+
+        // delete comments by the user
+        await Comment.deleteMany({ userId: id })
+
+        res.status(200).json({ message: "User deleted successfully", deletedUser })
     }
-    catch (err){
+    catch (err) {
         console.log("Error while deleting user")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
 
-// return the min(5,number of users) sorted by length of contributedResources array
-const topContributors = async (req, res) => {
+// // return the min(5,number of users) sorted by length of contributedResources array
+// const topContributors = async (req, res) => {
+//     try {
+//         // const topContributors = await User.find().sort({contributedResources: -1}).limit(5)
+
+//         const users = await User.find();
+
+//         // Sort users based on the length of contributedResources array
+//         const calculateTotalLikes = async (contributedResources) => {
+//             let totalLikes = 0;
+//             for (const element of contributedResources) {
+//                 let res = await Resource.findById(element);
+//                 if (res)
+//                     totalLikes += res.likes;
+//             }
+//             return totalLikes;
+//         };
+
+//         // Sort users based on the total likes of their contributed resources
+//         const sortedUsers = await Promise.all(users.map(async (user) => {
+
+//             const totalLikes = await calculateTotalLikes(user.contributedResources);
+
+//             return { ...user._doc, totalLikes };
+//         }));
+//         // console.log(sortedUsers)
+//         sortedUsers.sort((a, b) => {
+//             if (b.totalLikes != a.totalLikes) return b.totalLikes - a.totalLikes
+//             else return b.contributedResources.length - a.contributedResources.length;
+//         });
+
+//         // Take the top 5 contributors
+//         // const topContributors = sortedUsers.slice(0, 5);
+
+//         // console.log(topContributors)
+//         // sortedUsers.forEach(e=>console.log(e.name,e.totalLikes))
+//         // const contributorsWithContributions = sortedUsers.map(user => ({
+//         //     ...user._doc,
+//         //     contributions: user.contributedResources.length,
+//         // }));
+
+//         res.status(200).json({ message: "Top contributors fetched successfully", sortedUsers })
+//     }
+//     catch (err) {
+//         console.log("Error while getting top contributors")
+//         console.log(err.message)
+//         res.status(500).json({ message: err.message })
+//     }
+// }
+
+let sortedUsers = []; // Define sortedUsers in a shared scope
+
+// Schedule the task to run every 5 days
+cron.schedule('* * * * *', async () => {
     try {
-        // const topContributors = await User.find().sort({contributedResources: -1}).limit(5)
+        console.log('Counting and sorting process started...');
 
         const users = await User.find();
         
@@ -150,43 +261,41 @@ const topContributors = async (req, res) => {
             let totalLikes = 0;
             for (const element of contributedResources) {
                 let res = await Resource.findById(element);
-                if(res) 
-                totalLikes += res.likes;
+                if (res)
+                    totalLikes += res.likes;
             }
             return totalLikes;
         };
-        
+
         // Sort users based on the total likes of their contributed resources
-        const sortedUsers = await Promise.all(users.map(async (user) => {
-            
+        sortedUsers = await Promise.all(users.map(async (user) => {
             const totalLikes = await calculateTotalLikes(user.contributedResources);
-            
             return { ...user._doc, totalLikes };
         }));
-        // console.log(sortedUsers)
+        
         sortedUsers.sort((a, b) => {
-            if(b.totalLikes!=a.totalLikes) return b.totalLikes-a.totalLikes
-            else return b.contributedResources.length-a.contributedResources.length;
+            if (b.totalLikes != a.totalLikes) return b.totalLikes - a.totalLikes
+            else return b.contributedResources.length - a.contributedResources.length;
         });
-        
-        // Take the top 5 contributors
-        // const topContributors = sortedUsers.slice(0, 5);
-        
-        // console.log(topContributors)
-        // sortedUsers.forEach(e=>console.log(e.name,e.totalLikes))
-        // const contributorsWithContributions = sortedUsers.map(user => ({
-        //     ...user._doc,
-        //     contributions: user.contributedResources.length,
-        // }));
 
-        res.status(200).json({message: "Top contributors fetched successfully", sortedUsers})
+        console.log('Counting and sorting process completed...',sortedUsers);
+    } catch (error) {
+        console.error('Error during counting and sorting process:', error);
     }
-    catch (err){
-        console.log("Error while getting top contributors")
-        console.log(err.message)
-        res.status(500).json({message: err.message})
+});
+
+// Function to fetch top contributors
+const topContributors = async (req, res) => {
+    try {
+        // console.log('******************SORTED USERS : ******************************************************************', sortedUsers);
+        // Fetch the top 5 contributors from the already sorted list
+        // const top5Contributors = sortedUsers.length > 0 ? sortedUsers.slice(0, Math.min(5, sortedUsers.length)) : [];
+        res.status(200).json({ message: "Top contributors fetched successfully", sortedUsers });
+    } catch (error) {
+        console.error('Error while getting top contributors:', error);
+        res.status(500).json({ message: error.message });
     }
-}
+};
 
 // check wheter the given course is present in savedResources or not
 // savedResources is an array of resource ids
@@ -196,16 +305,16 @@ const isBookmarked = async (req, res) => {
     const userId = req.user.id
     try {
         const user = await User.findById(userId)
-        if(!user){
+        if (!user) {
             console.log("User not found")
-            res.status(404).json({message: "User not found"})
+            res.status(404).json({ message: "User not found" })
         }
         const isBookmarked = user.savedResources.includes(resourceId)
-        res.status(200).json({message: "Is bookmarked fetched successfully", isBookmarked})
+        res.status(200).json({ message: "Is bookmarked fetched successfully", isBookmarked })
     }
-    catch (err){
+    catch (err) {
         console.log("Error while getting is bookmarked")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -217,21 +326,21 @@ const saveResource = async (req, res) => {
     const userId = req.user.id
     try {
         const user = await User.findById(userId)
-        if(!user){
+        if (!user) {
             console.log("User not found")
-            res.status(404).json({message: "User not found"})
+            res.status(404).json({ message: "User not found" })
         }
         const savedResources = user.savedResources
         // if not present then push it
-        if(!savedResources.includes(resourceId)){
+        if (!savedResources.includes(resourceId)) {
             savedResources.push(resourceId)
         }
-        const updatedUser = await User.findByIdAndUpdate(userId, {savedResources}, {new: true})
-        res.status(200).json({message: "Resource saved successfully", updatedUser})
+        const updatedUser = await User.findByIdAndUpdate(userId, { savedResources }, { new: true })
+        res.status(200).json({ message: "Resource saved successfully", updatedUser })
     }
-    catch (err){
+    catch (err) {
         console.log("Error while saving resource")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -243,51 +352,51 @@ const removeSavedResource = async (req, res) => {
     const userId = req.user.id
     try {
         const user = await User.findById(userId)
-        if(!user){
+        if (!user) {
             console.log("User not found")
-            res.status(404).json({message: "User not found"})
+            res.status(404).json({ message: "User not found" })
         }
         const savedResources = user.savedResources
         const index = savedResources.indexOf(resourceId)
-        if(index > -1){
+        if (index > -1) {
             savedResources.splice(index, 1)
         }
-        const updatedUser = await User.findByIdAndUpdate(userId, {savedResources}, {new: true})
-        res.status(200).json({message: "Resource removed successfully", updatedUser})
+        const updatedUser = await User.findByIdAndUpdate(userId, { savedResources }, { new: true })
+        res.status(200).json({ message: "Resource removed successfully", updatedUser })
     }
-    catch (err){
+    catch (err) {
         console.log("Error while removing resource")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
 const logoutUser = async (req, res) => {
-    try{
+    try {
         res.clearCookie('_auth_resource_tkn');
-        res.status(200).json({message: "User logged out successfully"})
+        res.status(200).json({ message: "User logged out successfully" })
     }
-    catch (err){    
+    catch (err) {
         console.log("Error while logging out user")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
 // get saved resources
 const getSavedResources = async (req, res) => {
-    const userId = req.user.id 
+    const userId = req.user.id
     try {
         const user = await User.findById(userId)
-        if(!user){
+        if (!user) {
             console.log("User not found")
-            res.status(404).json({message: "User not found"})
+            res.status(404).json({ message: "User not found" })
         }
         const savedResources = user.savedResources
         // console.log("Saved Resources ", savedResources)
         // get all the saved resources
-        const savedResourcesData = await Resource.find({_id: {$in: user.savedResources}})
+        const savedResourcesData = await Resource.find({ _id: { $in: user.savedResources } })
         // console.log("Saved Resourcd Data ", savedResourcesData)
 
-        const updatedResourceData= await Promise.all(
+        const updatedResourceData = await Promise.all(
             savedResourcesData.map(async (resource) => {
                 const uploadedUser = await User.findById(resource.uploaded_by);
                 return {
@@ -298,11 +407,11 @@ const getSavedResources = async (req, res) => {
         );
 
         // console.log("Saved Resources Data ", resourceDataWithUploadedBy)
-        res.status(200).json({message: "Saved resources fetched successfully", updatedResourceData})
+        res.status(200).json({ message: "Saved resources fetched successfully", updatedResourceData })
     }
-    catch (err){
+    catch (err) {
         console.log("Error while getting saved resources")
-        res.status(500).json({message: err.message})
+        res.status(500).json({ message: err.message })
     }
 }
 
@@ -318,5 +427,6 @@ module.exports = {
     saveResource,
     removeSavedResource,
     getSavedResources,
-    logoutUser
+    logoutUser,
+    googleAuth
 }
