@@ -190,42 +190,42 @@ const page = ({params}:any) => {
     setSemesterFilter(value)
   }
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       if (filters.length > 0 || courseCode !== "" || course !== "" || year !== "" || semesterFilter !== "") {
-  //         setFound(true);
-  //         const data = {
-  //           tags: filters.length > 0 ? filters : undefined,
-  //           courseCode: courseCode !== "" ? courseCode : undefined,
-  //           courseTitle: course !== "" ? course : undefined,
-  //           year: year !== "" ? year : undefined,
-  //           semester: semesterFilter !== "" ? semesterFilter : undefined
-  //         };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (filters.length > 0 || courseCode !== "" || course !== "" || year !== "" || semesterFilter !== "") {
+          setFound(true);
+          const data = {
+            tags: filters.length > 0 ? filters : undefined,
+            courseCode: courseCode !== "" ? courseCode : undefined,
+            courseTitle: course !== "" ? course : undefined,
+            year: year !== "" ? year : undefined,
+            semester: semesterFilter !== "" ? semesterFilter : undefined
+          };
 
-  //         // console.log("DATA", data);
-  //         const token = localStorage.getItem('authToken')
-  //         const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/filterResources`, { params: data, headers: { 'Authorization': `Bearer ${token}` } });
-  //         // console.log(res.data);
-  //         setResult(res.data.resources)
-  //       } else {
-  //         setFound(false);
-  //       }
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
+          // console.log("DATA", data);
+          const token = localStorage.getItem('authToken')
+          const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/filterResources`, { params: data, headers: { 'Authorization': `Bearer ${token}` } });
+          // console.log(res.data);
+          setResult(res.data.resources)
+        } else {
+          setFound(false);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  //   fetchData();
+    fetchData();
 
-  //   // console.log("SET FOUND", found)
-  //   // console.log("filters", filters);
-  //   // console.log("courseCode", courseCode);
-  //   // console.log("course", course);
-  //   // console.log("year", year);
-  //   // console.log("semesterFilter", semesterFilter);
+    // console.log("SET FOUND", found)
+    // console.log("filters", filters);
+    // console.log("courseCode", courseCode);
+    // console.log("course", course);
+    // console.log("year", year);
+    // console.log("semesterFilter", semesterFilter);
 
-  // }, [filters, courseCode, course, year, semesterFilter]);
+  }, [render]);
 
   const applyFilters = async () => {
     try {
