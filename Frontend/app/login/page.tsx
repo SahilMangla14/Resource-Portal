@@ -14,7 +14,7 @@ import reset from '../assets/reset.webp'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
-import GoogleLogin from "@stack-pulse/next-google-login"
+// import GoogleLogin from "@stack-pulse/next-google-login"
 import { isEmpty } from 'lodash';
 axios.defaults.withCredentials = true;
 
@@ -168,14 +168,14 @@ const Login = () => {
             <div className='text-right'><button className='outline-none text-[#5D4C45] cursor-pointer hover:text-[#171311]' onClick={() => setResetPasswordMode(true)}>Forgot Password</button></div>
             {/* </div> */}
             <p className="text-center border-b-2 leading-[0.1em] mt-4"><span className='bg-[white] pl-2 pr-2'>or</span></p>
-            <GoogleLogin
+{      /*      <GoogleLogin
               clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
               buttonText="Login With Google"
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
               cookiePolicy={'single_host_origin'}
               className='p-2 mb-2 rounded-md border-[1.5px] border-slate-200 mt-6 hover:bg-slate-200 flex justify-center'
-            />
+            />*/}
             {/* <button onClick={handleGoogleSignup} className=' p-2 mb-2 rounded-md border-[1.5px] border-slate-200 mt-6 hover:bg-slate-200 flex justify-center' ><Image src={google} alt="" className='w-6 mr-4' /> Log In with Google</button> */}
             <div className='mt-8 text-center'><span>Create a new account </span><button className='text-red-900 cursor-pointer hover:text-red-600' onClick={() => router.push('/signup')}>Register</button></div>
           </div>
