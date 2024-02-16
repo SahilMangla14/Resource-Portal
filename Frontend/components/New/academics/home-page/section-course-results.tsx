@@ -2,22 +2,22 @@
 
 import '@fontsource/inter/400.css';
 import { Label } from '@/components/ui/label';
-import { CourseCodeCombobox } from '@/components/New/academics/combobox/course-code';
-import { CourseTitleCombobox } from '@/components/New/academics/combobox/course-title';
-import { CourseResultsTable } from '@/components/New/academics/table/course-results';
+import { CourseCodeComboboxSm } from '@/components/New/academics/home-page/combobox/course-code-sm';
+import { CourseTitleComboboxSm } from '@/components/New/academics/home-page/combobox/course-title-sm';
+import { CourseResultsTable } from '@/components/New/academics/home-page/table/course-results';
 
 
-export default function CourseResults() {
+export function SectionCourseResults() {
     return (
         <>
             <div className="flex justify-evenly p-6">
                 <div>
                     <Label htmlFor="course-code">Course Code: </Label>
-                    <CourseCodeCombobox />
+                    <CourseCodeComboboxSm />
                 </div>
                 <div>
                     <Label htmlFor="course-title">Course Title: </Label>
-                    <CourseTitleCombobox />
+                    <CourseTitleComboboxSm />
                 </div>
             </div>
             <div className="px-8">

@@ -11,10 +11,10 @@ import {
 import Link from 'next/link';
 import { SiInformatica } from 'react-icons/si';
 import { ModeToggle } from '@/components/New/mode-toggle';
+import { AvatarSheet } from '@/components/New/avatar-sheet/avatar-sheet';
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-export default function NavigationBar() {
+export function NavigationBar() {
     return (
         <div className="border-b py-2.5 px-6 flex justify-between items-center">
             <NavigationMenu>
@@ -22,7 +22,7 @@ export default function NavigationBar() {
                     <NavigationMenuItem>
                         <div className="flex items-center">
                             <SiInformatica size={30} />
-                            <p className="ml-1 text-lg font-bold">InfoNest</p>
+                            <p className="ml-2 text-lg font-bold">InfoNest</p>
                         </div>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
@@ -52,10 +52,7 @@ export default function NavigationBar() {
             </NavigationMenu>
             <div className="flex items-center space-x-4">
                 <ModeToggle />
-                <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                <AvatarSheet />
             </div>
         </div>
     );

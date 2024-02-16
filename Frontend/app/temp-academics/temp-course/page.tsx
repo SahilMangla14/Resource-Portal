@@ -1,20 +1,12 @@
 'use client';
 
-import {
-    ResizableHandle,
-    ResizablePanel,
-    ResizablePanelGroup,
-} from "@/components/ui/resizable"
-
-import '@fontsource/inter/400.css';
 import { useEffect, useState } from 'react';
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/New/theme-provider"
+import { NavigationBar } from '@/components/New/navigation-menu';
 import LoadingIndicator from '@/components/LoadingIndicator'
-import NavigationBar from '@/components/New/navigation-menu';
-import TopContributors from '@/components/New/academics/top-contributors';
-import { CourseFiltersCard } from '@/components/New/academics/card/course-filters';
-import CourseResults from "@/components/New/academics/course-results";
-
+import { SectionCourseDetails } from '@/components/New/academics/course-page/section-course-details';
+import { SectionCourseMetadata } from "@/components/New/academics/course-page/section-course-metadat";
+import { SectionCourseComments } from "@/components/New/academics/course-page/section-course-comments";
 
 export default function Page() {
     const [isPageLoading, setIsPageLoading] = useState(true);
@@ -26,6 +18,65 @@ export default function Page() {
 
         return () => clearTimeout(loadingTimeout);
     }, []);
+
+    const courseInfo = {
+        id: "bhqecj4p",
+        code: "MA517",
+        title: "Distributed Algorithms",
+        tags: ["quiz", "midterm", "endterm", "notes", "video", "system"],
+        instructors: ["Dr. Koushik Mondal", "Dr. Rano Ringo"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
+        year: "2024",
+        semester: "2",
+        author: "Sahil Mangla",
+        batch: "2025",
+        link: "www.google.com",
+        comments: [{
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person A",
+            comment: "I think this content is wrong",
+        },
+        {
+            user: "Person B",
+            comment: "@Person B I think you are wrong",
+        }],
+        upvotes: "38",
+    };
 
     return (
         <div>
@@ -41,19 +92,10 @@ export default function Page() {
                     >
 
                         <NavigationBar />
-                        <div className="flex">
-                            <CourseFiltersCard />
-                            <div className="flex-1">
-                                <ResizablePanelGroup direction="horizontal">
-                                    <ResizablePanel defaultSize={80}>
-                                        <CourseResults />
-                                    </ResizablePanel>
-                                    <ResizableHandle withHandle />
-                                    <ResizablePanel defaultSize={20}>
-                                        <TopContributors />
-                                    </ResizablePanel>
-                                </ResizablePanelGroup>
-                            </div>
+                        <SectionCourseDetails courseInfo={courseInfo} />
+                        <div className="flex justify-center text-sm">
+                            <SectionCourseMetadata courseInfo={courseInfo} />
+                            <SectionCourseComments courseInfo={courseInfo} />
                         </div>
 
                     </ThemeProvider>

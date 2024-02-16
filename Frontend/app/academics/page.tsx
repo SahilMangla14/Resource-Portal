@@ -41,7 +41,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { CardWithForm } from "@/components/New/academics/card/course-filters";
+import { CardWithForm } from "@/components/New/academics/home-page/card/course-filters";
 
 
 

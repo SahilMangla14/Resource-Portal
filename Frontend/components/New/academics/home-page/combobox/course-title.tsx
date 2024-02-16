@@ -45,7 +45,7 @@ export function CourseTitleCombobox() {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="justify-between w-64"
+                    className="justify-between"
                 >
                     {value
                         ? titles.find((title) => title.value === value)?.label

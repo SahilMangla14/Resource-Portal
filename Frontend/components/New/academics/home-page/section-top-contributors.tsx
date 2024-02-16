@@ -2,10 +2,12 @@
 
 import '@fontsource/inter/400.css';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ContributeAlert } from '@/components/New/academics/home-page/alert-dialog/contribute';
 
-export default function TopContributors() {
+export function SectionTopContributors() {
     return (
         <>
+            <ContributeAlert />
             <div className="flex justify-center p-6">
                 <span className="text-lg font-semibold">Top Contributors</span>
             </div>

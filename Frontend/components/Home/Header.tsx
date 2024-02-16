@@ -1,4 +1,4 @@
-import NucleusScene from "@/components/Home/NucleusScene";
+import NucleusScene from "@/components/New/nucleus-scene";
 import Link from 'next/link';
 import styles from './Header.module.css';
 

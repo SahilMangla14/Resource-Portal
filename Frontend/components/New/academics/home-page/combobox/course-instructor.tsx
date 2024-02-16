@@ -19,22 +19,22 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 
-const codes = [
+const instructors = [
     {
-        value: "ma302",
-        label: "MA302",
+        value: "koushik mondal",
+        label: "Dr. Koushik Mondal",
     },
     {
-        value: "ma517",
-        label: "MA517",
+        value: "arti pandey",
+        label: "Dr. Arti Pandey",
     },
     {
-        value: "hs509",
-        label: "HS509",
+        value: "rano ringo",
+        label: "Dr. Rano Ringo",
     },
 ]
 
-export function CourseCodeCombobox() {
+export function CourseInstructorCombobox() {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
 
@@ -45,33 +45,33 @@ export function CourseCodeCombobox() {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="justify-between w-64"
+                    className="justify-between"
                 >
                     {value
-                        ? codes.find((code) => code.value === value)?.label
-                        : "Select course code..."}
+                        ? instructors.find((instructor) => instructor.value === value)?.label
+                        : "Select instructor..."}
                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="p-0">
                 <Command>
-                    <CommandInput placeholder="Search course code..." className="h-9" />
+                    <CommandInput placeholder="Search instructor..." className="h-9" />
                     <CommandEmpty>No data found.</CommandEmpty>
                     <CommandGroup>
-                        {codes.map((code) => (
+                        {instructors.map((instructor) => (
                             <CommandItem
-                                key={code.value}
-                                value={code.value}
+                                key={instructor.value}
+                                value={instructor.value}
                                 onSelect={(currentValue) => {
                                     setValue(currentValue === value ? "" : currentValue)
                                     setOpen(false)
                                 }}
                             >
-                                {code.label}
+                                {instructor.label}
                                 <CheckIcon
                                     className={cn(
                                         "ml-auto h-4 w-4",
-                                        value === code.value ? "opacity-100" : "opacity-0"
+                                        value === instructor.value ? "opacity-100" : "opacity-0"
                                     )}
                                 />
                             </CommandItem>

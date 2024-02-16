@@ -48,154 +48,184 @@ const data: Payment[] = [
     {
         id: "m5gr84i9",
         tags: ["quiz", "midterm", "endterm", "video"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
+        instructors: ["Dr. Arti Pandey", "Dr. Rano Ringo"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
         author: "John Doe",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "3u1reuv4",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
         author: "Sahil Mangla",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "derv1ws0",
         tags: ["quiz", "midterm", "system"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "Monserrat44@gmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Mister Kang",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "5kma53ae",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "Silas22@gmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Salim Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
     {
         id: "bhqecj4p",
         tags: ["quiz", "midterm"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Cras metus.",
-        year: 2022,
-        semester: 2,
-        author: "carmella@hotmail.com",
+        instructors: ["Dr. Arti Pandey"],
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+        year: "2022",
+        semester: "2",
+        author: "Puneet Superstar",
         batch: "2025",
         link: "www.google.com",
+        upvotes: "69",
     },
 ]
 
 export type Payment = {
     id: string
     tags: string[]
+    instructors: string[]
     description: string
-    year: number
-    semester: number
+    year: string
+    semester: string
     author: string
     batch: string
     link: string
+    upvotes: string
 }
 
 export const columns: ColumnDef<Payment>[] = [
@@ -231,10 +261,12 @@ export const columns: ColumnDef<Payment>[] = [
             )
         },
         cell: ({ row }) => (
-            <div className="capitalize">
+            <div>
                 {row.getValue("author")},
                 <br />
-                batch of {row.getValue("batch")}
+                <span className="text-xs">Batch of 20XX{row.getValue("batch")}</span>
+                <br />
+                <span className="text-xs text-muted-foreground">{row.getValue("upvotes")}X Upvotes</span>
             </div>
         ),
 
@@ -244,7 +276,7 @@ export const columns: ColumnDef<Payment>[] = [
         header: "Description",
         cell: ({ row }) => (
             <div>
-                <div className="capitalize my-1 text-muted-foreground">{row.getValue("description")} </div>
+                <div className="my-1 text-muted-foreground">Offered by X{row.getValue("instructors")} during Semester X{row.getValue("semester")}, 20XX{row.getValue("year")}. {row.getValue("description")} </div>
                 <Button variant="outline" className="h-8 w-18">View</Button>
             </div>
         ),
@@ -314,7 +346,7 @@ export function CourseResultsTable() {
     const [rowSelection, setRowSelection] = React.useState({})
 
     const [pageIndex, setPageIndex] = useState(0);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(6);
     const [pageData, setPageData] = useState([]);
 
     useEffect(() => {
@@ -410,6 +442,7 @@ export function CourseResultsTable() {
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
+                                    className="bg-white hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50"
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>

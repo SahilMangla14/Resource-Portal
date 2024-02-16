@@ -4,7 +4,7 @@ import * as THREE from 'three';
 const NucleusScene = () => {
     useEffect(() => {
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xE6F0FF);
+        scene.background = new THREE.Color(0x030712);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
@@ -22,7 +22,7 @@ const NucleusScene = () => {
 
         const nucleusGeometry = new THREE.SphereGeometry(2.5, 32, 32);
         const nucleusMaterial = new THREE.MeshStandardMaterial({
-            map: createGradientTexture('#7E6363', '#A87C7C'),
+            map: createGradientTexture('#085F63', '#085F63'),
             metalness: 0.1,
             roughness: 0.5,
         });
@@ -35,7 +35,7 @@ const NucleusScene = () => {
             for (let i = 0; i < count; i++) {
               const neutronGeometry = new THREE.SphereGeometry(size, 16, 16);
               const neutronMaterial = new THREE.MeshStandardMaterial({
-                map: createGradientTexture('#D24545', '#A94438'),
+                map: createGradientTexture('#099A97', '#099A97'),
                 metalness: 0.1,
                 roughness: 0.5,
               });
@@ -53,7 +53,7 @@ const NucleusScene = () => {
         for (let i = 0; i < 9; i++) {
             const neutronGeometry = new THREE.SphereGeometry(0.5, 16, 16);
             const neutronMaterial = new THREE.MeshStandardMaterial({
-                map: createGradientTexture('#6DB9EF', '#3081D0'),
+                map: createGradientTexture('#32DBC6', '#32DBC6'),
                 metalness: 0.1,
                 roughness: 0.5,
             });
@@ -66,7 +66,7 @@ const NucleusScene = () => {
         for (let i = 0; i < 9; i++) {
             const neutronGeometry = new THREE.SphereGeometry(0.4, 16, 16);
             const neutronMaterial = new THREE.MeshStandardMaterial({
-                map: createGradientTexture('#79AC78', '#618264'),
+                map: createGradientTexture('#15CDA8', '#15CDA8'),
                 metalness: 0.1,
                 roughness: 0.5,
             });
@@ -86,7 +86,7 @@ const NucleusScene = () => {
                 const radius = 7;
                 neutron.position.x = Math.cos(angle) * radius;
                 neutron.position.z = Math.sin(angle) * radius;
-                neutron.position.y =  - Math.cos(angle) * radius / 9;
+                neutron.position.y =  - Math.cos(angle) * radius / 4;
                 neutron.rotation.y += 0.03;
                 neutron.rotation.x += 0.03;
             });
@@ -101,15 +101,15 @@ const NucleusScene = () => {
                 neutron.rotation.y += 0.04;
             });
         
-            neutronsBandA.forEach((neutron, index) => {
-                const angle = (time * 0.001) + (index / 9) * Math.PI * 2;
-                const radius = 5.1;
-                neutron.position.z = Math.cos(angle) * radius;
-                neutron.position.y = Math.sin(angle) * radius;
-                neutron.position.x = - Math.sin(angle) * radius / 2;
-                neutron.rotation.x += 0.05;
-                neutron.rotation.y += 0.05;
-            });
+            // neutronsBandA.forEach((neutron, index) => {
+            //     const angle = (time * 0.001) + (index / 9) * Math.PI * 2;
+            //     const radius = 5.1;
+            //     neutron.position.z = Math.cos(angle) * radius;
+            //     neutron.position.y = Math.sin(angle) * radius;
+            //     neutron.position.x = - Math.sin(angle) * radius / 2;
+            //     neutron.rotation.x += 0.05;
+            //     neutron.rotation.y += 0.05;
+            // });
 
             renderer.render(scene, camera);
         };
