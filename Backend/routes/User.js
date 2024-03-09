@@ -1,7 +1,7 @@
 const express = require('express')
 const {authenticationMiddleware} = require('../middleware/auth')
 const router = express.Router()
-const {registerUser, loginUser, getAllUsers, getUserById, updateUser, deleteUser,topContributors,isBookmarked,saveResource,removeSavedResource, getSavedResources,logoutUser, googleAuth} = require('../controllers/userController')
+const {registerUser, loginUser, getAllUsers, getUserById, updateUser, deleteUser,topContributors,isBookmarked,saveResource,removeSavedResource,removeContributedResource, getSavedResources,getContributedResources,logoutUser, googleAuth} = require('../controllers/userController')
 
 router.post('/register',registerUser)
 router.post('/login',loginUser)
@@ -12,6 +12,8 @@ router.get('/topContributors',authenticationMiddleware,topContributors)
 router.get('/isBookmarked/:id',authenticationMiddleware,isBookmarked)
 router.post('/saveResource/:id',authenticationMiddleware,saveResource)
 router.delete('/removeSavedResource/:id',authenticationMiddleware,removeSavedResource)
+router.delete('/removeContributedResource/:id',authenticationMiddleware,removeContributedResource)
 router.get('/getSavedResources',authenticationMiddleware,getSavedResources)
+router.get('/getContributedResources',authenticationMiddleware,getContributedResources)
 router.post('/google-login',googleAuth)
 module.exports = router

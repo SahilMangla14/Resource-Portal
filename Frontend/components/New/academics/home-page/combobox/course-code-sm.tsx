@@ -18,6 +18,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+import { useFiltersStore } from "@/store/filters"
 
 const codes = [
     {
@@ -37,6 +38,12 @@ const codes = [
 export function CourseCodeComboboxSm() {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
+    const addFilter = useFiltersStore((state : any) => state.addFilter)
+
+    React.useEffect(() => {
+        addFilter({courseCode : value})
+    }
+    , [value])
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

@@ -21,9 +21,13 @@ const ResourceSchema = mongoose.Schema({
         type: String,
         required : [true, 'must provide course title']
     },
-    instructor: {
+    instructor_primary: {
         type: String,
         required : [true, 'must provide instructor']
+    },
+    instructor_secondary: {
+        type: String,
+        default: ''
     },
     description: {
         type: String,

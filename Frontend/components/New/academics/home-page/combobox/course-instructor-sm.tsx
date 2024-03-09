@@ -18,7 +18,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
-import { useAddResourceStore } from "@/store/addResource"
+import { useFiltersStore } from "@/store/filters"
 
 const instructors = [
     {
@@ -35,16 +35,15 @@ const instructors = [
     },
 ]
 
-export function CourseInstructorCombobox({ type }: { type: string }) {
+export function CourseInstructorComboboxSm() {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
-    const [resource, addResource] = useAddResourceStore((state : any) => [state.resource, state.addResource])
+    const [filters, addFilter] = useFiltersStore((state : any) => [state.filters, state.addFilter])
 
     React.useEffect(() => {
-        if(type === "primary") addResource({ instructor_primary: value })
-        else if(type === "secondary")addResource({ instructor_secondary: value })
-
+        addFilter({instructor : value})
     }, [value])
+
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

@@ -54,7 +54,6 @@ export default function Page() {
                                 </ResizablePanelGroup>
                             </div>
                         </div>
-
                     </ThemeProvider>
                 </>
             )}

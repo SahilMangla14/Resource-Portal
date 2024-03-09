@@ -18,6 +18,8 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+import { useAddResourceStore } from "@/store/addResource"
+import add from "@/app/add/page"
 
 const years = [
     {
@@ -45,6 +47,12 @@ const years = [
 export function CourseYearCombobox() {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
+
+    const [resource, addResource] = useAddResourceStore((state : any) => [state.resource, state.addResource])
+
+    React.useEffect(() => {
+        addResource({ year: value })
+    }, [value])
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

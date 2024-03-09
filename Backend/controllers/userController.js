@@ -385,6 +385,30 @@ const removeSavedResource = async (req, res) => {
     }
 }
 
+
+const removeContributedResource = async (req, res) => {
+    const resourceId = req.params.id
+    const userId = req.user.id
+    try {
+        const user = await User.findById(userId)
+        if (!user) {
+            console.log("User not found")
+            res.status(404).json({ message: "User not found" })
+        }
+        const contributedResources = user.contributedResources
+        const index = contributedResources.indexOf(resourceId)
+        if (index > -1) {
+            contributedResources.splice(index, 1)
+        }
+        const updatedUser = await User.findByIdAndUpdate(userId, { contributedResources }, { new: true })
+        res.status(200).json({ message: "Resource removed successfully", updatedUser })
+    }
+    catch (err) {
+        console.log("Error while removing resource")
+        res.status(500).json({ message: err.message })
+    }
+}
+
 const logoutUser = async (req, res) => {
     try {
         res.clearCookie('_auth_resource_tkn');
@@ -430,6 +454,40 @@ const getSavedResources = async (req, res) => {
     }
 }
 
+
+const getContributedResources = async (req, res) => {
+    const userId = req.user.id
+    try {
+        const user = await User.findById(userId)
+        if (!user) {
+            console.log("User not found")
+            res.status(404).json({ message: "User not found" })
+        }
+        const contributedResources = user.contributedResources
+        // console.log("Saved Resources ", contributedResources)
+        // get all the saved resources
+        const contributedResourcesData = await Resource.find({ _id: { $in: user.contributedResources } })
+        // console.log("Saved Resourcd Data ", contributedResourcesData)
+
+        const updatedResourceData = await Promise.all(
+            contributedResourcesData.map(async (resource) => {
+                const uploadedUser = await User.findById(resource.uploaded_by);
+                return {
+                    ...resource._doc,
+                    uploadedBy: uploadedUser ? uploadedUser.name : "Unknown",
+                };
+            })
+        );
+
+        // console.log("Saved Resources Data ", resourceDataWithUploadedBy)
+        res.status(200).json({ message: "Contributed resources fetched successfully", updatedResourceData })
+    }
+    catch (err) {
+        console.log("Error while getting contributed resources")
+        res.status(500).json({ message: err.message })
+    }
+}
+
 module.exports = {
     registerUser,
     loginUser,
@@ -442,6 +500,8 @@ module.exports = {
     saveResource,
     removeSavedResource,
     getSavedResources,
+    getContributedResources,
+    removeContributedResource,
     logoutUser,
     googleAuth
 }

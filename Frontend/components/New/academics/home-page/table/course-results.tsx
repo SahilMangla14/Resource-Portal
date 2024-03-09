@@ -42,190 +42,194 @@ import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { IoMdArrowRoundUp, IoMdArrowRoundDown } from "react-icons/io";
+import { useResultsStore } from "@/store/results"
+import axios from 'axios'
+axios.defaults.withCredentials = true;
 
-const data: Payment[] = [
-    {
-        id: "m5gr84i9",
-        tags: ["quiz", "midterm", "endterm", "video"],
-        instructors: ["Dr. Arti Pandey", "Dr. Rano Ringo"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "John Doe",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "3u1reuv4",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Sahil Mangla",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "derv1ws0",
-        tags: ["quiz", "midterm", "system"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Mister Kang",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "5kma53ae",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Salim Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-    {
-        id: "bhqecj4p",
-        tags: ["quiz", "midterm"],
-        instructors: ["Dr. Arti Pandey"],
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
-        year: "2022",
-        semester: "2",
-        author: "Puneet Superstar",
-        batch: "2025",
-        link: "www.google.com",
-        upvotes: "69",
-    },
-]
+// const data: Payment[] = [
+//     {
+//         _id: "m5gr84i9",
+//         tags: ["quiz", "midterm", "endterm", "video"],
+//         instructors: ["Dr. Arti Pandey", "Dr. Rano Ringo"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "John Doe",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "3u1reuv4",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Sahil Mangla",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "derv1ws0",
+//         tags: ["quiz", "midterm", "system"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Mister Kang",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "5kma53ae",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Salim Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+//     {
+//         _id: "bhqecj4p",
+//         tags: ["quiz", "midterm"],
+//         instructors: ["Dr. Arti Pandey"],
+//         description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio.",
+//         year: "2022",
+//         semester: "2",
+//         uploaded_by: "Puneet Superstar",
+//         batch: "2025",
+//         link: "www.google.com",
+//         likes: "69",
+//     },
+// ]
 
 export type Payment = {
-    id: string
+    _id: string
     tags: string[]
     instructors: string[]
     description: string
     year: string
     semester: string
-    author: string
+    uploaded_by: string
     batch: string
     link: string
-    upvotes: string
+    likes: string
 }
 
 export const columns: ColumnDef<Payment>[] = [
@@ -246,7 +250,7 @@ export const columns: ColumnDef<Payment>[] = [
         ),
     },
     {
-        accessorKey: "author",
+        accessorKey: "uploaded_by",
         header: ({ column }) => {
             return (
                 <div className="my-2">
@@ -262,22 +266,26 @@ export const columns: ColumnDef<Payment>[] = [
         },
         cell: ({ row }) => (
             <div>
-                {row.getValue("author")},
+                {row.getValue("uploaded_by")},
                 <br />
-                <span className="text-xs">Batch of 20XX{row.getValue("batch")}</span>
-                <br />
-                <span className="text-xs text-muted-foreground">{row.getValue("upvotes")}X Upvotes</span>
+                {/* <span className="text-xs">Batch of 20XX{row.getValue("batch")}</span> */}
+                {/* <br /> */}
+                <span className="text-xs text-muted-foreground">{row.getValue("likes")}X Upvotes</span>
             </div>
         ),
 
     },
     {
-        accessorKey: "description",
+        accessorKey: "_id",
         header: "Description",
         cell: ({ row }) => (
             <div>
-                <div className="my-1 text-muted-foreground">Offered by X{row.getValue("instructors")} during Semester X{row.getValue("semester")}, 20XX{row.getValue("year")}. {row.getValue("description")} </div>
-                <Button variant="outline" className="h-8 w-18">View</Button>
+                <div className="my-1 text-muted-foreground">Offered by {row.getValue("instructor_primary")} during Semester {row.getValue("semester")}, {row.getValue("year")}. {row.getValue("description")} </div>
+                <Button variant="outline" className="h-8 w-18">
+                    <Link href={`/temp-academics/temp-course/${row.getValue("_id")}`}>
+                    View
+                    </Link>
+                </Button>
             </div>
         ),
     },
@@ -348,8 +356,32 @@ export function CourseResultsTable() {
     const [pageIndex, setPageIndex] = useState(0);
     const [pageSize, setPageSize] = useState(6);
     const [pageData, setPageData] = useState([]);
+    // const data = useResultsStore((state : any) => state.results)
+    const [data, setData] = useState<Payment[]>([]);
+    const [results, setResults] = useResultsStore((state: any) => [state.results, state.setResults]);
 
     useEffect(() => {
+        setData(results)
+    }, [results]);
+
+
+    useEffect(() => {
+        const fetchTopResources = async () => {
+            try {
+              const token = localStorage.getItem('authToken')
+              let k = 6
+              const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/top/${k}`  , { headers: { 'Authorization': `Bearer ${token}` } });
+              // console.log(res.data);
+              setResults(res.data.resources)
+            } catch (err) {
+              console.error(err);
+            }
+          };
+          fetchTopResources();
+    } , []);
+
+    useEffect(() => {
+        console.log("Data", data)
         const getPageData = () => {
             const startIndex = pageIndex * pageSize;
             const endIndex = startIndex + pageSize;
@@ -357,7 +389,7 @@ export function CourseResultsTable() {
         };
 
         setPageData(getPageData());
-    }, [pageIndex, pageSize]);
+    }, [pageIndex, pageSize, data]);
 
     const table = useReactTable({
         data: pageData,
@@ -383,9 +415,9 @@ export function CourseResultsTable() {
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter authors..."
-                    value={(table.getColumn("author")?.getFilterValue() as string) ?? ""}
+                    value={(table.getColumn("uploaded_by")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("author")?.setFilterValue(event.target.value)
+                        table.getColumn("uploaded_by")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
                 />

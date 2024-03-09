@@ -2,17 +2,17 @@
 
 import { Badge } from '@/components/ui/badge';
 
-export function SectionCourseMetadata({ courseInfo }) {
+export function SectionCourseMetadata({ courseInfo, uploader }) {
     return (
         <div className="w-[20%] border-r p-3">
             <div className="py-2 rounded">
-                Contributed by <span>{courseInfo.author}</span>
-                <br /> <span className="text-xs text-muted-foreground">Batch of {courseInfo.batch}</span>
+                Contributed by <span>{uploader}</span>
+                {/* <br /> <span className="text-xs text-muted-foreground">Batch of {courseInfo.batch}</span> */}
             </div>
             <div className="py-2">
                 <div>Description</div>
                 <div className="text-muted-foreground text-xs">
-                    {courseInfo.description}
+                    {courseInfo?.description}
                 </div>
             </div>
             <div className="py-2">

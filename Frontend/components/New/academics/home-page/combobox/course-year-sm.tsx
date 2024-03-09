@@ -18,32 +18,39 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
-import { useAddResourceStore } from "@/store/addResource"
+import { useFiltersStore } from "@/store/filters"
 
-const instructors = [
+const years = [
     {
-        value: "koushik mondal",
-        label: "Dr. Koushik Mondal",
+        value: "2023",
+        label: "2023",
     },
     {
-        value: "arti pandey",
-        label: "Dr. Arti Pandey",
+        value: "2022",
+        label: "2022",
     },
     {
-        value: "rano ringo",
-        label: "Dr. Rano Ringo",
+        value: "2021",
+        label: "2021",
+    },
+    {
+        value: "2020",
+        label: "2020",
+    },
+    {
+        value: "2019",
+        label: "2019",
     },
 ]
 
-export function CourseInstructorCombobox({ type }: { type: string }) {
+export function CourseYearComboboxSm() {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState("")
-    const [resource, addResource] = useAddResourceStore((state : any) => [state.resource, state.addResource])
+
+    const [filters, addFilter] = useFiltersStore((state : any) => [state.filters, state.addFilter])
 
     React.useEffect(() => {
-        if(type === "primary") addResource({ instructor_primary: value })
-        else if(type === "secondary")addResource({ instructor_secondary: value })
-
+        addFilter({year : value})
     }, [value])
 
     return (
@@ -56,30 +63,30 @@ export function CourseInstructorCombobox({ type }: { type: string }) {
                     className="justify-between"
                 >
                     {value
-                        ? instructors.find((instructor) => instructor.value === value)?.label
-                        : "Select instructor..."}
+                        ? years.find((year) => year.value === value)?.label
+                        : "Select year..."}
                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="p-0">
                 <Command>
-                    <CommandInput placeholder="Search instructor..." className="h-9" />
+                    <CommandInput placeholder="Search year..." className="h-9" />
                     <CommandEmpty>No data found.</CommandEmpty>
                     <CommandGroup>
-                        {instructors.map((instructor) => (
+                        {years.map((year) => (
                             <CommandItem
-                                key={instructor.value}
-                                value={instructor.value}
+                                key={year.value}
+                                value={year.value}
                                 onSelect={(currentValue) => {
                                     setValue(currentValue === value ? "" : currentValue)
                                     setOpen(false)
                                 }}
                             >
-                                {instructor.label}
+                                {year.label}
                                 <CheckIcon
                                     className={cn(
                                         "ml-auto h-4 w-4",
-                                        value === instructor.value ? "opacity-100" : "opacity-0"
+                                        value === year.value ? "opacity-100" : "opacity-0"
                                     )}
                                 />
                             </CommandItem>

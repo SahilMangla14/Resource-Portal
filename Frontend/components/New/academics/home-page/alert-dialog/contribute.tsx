@@ -20,8 +20,79 @@ import { CourseYearCombobox } from "@/components/New/academics/home-page/combobo
 import { CourseTitleCombobox } from "@/components/New/academics/home-page/combobox/course-title"
 import { CourseInstructorCombobox } from "@/components/New/academics/home-page/combobox/course-instructor"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useAddResourceStore } from "@/store/addResource"
+import * as React from "react"
+import axios from "axios"
+axios.defaults.withCredentials = true
 
 export function ContributeAlert() {
+
+    const [semester, setSemester] = React.useState("")
+    const [driveLink, setDriveLink] = React.useState("")
+    const [description, setDescription] = React.useState("")
+    const [resource, addResource, clearResource] = useAddResourceStore((state : any) => [state.resource, state.addResource, state.clearResource])
+
+
+    React.useEffect(() => {
+        addResource({semester : semester})
+    }
+    , [semester])
+
+    React.useEffect(() => {
+        addResource({description : description})
+    }
+    , [description])
+
+    React.useEffect(() => {
+        addResource({link : driveLink})
+    }
+    , [driveLink])
+
+    const handleSemester = (value: string) => {
+        if(value === "None") {
+            setSemester("")
+        }
+        else {
+            setSemester(value)
+        }
+
+        console.log("SEMESTER", semester)
+    }
+
+    const handleDescription = (e: any) => {
+        e.preventDefault()
+        setDescription(e.target.value)
+    }
+
+    const handleDriveLink = (e: any) => {
+        e.preventDefault()
+        setDriveLink(e.target.value)
+    }
+
+    const handleSubmit = async () => {
+        try{
+            const resourceData = resource
+            console.log("Add Resource : ", resourceData)
+            const token = localStorage.getItem('authToken');
+            const response = await axios.post(`${process.env.BACKEND_URL}/api/v1/resource/add`, resourceData, {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              });
+
+            console.log("Resource Added succesfully")
+              
+
+            setDriveLink("")
+            setDescription("")
+            clearResource()
+        }
+        catch(err) {
+            console.log(err)
+        }
+    }
+
+
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -46,21 +117,21 @@ export function ContributeAlert() {
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="primary-instructor">Primary Instructor</Label>
-                                        <CourseInstructorCombobox />
+                                        <CourseInstructorCombobox type="primary"/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="secondary-instructor">Secondary Instructor (If applicable)</Label>
-                                        <CourseInstructorCombobox />
+                                        <CourseInstructorCombobox type="secondary" />
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="semester">Semester</Label>
-                                        <Select>
+                                        <Select onValueChange={handleSemester}>
                                             <SelectTrigger id="semester">
                                                 <SelectValue placeholder="Select semester..." />
                                             </SelectTrigger>
                                             <SelectContent position="popper">
-                                                <SelectItem value="first">1</SelectItem>
-                                                <SelectItem value="second">2</SelectItem>
+                                                <SelectItem value="1">1</SelectItem>
+                                                <SelectItem value="2">2</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -71,16 +142,16 @@ export function ContributeAlert() {
                                     <div className="flex flex-col space-y-1.5">
                                         <div>Tags</div>
                                         <div className="border rounded-lg">
-                                           <CourseTags />
+                                           <CourseTags type="add"/>
                                         </div>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="description">Description</Label>
-                                        <Textarea />
+                                        <Textarea onChange={handleDescription}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5 mb-2">
                                         <Label htmlFor="link">Drive Link</Label>
-                                        <Textarea />
+                                        <Textarea onChange={handleDriveLink}/>
                                     </div>
                                 </div>
                             </form>
@@ -89,7 +160,7 @@ export function ContributeAlert() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Upload</AlertDialogAction>
+                    <AlertDialogAction onClick={handleSubmit}>Upload</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

@@ -14,15 +14,15 @@ export function SectionPersonalDetails({ personalInfo }) {
                         </Avatar>
                     </div>
                     <div>
-                        <div className="px-2 pt-4 text-2xl font-bold">{personalInfo.name}</div>
-                        <div className="px-2 text-lg text-muted-foreground capitalize">Batch of {personalInfo.batch}</div>
-                        <div className="px-2 text-xs text-muted-foreground">{personalInfo.upvotes} Upvotes</div>
+                        <div className="px-2 pt-4 text-2xl font-bold">{personalInfo?.name}</div>
+                        <div className="px-2 text-lg text-muted-foreground capitalize">Batch of {personalInfo?.year}</div>
+                        <div className="px-2 text-xs text-muted-foreground">{personalInfo?.rating} Upvotes</div>
                     </div>
                 </div>
                 <div className="flex px-5">
                     <div className="w-28 h-28 border rounded bg-secondary mr-4">
                         <div className="text-xs text-center py-2 font-bold">Contributions</div>
-                        <div className="text-6xl text-center text-muted-foreground font-bold">0</div>
+                        <div className="text-6xl text-center text-muted-foreground font-bold">{personalInfo?.contributedResources?.length}</div>
                     </div>
                     <div className="w-28 h-28 border rounded bg-secondary">
                         <div className="text-xs text-center py-1 font-bold">Leaderboard <br/> Rank</div>

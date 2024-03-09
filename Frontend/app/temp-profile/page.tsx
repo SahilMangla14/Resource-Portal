@@ -7,9 +7,16 @@ import { NavigationBar } from '@/components/New/navigation-menu';
 import { SectionBookmarks } from '@/components/New/profile/section-bookmarks';
 import { SectionPersonalDetails } from '@/components/New/profile/section-personal-details';
 import { SectionContributions } from '@/components/New/profile/section-contributions';
+import {useRouter} from 'next/navigation'
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 export default function Page() {
     const [isPageLoading, setIsPageLoading] = useState(true);
+    const [userDetails, setUserDetails] = useState({});
+    const [savedResources, setSavedResources] = useState([]);
+    const [contributedResources, setContributedResources] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         const loadingTimeout = setTimeout(() => {
@@ -84,6 +91,67 @@ export default function Page() {
         ],
     };
 
+
+
+    useEffect(() => {
+        const getSavedResources = async () => {
+            try{
+                const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getSavedResources/`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                })
+                // console.log("RESULT",res.data);
+                setSavedResources(res.data.updatedResourceData);
+                // console.log("COURSES",courses);
+            }
+            catch(error){
+                console.log(error)
+            }
+        };
+        getSavedResources();
+    }, []);
+
+    useEffect(() => {
+        const getUserDetails = async () => {
+            try {
+              const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+              });
+              // console.log("HELLO", response.data.user);
+              setUserDetails(response.data.user);
+            } catch (error) {
+              console.log(error);
+              // Handle error if needed
+              router.push('/temp-login');
+              return
+            }
+          };
+
+          getUserDetails();
+    }, []);
+
+
+    useEffect(() => {
+        const getContributedResources = async () => {
+            try{
+                const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getContributedResources`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                })
+                // console.log("RESULT",res.data);
+                setContributedResources(res.data.updatedResourceData);
+                // console.log("COURSES",courses);
+            }
+            catch(error){
+                console.log(error)
+            }
+        };
+        getContributedResources();
+    }, []);
+
+
     return (
         <div>
             {isPageLoading ? (
@@ -98,13 +166,13 @@ export default function Page() {
                     >
 
                         <NavigationBar />
-                        <SectionPersonalDetails personalInfo={personalInfo} />
+                        <SectionPersonalDetails personalInfo={userDetails} />
                         <div className="flex justify-center">
                             <div className="w-[45%]">
-                                <SectionBookmarks personalInfo={personalInfo} />
+                                <SectionBookmarks bookmarks={savedResources} />
                             </div>
                             <div className="w-[45%]">
-                                <SectionContributions personalInfo={personalInfo} />
+                                <SectionContributions contributions={contributedResources} />
                             </div>
                         </div>
 

@@ -12,8 +12,65 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ChangePasswordAlert } from "@/components/New/avatar-sheet/alert-dialog/change-password"
 import { ReportIssueAlert } from "@/components/New/avatar-sheet/alert-dialog/report-issue"
+import { useState, useEffect } from "react"
+import axios from "axios"
+axios.defaults.withCredentials = true;
+import { useRouter } from "next/navigation"
 
 export function AvatarSheet() {
+
+    const [name, setName] = useState("")
+    const router = useRouter();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const user = await getUserDetails();
+            if(!user){
+                router.push('/temp-login')
+                return;
+            }
+
+            setName(user.name);
+        };
+        fetchData();
+    }, []);
+
+
+    const getUserDetails = async () => {
+        try {
+            const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
+            // console.log("HELLO", response.data.user);
+            return response.data.user;
+        } catch (error) {
+            // console.log(error);
+            // Handle error if needed
+            return null;
+        }
+    };
+
+    const handleLogout = async () => {
+        try {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                router.push('/temp-login');
+                return;
+            }
+
+            const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/logout`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            // console.log(response.data);
+            localStorage.removeItem('authToken');
+            router.push('/temp-login');
+        } catch (error) {
+            // console.log(error);
+            // Handle error if needed
+        }
+    }
+
+
     return (
         <div>
             <Sheet key="left">
@@ -30,23 +87,23 @@ export function AvatarSheet() {
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div className="flex justify-center w-full">
-                            <SheetTitle className="text-2xl">Ojassvi Kumar</SheetTitle>
+                            <SheetTitle className="text-2xl">{name}</SheetTitle>
                         </div>
                     </SheetHeader>
                     <div className="space-y-2 py-10 w-full">
                         <div>
-                            <Button variant="outline" className="w-full text-md">
+                            <Button variant="outline" className="w-full text-md" onClick={() => router.push('/temp-profile')}>
                                 View Profile
                             </Button>
                         </div>
-                        <div>
+                        {/* <div>
                             <ChangePasswordAlert />
                         </div>
                         <div>
                             <ReportIssueAlert />
-                        </div>
+                        </div> */}
                         <div>
-                            <Button variant="outline" className="w-full text-md">
+                            <Button variant="outline" className="w-full text-md" onClick={handleLogout}>
                                 Logout
                             </Button>
                         </div>

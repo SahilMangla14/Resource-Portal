@@ -74,7 +74,7 @@ const LikeResource = async (req, res) => {
 
         const userId = req.user.id
         if(resource.peopleWhoLiked.has(userId)){
-            return res.status(200).json({message : "You have already liked this resource!"})
+            return res.status(400).json({message : "You have already liked this resource!"})
         }
         else{
             // update the userwholiked map
@@ -83,7 +83,9 @@ const LikeResource = async (req, res) => {
                 resource.peopleWhoDisliked.delete(userId)
             }
             resource.likes++
-            await resource.save()
+            console.log("RESOURCE", resource)
+            const data = await resource.save()
+            console.log("HELLO3", data)
             res.status(200).json({message : "Resource updated successfully!"  ,resource})
         }
     }
@@ -103,7 +105,7 @@ const DislikeResource = async (req, res) => {
 
         const userId = req.user.id
         if(resource.peopleWhoDisliked.has(userId)){
-            return res.status(200).json({message : "You have already disliked this resource!"})
+            return res.status(400).json({message : "You have already disliked this resource!"})
         }
         else{
             // update the userwhodisliked map
@@ -259,6 +261,7 @@ const filterResources = async (req, res) => {
         const tags = req.query.tags
         const semester = req.query.semester
         const courseTitle = req.query.courseTitle
+        const instructor = req.query.instructor
         // handle all the cases
         // for tags, if all the tags given are present in the resource, then only return that resource. Resource may have more tags than the given tags
         // tags is an array
@@ -281,6 +284,12 @@ const filterResources = async (req, res) => {
         if(courseTitle){
             resources = resources.filter(resource => resource.courseTitle === courseTitle)
         }
+
+        if(instructor){
+            // either instrcutor_primary or instructor_secondary should be equal to instructor
+            resources = resources.filter(resource => resource.instructor_primary === instructor || resource.instructor_secondary === instructor)
+        }
+
 
         if(tags){
             resources = resources.filter(resource => {
