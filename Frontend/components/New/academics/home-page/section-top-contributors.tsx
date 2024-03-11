@@ -28,7 +28,10 @@ export function SectionTopContributors() {
 
     return (
         <>
-            <ContributeAlert />
+        <div className='my-8'>
+
+        
+            <ContributeAlert label='Contribute' variant='secondary' resourceId=''/>
             <div className="flex justify-center p-6">
                 <span className="text-lg font-semibold">Top Contributors</span>
             </div>
@@ -111,6 +114,7 @@ export function SectionTopContributors() {
                         </div>
                     </div>
                 </div> */}
+            </div>
             </div>
         </>
     );

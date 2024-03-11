@@ -5,23 +5,29 @@ import { useAddResourceStore } from "@/store/addResource";
 import add from "@/app/add/page";
 
 
-export function CourseTags({ type }: { type: string }) {
+export function CourseTags({ type,defaultTags }: { type: string,defaultTags:string[]}) {
 
-
+    
     const [filters, setFilters, addFilter, clearFilters] = useFiltersStore((state: any) => [state.filters, state.setFilters, state.addFilter, state.removeFilter, state.clearFilters])
     const [resource, addResource] = useAddResourceStore((state: any) => [state.resource, state.addResource])
+    
+    const [assignments, setAssignments] = React.useState<boolean>(defaultTags?defaultTags.includes('assignments'):false);
+    const [books, setBooks] = React.useState<boolean>( defaultTags?defaultTags.includes('books'):false);
+    const [endterm, setEndterm] = React.useState<boolean>( defaultTags?defaultTags.includes('endterm'):false);
+    const [lectureSlides, setLectureSlides] = React.useState<boolean>( defaultTags? defaultTags.includes('lectureSlides'):false);
+    const [midterm, setMidterm] = React.useState<boolean>( defaultTags? defaultTags.includes('midterm'):false);
+    const [notes, setNotes] = React.useState<boolean>( defaultTags? defaultTags.includes('notes'):false);
+    const [programming, setProgramming] = React.useState<boolean>( defaultTags? defaultTags.includes('programming'):false);
+    const [quizzes, setQuizzes] = React.useState<boolean>( defaultTags? defaultTags.includes('quizzes'):false);
+    const [videoLectures, setVideoLectures] = React.useState<boolean>( defaultTags? defaultTags.includes('videoLectures'):false);
 
-    const [assignments, setAssignments] = React.useState(false);
-    const [books, setBooks] = React.useState(false);
-    const [endterm, setEndterm] = React.useState(false);
-    const [lectureSlides, setLectureSlides] = React.useState(false);
-    const [midterm, setMidterm] = React.useState(false);
-    const [notes, setNotes] = React.useState(false);
-    const [programming, setProgramming] = React.useState(false);
-    const [quizzes, setQuizzes] = React.useState(false);
-    const [videoLectures, setVideoLectures] = React.useState(false);
-
-
+    console.log("defaultTage TT",defaultTags);
+    
+    React.useEffect(()=>{
+        let tags=defaultTags;
+    },[])
+    
+    
     React.useEffect(() => {
         let tags = []
         if (assignments) tags.push("assignments")
@@ -54,7 +60,7 @@ export function CourseTags({ type }: { type: string }) {
                         Assignments
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setAssignments(!assignments)} />
+                <Switch onCheckedChange={() => setAssignments(!assignments)} defaultChecked={assignments}/>
             </div>
             <div className="flex items-center space-x-4 p-4">
                 <div className="flex-1 space-y-1">
@@ -62,7 +68,7 @@ export function CourseTags({ type }: { type: string }) {
                         Books
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setBooks(!books)} />
+                <Switch onCheckedChange={() => setBooks(!books)} defaultChecked={books}/>
             </div>
             <div className="flex items-center space-x-4 p-4">
                 <div className="flex-1 space-y-1">
@@ -70,7 +76,7 @@ export function CourseTags({ type }: { type: string }) {
                         Endterm Assessments
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setEndterm(!endterm)} />
+                <Switch onCheckedChange={() => setEndterm(!endterm)} defaultChecked={endterm}/>
             </div>
             <div className="flex items-center space-x-4 p-4">
                 <div className="flex-1 space-y-1">
@@ -78,7 +84,7 @@ export function CourseTags({ type }: { type: string }) {
                         Lecture Slides
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setLectureSlides(!lectureSlides)} />
+                <Switch onCheckedChange={() => setLectureSlides(!lectureSlides)} defaultChecked={lectureSlides}/>
             </div>
             <div className="flex items-center space-x-4 p-4">
                 <div className="flex-1 space-y-1">
@@ -86,7 +92,7 @@ export function CourseTags({ type }: { type: string }) {
                         Midterm Assessments
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setMidterm(!midterm)} />
+                <Switch onCheckedChange={() => setMidterm(!midterm)} defaultChecked={midterm}/>
             </div>
             <div className="flex items-center space-x-4 p-4">
                 <div className="flex-1 space-y-1">
@@ -94,7 +100,7 @@ export function CourseTags({ type }: { type: string }) {
                         Notes
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setNotes(!notes)} />
+                <Switch onCheckedChange={() => setNotes(!notes)} defaultChecked={notes}/>
             </div>
             <div className="flex items-center space-x-4 p-4">
                 <div className="flex-1 space-y-1">
@@ -102,7 +108,7 @@ export function CourseTags({ type }: { type: string }) {
                         Programming Assessments
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setProgramming(!programming)} />
+                <Switch onCheckedChange={() => setProgramming(!programming)} defaultChecked={programming}/>
             </div>
             <div className="flex items-center space-x-4 p-4">
                 <div className="flex-1 space-y-1">
@@ -110,7 +116,7 @@ export function CourseTags({ type }: { type: string }) {
                         Quizzes
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setQuizzes(!quizzes)} />
+                <Switch onCheckedChange={() => setQuizzes(!quizzes)} defaultChecked={quizzes}/>
             </div>
             <div className="flex items-center space-x-4 p-4">
                 <div className="flex-1 space-y-1">
@@ -118,7 +124,7 @@ export function CourseTags({ type }: { type: string }) {
                         Video Lectures
                     </p>
                 </div>
-                <Switch onCheckedChange={() => setVideoLectures(!videoLectures)} />
+                <Switch onCheckedChange={() => setVideoLectures(!videoLectures)} defaultChecked={videoLectures}/>
             </div>
         </>
     )

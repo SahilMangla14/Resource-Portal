@@ -107,7 +107,7 @@ export default function Page() {
                                                     Sakshi Bansal
                                                 </div>
                                                 <div className="text-xs text-center text-muted-foreground">
-                                                    Batch of 2024
+                                                    Batch of 2025
                                                 </div>
                                                 <div className="flex space-x-2 justify-center mt-6">
                                                     <a className="cursor-pointer" href="www.google.com" target="_blank"><MdEmail size={20} /></a>

@@ -35,9 +35,9 @@ const instructors = [
     },
 ]
 
-export function CourseInstructorCombobox({ type }: { type: string }) {
+export function CourseInstructorCombobox({ type,defaultValue }: { type: string,defaultValue:string }) {
     const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
+    const [value, setValue] = React.useState<string>(()=>defaultValue)
     const [resource, addResource] = useAddResourceStore((state : any) => [state.resource, state.addResource])
 
     React.useEffect(() => {

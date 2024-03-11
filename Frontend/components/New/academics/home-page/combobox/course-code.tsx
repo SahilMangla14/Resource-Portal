@@ -35,11 +35,13 @@ const codes = [
     },
 ]
 
-export function CourseCodeCombobox() {
-    const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
-    const [resource, addResource] = useAddResourceStore((state : any) => [state.resource, state.addResource])
 
+
+export function CourseCodeCombobox({defaultValue}:{defaultValue:string}) {
+    const [open, setOpen] = React.useState(false)
+    const [value, setValue] = React.useState<string>(()=>defaultValue)
+    const [resource, addResource] = useAddResourceStore((state : any) => [state.resource, state.addResource])
+   
     React.useEffect(() => {
         addResource({ courseCode: value })
     }, [value])

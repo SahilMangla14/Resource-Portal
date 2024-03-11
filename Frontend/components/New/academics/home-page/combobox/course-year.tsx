@@ -44,9 +44,9 @@ const years = [
     },
 ]
 
-export function CourseYearCombobox() {
+export function CourseYearCombobox({defaultValue}:{defaultValue:string}) {
     const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
+    const [value, setValue] = React.useState<string>(()=>defaultValue)
 
     const [resource, addResource] = useAddResourceStore((state : any) => [state.resource, state.addResource])
 

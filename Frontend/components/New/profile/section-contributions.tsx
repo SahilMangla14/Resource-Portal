@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useState } from 'react';
 axios.defaults.withCredentials = true;
+import { ContributeAlert } from '../academics/home-page/alert-dialog/contribute';
 
 export function SectionContributions({ contributions }) {
 
@@ -55,7 +56,7 @@ export function SectionContributions({ contributions }) {
                                         View
                                     </Button>
                                     <Button variant="outline" className="mx-1" >
-                                        Edit
+                                       <ContributeAlert label='Edit' variant='ghost' resourceId={contribution._id}/>
                                     </Button>
                                     <Button variant="outline" className="mx-1"  onClick={() => handleDelete(contribution._id)}>
                                         Delete

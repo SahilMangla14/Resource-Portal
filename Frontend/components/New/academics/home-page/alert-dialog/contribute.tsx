@@ -25,13 +25,45 @@ import * as React from "react"
 import axios from "axios"
 axios.defaults.withCredentials = true
 
-export function ContributeAlert() {
 
-    const [semester, setSemester] = React.useState("")
-    const [driveLink, setDriveLink] = React.useState("")
-    const [description, setDescription] = React.useState("")
+
+export function ContributeAlert({ label,variant,resourceId }: { label: string,variant:any,resourceId:string }) {
+
+
+    const [semester, setSemester] = React.useState<string>("")
+    const [driveLink, setDriveLink] = React.useState<string>("")
+    const [description, setDescription] = React.useState<string>("")
+    const [resourceData,setResourceData]=React.useState({courseCode:'',courseTitle:'',courseInstructor:'',courseSecondaryInstructor:'',year:''});
+    const [tags,setTags]=React.useState<string[]>([]);
+    const [error,setError]=React.useState(false);
     const [resource, addResource, clearResource] = useAddResourceStore((state : any) => [state.resource, state.addResource, state.clearResource])
 
+    React.useEffect(()=>{
+        if(resourceId.length!==0){
+            
+            const getInfo=async()=>{
+                try{
+                    const token=localStorage.getItem('authToken');
+                    const response=await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/${resourceId}`,{
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    })
+                    const data=response.data.resource
+                    setResourceData({courseCode:data.courseCode,courseTitle:data.courseTitle,courseInstructor:data.instructor_primary
+,courseSecondaryInstructor:data.instructor_secondary,year:data.year  })
+                    setTags(data.tags);
+                    setSemester(data.semester)
+                    setDriveLink(data.link)
+                    setDescription(data.description)
+
+    
+                }catch(err){
+                    console.log(err);
+                }
+
+            }
+            getInfo();
+        }
+    },[resourceId])
 
     React.useEffect(() => {
         addResource({semester : semester})
@@ -72,13 +104,24 @@ export function ContributeAlert() {
     const handleSubmit = async () => {
         try{
             const resourceData = resource
+            
             console.log("Add Resource : ", resourceData)
             const token = localStorage.getItem('authToken');
-            const response = await axios.post(`${process.env.BACKEND_URL}/api/v1/resource/add`, resourceData, {
-                headers: {
-                  Authorization: `Bearer ${token}`
-                }
-              });
+
+            if(label==='Edit'){
+                const response = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/update/${resourceId}`, resourceData, {
+                    headers: {
+                      Authorization: `Bearer ${token}`
+                    }
+                  });
+                  window.location.reload();
+            }else{
+                const response = await axios.post(`${process.env.BACKEND_URL}/api/v1/resource/add`, resourceData, {
+                    headers: {
+                      Authorization: `Bearer ${token}`
+                    }
+                  });
+            }
 
             console.log("Resource Added succesfully")
               
@@ -92,40 +135,61 @@ export function ContributeAlert() {
         }
     }
 
+    const handleCancel=()=>{
+        if(resourceId.length===0){
+            setSemester('');
+            setDriveLink('');
+            setDescription('');
+        }
+        setError(false);
+    }
+
+    const checkError=()=>{
+        const resourceData = resource
+            if(resourceData.courseCode.length===0||resourceData.courseTitle.length===0||resourceData.instructor_primary.length===0||resourceData.semester.length===0||resourceData.year.length===0||resourceData.link.length===0){
+                setError(true);
+                setTimeout(()=>setError(false),5000);
+         }
+    }
+
 
     return (
+        // <div className="w-full h-full bg-pink-300">
+
+       
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <div className="flex justify-center pt-6">
-                    <Button variant="secondary" className="w-[80%]">Contribute</Button>
+                <div className="flex justify-center">
+                    <Button variant={variant} className="w-[80%]">{label}</Button>
                 </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Add a new resource</AlertDialogTitle>
                     <ScrollArea className="h-[500px] px-4 py-4">
+                        {error&&<AlertDialogDescription className='text-red-900'>'Please fill all the required fields'</AlertDialogDescription>}
                         <AlertDialogDescription>
                             <form>
                                 <div className="grid w-full items-center gap-4 text-foreground px-1">
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="course-code">Course Code</Label>
-                                        <CourseCodeCombobox />
+                                        <CourseCodeCombobox defaultValue={resourceData.courseCode}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="course-title">Course Title</Label>
-                                        <CourseTitleCombobox />
+                                        <CourseTitleCombobox defaultValue={resourceData.courseTitle}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="primary-instructor">Primary Instructor</Label>
-                                        <CourseInstructorCombobox type="primary"/>
+                                        <CourseInstructorCombobox type="primary" defaultValue={resourceData.courseInstructor}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="secondary-instructor">Secondary Instructor (If applicable)</Label>
-                                        <CourseInstructorCombobox type="secondary" />
+                                        <CourseInstructorCombobox type="secondary" defaultValue={resourceData.courseSecondaryInstructor} />
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="semester">Semester</Label>
-                                        <Select onValueChange={handleSemester}>
+                                        <Select onValueChange={handleSemester} defaultValue={semester}>
                                             <SelectTrigger id="semester">
                                                 <SelectValue placeholder="Select semester..." />
                                             </SelectTrigger>
@@ -137,21 +201,21 @@ export function ContributeAlert() {
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="year">Year</Label>
-                                        <CourseYearCombobox />
+                                        <CourseYearCombobox defaultValue={resourceData.year}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <div>Tags</div>
                                         <div className="border rounded-lg">
-                                           <CourseTags type="add"/>
+                                           <CourseTags type="add" defaultTags={tags}/>
                                         </div>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="description">Description</Label>
-                                        <Textarea onChange={handleDescription}/>
+                                        <Textarea onChange={handleDescription} value={description}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5 mb-2">
                                         <Label htmlFor="link">Drive Link</Label>
-                                        <Textarea onChange={handleDriveLink}/>
+                                        <Textarea onChange={handleDriveLink} value={driveLink}/>
                                     </div>
                                 </div>
                             </form>
@@ -159,10 +223,13 @@ export function ContributeAlert() {
                     </ScrollArea>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleSubmit}>Upload</AlertDialogAction>
+                    <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
+                    {error&&<AlertDialogAction onClick={handleSubmit} disabled >Upload</AlertDialogAction>}
+                    {!error&&<AlertDialogAction onClick={handleSubmit} onKeyDown={checkError} onPointerDown={checkError} >Upload</AlertDialogAction>}
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+
+        // </div>
     )
 }
