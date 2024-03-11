@@ -10,11 +10,17 @@ import { SectionCourseComments } from "@/components/New/academics/course-page/se
 import axios from 'axios'
 axios.defaults.withCredentials = true
 
+const u1={
+    name:'Username',
+    _id:'abc'
+}
+
 export default function Page({ params }: any) {
     const [isPageLoading, setIsPageLoading] = useState(true);
     const [course, setCourse] = useState({})
     const [comments, setComments] = useState([])
     const [uploader, setUploader] = useState('')
+    const [user,setUser]=useState(u1);
 
     useEffect(() => {
         const loadingTimeout = setTimeout(() => {
@@ -66,6 +72,15 @@ export default function Page({ params }: any) {
                     }
                 })
                 setComments(res.data.comments ? res.data.comments : [])
+
+                const currentUser= await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`,{
+                    params: {user:res.data.user},
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                    }
+                })
+                console.log("currentUser",currentUser);
+                setUser(currentUser.data.user)
                 
             }
             catch (err) {
@@ -95,7 +110,7 @@ export default function Page({ params }: any) {
                         <SectionCourseDetails courseInfo={course} />
                         <div className="flex justify-center text-sm">
                             <SectionCourseMetadata courseInfo={course} uploader={uploader}/>
-                            <SectionCourseComments commentsInfo={comments} courseInfo = {course}/>
+                            <SectionCourseComments commentsInfo={comments} courseInfo = {course} user={user}/>
                         </div>
 
                     </ThemeProvider>

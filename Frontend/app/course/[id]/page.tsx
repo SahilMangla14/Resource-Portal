@@ -113,6 +113,7 @@ export default function CoursePage({ params }: any) {
     const [render,setRender]=useState<boolean>(false);
     const [uploader,setUploader]=useState<boolean>(false);
     const [user,setUser]=useState<User>(u1)
+    // console.log("params",params);
     
 
     const toggleBookmark = async () => {
@@ -304,13 +305,14 @@ export default function CoursePage({ params }: any) {
 
                 setComments(sortedComments)
                 
-
+                console.log("res",res.data);
                 const currentUser= await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`,{
                     params: {user:res.data.user},
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
+                console.log("currentUser",currentUser);
                 setUser(currentUser.data.user)
                 
             }

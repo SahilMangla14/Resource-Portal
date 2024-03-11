@@ -52,7 +52,7 @@ const createComment = async (req, res) => {
 
 const getAllComments = async (req, res) => {
     try{
-        const comments = await Comment.find()
+        const comments = await Comment.find().populate('parent')
         res.status(200).json({message: "Comments fetched successfully!", comments,user:req.user.id})
     }
     catch(err){
@@ -65,7 +65,7 @@ const getAllComments = async (req, res) => {
 const getCommentById = async (req, res) => {
     try{
         const id = req.params.id
-        const comment = await Comment.findById(id)
+        const comment = await Comment.findById(id).populate('parent')
 
         res.status(200).json({message: "Comment fetched successfully!", comment})
     }
@@ -81,7 +81,7 @@ const getCommentByResourceId = async (req, res) => {
     try{
         const id = req.params.resourceId
         
-        const comments = await Comment.find({resourceId: id})
+        const comments = await Comment.find({resourceId: id}).populate('parent')
 
         res.status(200).json({message: "Comments fetched successfully!", comments,user:req.user.id})
     }
@@ -95,7 +95,7 @@ const getCommentByResourceId = async (req, res) => {
 const getCommentByUserId = async (req, res) => {
     try{
         const id = req.params.userId
-        const comments = await Comment.find({userId: id})
+        const comments = await Comment.find({userId: id}).populate('parent')
 
         res.status(200).json({message: "Comments fetched successfully!", comments})
     }
@@ -111,7 +111,7 @@ const getCommentByUserIdAndResourceId = async (req, res) => {
     try{
         const userId = req.params.userId
         const resourceId = req.params.resourceId
-        const comments = await Comment.find({userId: userId, resourceId: resourceId})
+        const comments = await Comment.find({userId: userId, resourceId: resourceId}).populate('parent')
 
         res.status(200).json({message: "Comments fetched successfully!", comments})
     }

@@ -18,7 +18,7 @@ export function SectionCourseMetadata({ courseInfo, uploader }) {
             <div className="py-2">
                 <div>Tags</div>
                 <div>
-                    {courseInfo.tags.map((tag, index) => (
+                    {courseInfo&&courseInfo.tags&&courseInfo.tags.map((tag, index) => (
                         index % 2 == 0 ? (
                             <>
                                 <Badge variant="default" className="m-0.5">#{tag}</Badge>
