@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export function SectionPersonalDetails({ personalInfo }) {
+export function SectionPersonalDetails({ personalInfo,rank }) {
     return (
         <div className="flex justify-center">
             <div className="w-[95%] border-b py-8 px-2 flex justify-between">
@@ -26,7 +26,7 @@ export function SectionPersonalDetails({ personalInfo }) {
                     </div>
                     <div className="w-28 h-28 border rounded bg-secondary">
                         <div className="text-xs text-center py-1 font-bold">Leaderboard <br/> Rank</div>
-                        <div className="text-6xl text-center text-muted-foreground font-bold">21</div>
+                        <div className="text-6xl text-center text-muted-foreground font-bold">{rank}</div>
                     </div>
                 </div>
             </div>

@@ -17,6 +17,7 @@ export default function Page() {
     const [savedResources, setSavedResources] = useState([]);
     const [contributedResources, setContributedResources] = useState([]);
     const router = useRouter();
+    const [rank,setRank]=useState(0);
 
     useEffect(() => {
         const loadingTimeout = setTimeout(() => {
@@ -118,7 +119,7 @@ export default function Page() {
               const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
               });
-              // console.log("HELLO", response.data.user);
+              console.log("HELLO", response.data.user);
               setUserDetails(response.data.user);
             } catch (error) {
               console.log(error);
@@ -130,6 +131,27 @@ export default function Page() {
 
           getUserDetails();
     }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try{
+    
+            const response=await axios.get(`${process.env.BACKEND_URL}/api/v1/user/topContributors`, {
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
+            console.log(response.data.sortedUsers)
+            response.data.sortedUsers.forEach((element:any,index:number)=>{
+              if(element._id===userDetails._id) setRank(index+1)
+              console.log(element._id,userDetails._id,rank);
+            })
+          }catch(e){
+            console.log(e)
+          }
+          // console.log("USER DETAILS", userDetails);
+        };
+    
+        fetchData();
+      }, [userDetails]);
 
 
     useEffect(() => {
@@ -166,7 +188,7 @@ export default function Page() {
                     >
 
                         <NavigationBar />
-                        <SectionPersonalDetails personalInfo={userDetails} />
+                        <SectionPersonalDetails personalInfo={userDetails} rank={rank}/>
                         <div className="flex justify-center">
                             <div className="w-[45%]">
                                 <SectionBookmarks bookmarks={savedResources} />
