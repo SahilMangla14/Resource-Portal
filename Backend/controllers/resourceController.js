@@ -4,7 +4,7 @@ const User = require('../models/User.js');
 
 const getAllResources = async (req, res) => {
     try {
-        const resources = await Resource.find()
+        const resources = await Resource.find().populate('uploaded_by')
         res.status(200).json({message : "Resources fetched successfully!"  ,resources})
     }
     catch(err) {
@@ -16,7 +16,7 @@ const getAllResources = async (req, res) => {
 const getResourceById = async (req, res) => {
     try {
         const id = req.params.id
-        const resource = await Resource.findById(id)
+        const resource = await Resource.findById(id).populate('uploaded_by')
         res.status(200).json({message : "Resource fetched successfully!"  ,resource})
     }
     catch(err) {
@@ -200,7 +200,7 @@ const getTopKResourcesForLikes = async (req, res) => {
         let k = parseInt(req.params.k)
         const totalResources = await Resource.countDocuments()
         k = Math.min(k, totalResources)
-        const resources = await Resource.find().sort({likes : -1}).limit(k)
+        const resources = await Resource.find().sort({likes : -1}).limit(k).populate("uploaded_by")
         res.status(200).json({message : "Top k resources fetched successfully!"  ,resources})
     }
     catch(err) {

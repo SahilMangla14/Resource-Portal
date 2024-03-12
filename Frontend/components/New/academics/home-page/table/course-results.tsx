@@ -43,6 +43,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import {create} from 'zustand'
 import { IoMdArrowRoundUp, IoMdArrowRoundDown } from "react-icons/io";
 import { useResultsStore } from "@/store/results"
 import axios from 'axios'
@@ -219,6 +220,16 @@ axios.defaults.withCredentials = true;
 //     },
 // ]
 
+type Store = {
+    count: number
+    inc: () => void
+  }
+  
+const useStore = create<Store>()((set) => ({
+    count: 1,
+    inc: () => set((state) => ({ count: state.count + 1 })),
+  }))
+
 export type Payment = {
     _id: string
     tags: string[]
@@ -230,6 +241,78 @@ export type Payment = {
     batch: string
     link: string
     likes: string
+
+}
+
+const HandleVotes=({row})=>{
+
+    const [upvoted,setUpvoted]=useState<boolean>(false);
+    const [downvoted,setDownvoted]=useState<boolean>(false);
+    const {inc}=useStore();
+    // const [likes,setLikes]=useState<number>(row.original.likes)
+
+    useEffect(()=>{
+
+    },[])
+
+    const handleUpvote = async ({ _id, likes }: { _id: string, likes: number }) => {
+        try {
+            console.log("_iddd",_id,likes);
+            const token = localStorage.getItem('authToken')
+            const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/like/${_id}`, { likes: likes+1 }, { headers: { 'Authorization': `Bearer ${token}` } });
+            console.log(res.data);
+            if(!upvoted) setUpvoted(true)
+            else if(downvoted){
+                setDownvoted(false)
+            } 
+            inc();
+            
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleDownvote = async ({ _id, likes }: { _id: string, likes: number }) => {
+        try {
+            // console.log("HEY THERE")
+            console.log("idddd",_id);
+            const token = localStorage.getItem('authToken')
+            const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/dislike/${_id}`, { likes: likes-1 }, { headers: { 'Authorization': `Bearer ${token}` } });
+            console.log(res.data);
+            if(upvoted) setUpvoted(false)
+            else if(!downvoted) setDownvoted(true)
+            inc();
+        
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const likes=parseInt(row.original.likes, 10);
+
+    // console.log("upvoted",upvoted)
+    // console.log("downvoted",downvoted)
+
+    return (
+        <div className="space-y-2">
+                {!upvoted&&<Button variant="secondary" className="w-15 h-8" onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
+                    <IoMdArrowRoundUp size={20} />
+                </Button>}
+                {upvoted&&<Button variant="secondary" className="w-15 h-8 bg-gray-300" onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
+                    <IoMdArrowRoundUp size={20} />
+                </Button>}
+                {likes===0&&<Button variant="secondary" disabled className="w-15 h-8" onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
+                    <IoMdArrowRoundDown size={20} />
+                </Button>}
+                {!downvoted&&likes!==0&&<Button variant="secondary"  className="w-15 h-8" onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
+                    <IoMdArrowRoundDown size={20} />
+                </Button>}
+                {downvoted&&likes!==0&&<Button variant="secondary"  className="w-15 h-8 bg-gray-300" onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
+                    <IoMdArrowRoundDown size={20} />
+                </Button>}
+
+            </div>
+    )
 }
 
 export const columns: ColumnDef<Payment>[] = [
@@ -237,16 +320,8 @@ export const columns: ColumnDef<Payment>[] = [
         enableHiding: false,
         accessorKey: "vote",
         header: "",
-        cell: () => (
-            <div className="space-y-2">
-                <Button variant="secondary" className="w-15 h-8">
-                    <IoMdArrowRoundUp size={20} />
-                </Button>
-                <Button variant="secondary" className="w-15 h-8">
-                    <IoMdArrowRoundDown size={20} />
-                </Button>
-
-            </div>
+        cell: ({row}) => (
+            <HandleVotes row={row}/>
         ),
     },
     {
@@ -266,11 +341,11 @@ export const columns: ColumnDef<Payment>[] = [
         },
         cell: ({ row }) => (
             <div>
-                {row.getValue("uploaded_by")},
+                {row.original.uploaded_by.name}
                 <br />
                 {/* <span className="text-xs">Batch of 20XX{row.getValue("batch")}</span> */}
                 {/* <br /> */}
-                <span className="text-xs text-muted-foreground">{row.getValue("likes")}X Upvotes</span>
+                <span className="text-xs text-muted-foreground">{row.original.likes}X Upvotes</span>
             </div>
         ),
 
@@ -279,14 +354,16 @@ export const columns: ColumnDef<Payment>[] = [
         accessorKey: "_id",
         header: "Description",
         cell: ({ row }) => (
+           
             <div>
-                <div className="my-1 text-muted-foreground">Offered by {row.getValue("instructor_primary")} during Semester {row.getValue("semester")}, {row.getValue("year")}. {row.getValue("description")} </div>
+                <div className="my-1 text-muted-foreground">Offered by {row.original.instructor_primary} during Semester {row.original.semester}, {row.original.year}. {row.original.description} </div>
                 <Button variant="outline" className="h-8 w-18">
                     <Link href={`/temp-academics/temp-course/${row.getValue("_id")}`}>
                     View
                     </Link>
                 </Button>
             </div>
+           
         ),
     },
     {
@@ -356,6 +433,7 @@ export function CourseResultsTable() {
     const [pageIndex, setPageIndex] = useState(0);
     const [pageSize, setPageSize] = useState(6);
     const [pageData, setPageData] = useState([]);
+    
     // const data = useResultsStore((state : any) => state.results)
     const [data, setData] = useState<Payment[]>([]);
     const [results, setResults] = useResultsStore((state: any) => [state.results, state.setResults]);
@@ -364,6 +442,8 @@ export function CourseResultsTable() {
         setData(results)
     }, [results]);
 
+    const {count}=useStore();
+    
 
     useEffect(() => {
         const fetchTopResources = async () => {
@@ -378,8 +458,9 @@ export function CourseResultsTable() {
             }
           };
           fetchTopResources();
-    } , []);
+    } , [count]);
 
+  
     useEffect(() => {
         console.log("Data", data)
         const getPageData = () => {
@@ -390,6 +471,8 @@ export function CourseResultsTable() {
 
         setPageData(getPageData());
     }, [pageIndex, pageSize, data]);
+
+   
 
     const table = useReactTable({
         data: pageData,
@@ -477,7 +560,7 @@ export function CourseResultsTable() {
                                     className="bg-white hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50"
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell key={cell.id} >
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
