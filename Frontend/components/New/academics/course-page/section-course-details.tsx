@@ -137,15 +137,15 @@ export function SectionCourseDetails({ courseInfo,user }) {
                     <div className="flex">
                         <div className="pl-3">
                             <div>
-                                <Button variant="secondary" className={`w-15 h-9 m-1 ${upvoted?'bg-gray-300':''}`} onClick={() => handleLikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                <Button variant={`${upvoted?'default':'secondary'}`} className={`w-15 h-9 m-1 ${upvoted?'bg-gray-300':''}`} onClick={() => handleLikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundUp size={20}  />
                                 </Button>
                             </div>
                             <div>
-                                {currentLikes!==0&&<Button variant="secondary" className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                {currentLikes!==0&&<Button variant={`${downvoted?'default':'secondary'}`} className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundDown size={20}  />
                                 </Button>}
-                                {currentLikes==0&&<Button variant="secondary" disabled className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                {currentLikes==0&&<Button variant={`${downvoted?'default':'secondary'}`} disabled className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundDown size={20}  />
                                 </Button>}
                             </div>

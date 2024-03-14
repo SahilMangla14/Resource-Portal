@@ -302,14 +302,14 @@ const HandleVotes=({row})=>{
 
     return (
         <div className="space-y-2">
-               <Button variant="secondary" className={`w-15 h-8 ${upvoted?'bg-gray-300':''}`} onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
+               <Button variant={`${upvoted?'default':'secondary'}`} className={`w-15 h-8 ${upvoted?'bg-gray-300':''}`} onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
                     <IoMdArrowRoundUp size={20} />
                 </Button>
                 
-                {likes===0&&<Button variant="secondary" disabled className="w-15 h-8" onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
+                {likes===0&&<Button variant={`${downvoted?'default':'secondary'}`} disabled className="w-15 h-8" onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
                     <IoMdArrowRoundDown size={20} />
                 </Button>}
-                {likes!==0&&<Button variant="secondary"  className={`w-15 h-8 ${downvoted?'bg-gray-300':''}`} onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
+                {likes!==0&&<Button variant={`${downvoted?'default':'secondary'}`}  className={`w-15 h-8 ${downvoted?'bg-gray-300':''}`} onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
                     <IoMdArrowRoundDown size={20} />
                 </Button>}
 
