@@ -107,9 +107,9 @@ export default function Page({ params }: any) {
                     >
 
                         <NavigationBar />
-                        <SectionCourseDetails courseInfo={course} />
+                        <SectionCourseDetails courseInfo={course} user={user}/>
                         <div className="flex justify-center text-sm">
-                            <SectionCourseMetadata courseInfo={course} uploader={uploader}/>
+                            <SectionCourseMetadata courseInfo={course} uploader={uploader} />
                             <SectionCourseComments commentsInfo={comments} courseInfo = {course} user={user}/>
                         </div>
 

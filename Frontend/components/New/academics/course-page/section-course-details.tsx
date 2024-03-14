@@ -11,10 +11,12 @@ import axios from "axios";
 import { set } from "react-hook-form";
 axios.defaults.withCredentials = true
 
-export function SectionCourseDetails({ courseInfo }) {
+export function SectionCourseDetails({ courseInfo,user }) {
 
     const [isBookmarked, setIsBookmarked] = useState<boolean>(false);
     const [currentLikes, setCurrentLikes] = useState<number>(courseInfo?.likes || 0);
+    const [upvoted,setUpvoted]=useState<boolean>(false)
+    const [downvoted,setDownvoted]=useState<boolean>(false)
     const router = useRouter();
 
     const notifySuccess = (message: string) => {
@@ -24,6 +26,19 @@ export function SectionCourseDetails({ courseInfo }) {
     const notifyError = (message: string) => {
         toast.error(message);
     }
+
+    useEffect(()=>{
+        console.log(user,"user")
+        if ( courseInfo.peopleWhoLiked.includes(user._id)) 
+            setUpvoted(true);
+        else 
+            setUpvoted(false)
+        if (courseInfo.peopleWhoDisliked.includes(user._id))
+            setDownvoted(true);
+        else setDownvoted(false)
+        
+        // console.log(row.original.peopleWhoLiked.includes(row.original._id),row.original._id)
+    },[])
 
     const toggleBookmark = async () => {
         // if isBookmarked true, then make a delete request to remove from saved Resources
@@ -93,6 +108,9 @@ export function SectionCourseDetails({ courseInfo }) {
             const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/like/${_id}`, { likes: likes }, { headers: { 'Authorization': `Bearer ${token}` } });
             console.log(res.data);
             setCurrentLikes(res.data.resource.likes)
+            if(downvoted) setDownvoted(false)
+            else setUpvoted(prev=>!prev)
+
         } catch (err) {
             console.error(err);
         }
@@ -103,8 +121,9 @@ export function SectionCourseDetails({ courseInfo }) {
             // console.log("HEY THERE")
             const token = localStorage.getItem('authToken')
             const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/dislike/${_id}`, { likes: likes }, { headers: { 'Authorization': `Bearer ${token}` } });
-            console.log(res.data);
             setCurrentLikes(res.data.resource.likes)
+            if(upvoted) setUpvoted(false)
+            else setDownvoted(prev=>!prev)
         } catch (err) {
             console.error(err);
         }
@@ -118,14 +137,17 @@ export function SectionCourseDetails({ courseInfo }) {
                     <div className="flex">
                         <div className="pl-3">
                             <div>
-                                <Button variant="secondary" className="w-15 h-10 m-1" onClick={() => handleLikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                <Button variant="secondary" className={`w-15 h-9 m-1 ${upvoted?'bg-gray-300':''}`} onClick={() => handleLikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundUp size={20}  />
                                 </Button>
                             </div>
                             <div>
-                                <Button variant="secondary" className="w-15 h-10 m-1" onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                {currentLikes!==0&&<Button variant="secondary" className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundDown size={20}  />
-                                </Button>
+                                </Button>}
+                                {currentLikes==0&&<Button variant="secondary" disabled className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                    <IoMdArrowRoundDown size={20}  />
+                                </Button>}
                             </div>
                         </div>
                         <div>
@@ -141,10 +163,10 @@ export function SectionCourseDetails({ courseInfo }) {
                             <br />Semester {courseInfo?.semester}, {courseInfo?.year}
                         </div>
                         <div className="text-right">
-                            <Button variant="outline" className="w-15 h-9 m-1" onClick={toggleBookmark}>
+                            <Button variant="outline" className="w-15 h-10 m-1" onClick={toggleBookmark}>
                                 <CiBookmark size={20} />
                             </Button>
-                            <Button variant="outline" className="w-15 h-9 m-1 mr-5" onClick={() => router.back()}>
+                            <Button variant="outline" className="w-15 h-10 m-1" onClick={() => router.back()}>
                                 <IoArrowBackOutline size={20} />
                             </Button>
                         </div>

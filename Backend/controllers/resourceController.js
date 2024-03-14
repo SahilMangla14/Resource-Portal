@@ -4,8 +4,9 @@ const User = require('../models/User.js');
 
 const getAllResources = async (req, res) => {
     try {
+        const userId = req.user.id 
         const resources = await Resource.find().populate('uploaded_by')
-        res.status(200).json({message : "Resources fetched successfully!"  ,resources})
+        res.status(200).json({message : "Resources fetched successfully!"  ,resources,userId})
     }
     catch(err) {
         console.log("Error in getting all resources!")
@@ -73,19 +74,22 @@ const LikeResource = async (req, res) => {
             return res.status(404).json({message : "Resource not found!"})
 
         const userId = req.user.id
-        if(resource.peopleWhoLiked.has(userId)){
-            return res.status(400).json({message : "You have already liked this resource!"})
+        const userIndex = resource.peopleWhoLiked.indexOf(userId)
+        if(userIndex!==-1){
+            resource.peopleWhoLiked.splice(userIndex, 1)
         }
         else{
-            // update the userwholiked map
-            resource.peopleWhoLiked.set(userId, true)
-            if(resource.peopleWhoDisliked.has(userId)){
-                resource.peopleWhoDisliked.delete(userId)
+            const userDislikeIndex = resource.peopleWhoDisliked.indexOf(userId)
+            if (userDislikeIndex !== -1) {
+                resource.peopleWhoDisliked.splice(userDislikeIndex, 1)
             }
+            else{
+                resource.peopleWhoLiked.push(userId)
+            }     
             resource.likes++
-            console.log("RESOURCE", resource)
+            
             const data = await resource.save()
-            console.log("HELLO3", data)
+            
             res.status(200).json({message : "Resource updated successfully!"  ,resource})
         }
     }
@@ -104,19 +108,22 @@ const DislikeResource = async (req, res) => {
             return res.status(404).json({message : "Resource not found!"})
 
         const userId = req.user.id
-        if(resource.peopleWhoDisliked.has(userId)){
-            return res.status(400).json({message : "You have already disliked this resource!"})
+        const userIndex = resource.peopleWhoDisliked.indexOf(userId)
+        if(userIndex!==-1){
+            resource.peopleWhoDisliked.splice(userIndex, 1)
         }
         else{
-            // update the userwhodisliked map
-            resource.peopleWhoDisliked.set(userId, true)
-            if(resource.peopleWhoLiked.has(userId)){
-                resource.peopleWhoLiked.delete(userId)
+            const userLikeIndex = resource.peopleWhoLiked.indexOf(userId)
+            if (userLikeIndex !== -1) {
+                resource.peopleWhoLiked.splice(userLikeIndex, 1)
             }
+            else{
+                resource.peopleWhoDisliked.push(userId)
+            }     
             resource.likes--
-            await resource.save()
-
-            console.log(resource)
+            
+            const data = await resource.save()
+            
             res.status(200).json({message : "Resource updated successfully!"  ,resource})
         }
     }
@@ -197,11 +204,12 @@ const deleteAllResources = async (req, res) => {
 // find top k resource with most likes
 const getTopKResourcesForLikes = async (req, res) => {
     try {
+        const userId = req.user.id 
         let k = parseInt(req.params.k)
         const totalResources = await Resource.countDocuments()
         k = Math.min(k, totalResources)
         const resources = await Resource.find().sort({likes : -1}).limit(k).populate("uploaded_by")
-        res.status(200).json({message : "Top k resources fetched successfully!"  ,resources})
+        res.status(200).json({message : "Top k resources fetched successfully!"  ,resources,userId})
     }
     catch(err) {
         console.log("Error in getting top k resources!")

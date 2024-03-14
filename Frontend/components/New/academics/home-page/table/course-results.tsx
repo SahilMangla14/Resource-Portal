@@ -222,11 +222,15 @@ axios.defaults.withCredentials = true;
 
 type Store = {
     count: number
+    userId:string
+    setId:(id:string)=>void
     inc: () => void
   }
   
 const useStore = create<Store>()((set) => ({
     count: 1,
+    userId:"",
+    setId: (id: string) => set({ userId: id }),
     inc: () => set((state) => ({ count: state.count + 1 })),
   }))
 
@@ -248,12 +252,21 @@ const HandleVotes=({row})=>{
 
     const [upvoted,setUpvoted]=useState<boolean>(false);
     const [downvoted,setDownvoted]=useState<boolean>(false);
-    const {inc}=useStore();
+    const {inc,userId}=useStore();
     // const [likes,setLikes]=useState<number>(row.original.likes)
 
     useEffect(()=>{
-
-    },[])
+        
+        if ( row.original.peopleWhoLiked.includes(userId)) 
+            setUpvoted(true);
+        else 
+            setUpvoted(false)
+        if (row.original.peopleWhoDisliked.includes(userId))
+            setDownvoted(true);
+        else setDownvoted(false)
+        const likes=parseInt(row.original.likes, 10);
+        // console.log(row.original.peopleWhoLiked.includes(row.original._id),row.original._id)
+    },[row.original.likes])
 
     const handleUpvote = async ({ _id, likes }: { _id: string, likes: number }) => {
         try {
@@ -261,10 +274,7 @@ const HandleVotes=({row})=>{
             const token = localStorage.getItem('authToken')
             const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/like/${_id}`, { likes: likes+1 }, { headers: { 'Authorization': `Bearer ${token}` } });
             console.log(res.data);
-            if(!upvoted) setUpvoted(true)
-            else if(downvoted){
-                setDownvoted(false)
-            } 
+            
             inc();
             
         } catch (err) {
@@ -274,40 +284,32 @@ const HandleVotes=({row})=>{
 
     const handleDownvote = async ({ _id, likes }: { _id: string, likes: number }) => {
         try {
-            // console.log("HEY THERE")
-            console.log("idddd",_id);
+           
             const token = localStorage.getItem('authToken')
             const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/dislike/${_id}`, { likes: likes-1 }, { headers: { 'Authorization': `Bearer ${token}` } });
             console.log(res.data);
-            if(upvoted) setUpvoted(false)
-            else if(!downvoted) setDownvoted(true)
+           
             inc();
         
         } catch (err) {
             console.error(err);
         }
     }
-
+    
     const likes=parseInt(row.original.likes, 10);
 
-    // console.log("upvoted",upvoted)
-    // console.log("downvoted",downvoted)
+    
 
     return (
         <div className="space-y-2">
-                {!upvoted&&<Button variant="secondary" className="w-15 h-8" onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
+               <Button variant="secondary" className={`w-15 h-8 ${upvoted?'bg-gray-300':''}`} onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
                     <IoMdArrowRoundUp size={20} />
-                </Button>}
-                {upvoted&&<Button variant="secondary" className="w-15 h-8 bg-gray-300" onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
-                    <IoMdArrowRoundUp size={20} />
-                </Button>}
+                </Button>
+                
                 {likes===0&&<Button variant="secondary" disabled className="w-15 h-8" onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
                     <IoMdArrowRoundDown size={20} />
                 </Button>}
-                {!downvoted&&likes!==0&&<Button variant="secondary"  className="w-15 h-8" onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
-                    <IoMdArrowRoundDown size={20} />
-                </Button>}
-                {downvoted&&likes!==0&&<Button variant="secondary"  className="w-15 h-8 bg-gray-300" onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
+                {likes!==0&&<Button variant="secondary"  className={`w-15 h-8 ${downvoted?'bg-gray-300':''}`} onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
                     <IoMdArrowRoundDown size={20} />
                 </Button>}
 
@@ -442,7 +444,7 @@ export function CourseResultsTable() {
         setData(results)
     }, [results]);
 
-    const {count}=useStore();
+    const {count,setId}=useStore();
     
 
     useEffect(() => {
@@ -453,12 +455,15 @@ export function CourseResultsTable() {
               const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/top/${k}`  , { headers: { 'Authorization': `Bearer ${token}` } });
               // console.log(res.data);
               setResults(res.data.resources)
+              setId(res.data.userId)
             } catch (err) {
               console.error(err);
             }
           };
           fetchTopResources();
     } , [count]);
+
+   
 
   
     useEffect(() => {
