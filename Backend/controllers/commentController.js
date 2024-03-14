@@ -181,13 +181,26 @@ const deleteComment = async (req, res) => {
         const userid=req.user.id
 
         const comment = await Comment.findById(id)
+
+        
         console.log(req.params)
         if(!comment)
-            return res.status(404).json({message: "Comment not found!"})
-        else if(comment.userId!=userid){
-            return res.status(404).json({message: ""})
-        }
-        else{
+        return res.status(404).json({message: "Comment not found!"})
+    else if(comment.userId!=userid){
+        return res.status(404).json({message: ""})
+    }
+    else{
+            const deleteNestedComments = async (parentId) => {
+                // Find and delete all child comments
+                const childComments = await Comment.find({ parent: parentId });
+                for (const childComment of childComments) {
+                    await deleteNestedComments(childComment._id); // Recursively delete nested comments
+                    await Comment.findByIdAndDelete(childComment._id); // Delete the child comment itself
+                }
+            };
+        
+            // Call the function to delete nested comments
+            await deleteNestedComments(id);
 
             const result = await Comment.findByIdAndDelete(id)
             res.status(200).json({message: "Comment deleted successfully!", result})

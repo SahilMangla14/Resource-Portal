@@ -29,13 +29,13 @@ export function SectionCourseDetails({ courseInfo,user }) {
 
     useEffect(()=>{
         console.log(user,"user")
-        if ( courseInfo.peopleWhoLiked.includes(user._id)) 
-            setUpvoted(true);
-        else 
-            setUpvoted(false)
-        if (courseInfo.peopleWhoDisliked.includes(user._id))
-            setDownvoted(true);
-        else setDownvoted(false)
+        // if ( courseInfo.peopleWhoLiked.includes(user._id)) 
+        //     setUpvoted(true);
+        // else 
+        //     setUpvoted(false)
+        // if (courseInfo.peopleWhoDisliked.includes(user._id))
+        //     setDownvoted(true);
+        // else setDownvoted(false)
         
         // console.log(row.original.peopleWhoLiked.includes(row.original._id),row.original._id)
     },[])

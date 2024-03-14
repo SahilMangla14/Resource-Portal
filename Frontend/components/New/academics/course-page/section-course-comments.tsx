@@ -31,6 +31,7 @@ interface framework{
     comments:Comment[];
     user:User;
     handleDelete:(id:any)=>void;
+    handleReply:(comment:Comment)=>void;
     allComments:Comment[];
     id:any
 }
@@ -156,7 +157,7 @@ export function SectionCourseComments({ commentsInfo , courseInfo, user}:{commen
                                     </Button>}
                                 </div>
                             </div>
-                            <CommentReplies comments={allComments.filter(comnt=>comnt.parent&&comnt.parent._id===comment._id)} user={user} handleDelete={handleDelete} allComments={allComments}/>
+                            <CommentReplies comments={allComments.filter(comnt=>comnt.parent&&comnt.parent._id===comment._id)} user={user} handleDelete={handleDelete} allComments={allComments} handleReply={handleReply}/>
                             </>
                         ))}
                     </ScrollArea>
@@ -174,7 +175,7 @@ export function SectionCourseComments({ commentsInfo , courseInfo, user}:{commen
     );
 }
 
-const CommentReplies=({comments,user,handleDelete,allComments}:{comments:any,user:{name:string,_id:string},handleDelete:(id:string)=>void,allComments:Comment[]})=>{
+const CommentReplies=({comments,user,handleDelete,allComments,handleReply}:{comments:any,user:{name:string,_id:string},handleDelete:(id:string)=>void,allComments:Comment[],handleReply:(comment:Comment)=>void})=>{
 
     return (
         <ScrollArea className="h-full">
@@ -191,8 +192,8 @@ const CommentReplies=({comments,user,handleDelete,allComments}:{comments:any,use
                                         <p className="text-muted-foreground mt-2">{comment.author}<span className='mx-3 italic text-gray-400'>  {moment(comment.createdAt).fromNow()}</span></p>
                                     </div>
                                 </div>
-                                <div className="space-y-1">
-                                    <Button variant="outline" className="mx-1">
+                                <div className="space-y-1" >
+                                    <Button variant="outline" className="mx-1" onClick={()=>handleReply(comment)}>
                                         <BsReplyFill size={18} />
                                     </Button>
                                     {user.name==comment.author&&<Button variant="outline" className="mx-1" onClick={()=>handleDelete(comment._id)}>
@@ -200,7 +201,7 @@ const CommentReplies=({comments,user,handleDelete,allComments}:{comments:any,use
                                     </Button>}
                                 </div>
                             </div>
-                            <CommentReplies comments={allComments.filter(comnt=>comnt.parent&&comnt.parent._id===comment._id)} user={user} handleDelete={handleDelete} allComments={allComments}/>
+                            <CommentReplies comments={allComments.filter(comnt=>comnt.parent&&comnt.parent._id===comment._id)} user={user} handleDelete={handleDelete} allComments={allComments} handleReply={handleReply}/>
                             </>
                         ))}
                     </ScrollArea>
