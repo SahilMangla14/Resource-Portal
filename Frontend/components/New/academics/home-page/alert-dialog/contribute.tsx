@@ -172,15 +172,15 @@ export function ContributeAlert({ label,variant,resourceId }: { label: string,va
                             <form>
                                 <div className="grid w-full items-center gap-4 text-foreground px-1">
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="course-code">Course Code</Label>
+                                        <Label htmlFor="course-code">Course Code <span>*</span></Label>
                                         <CourseCodeCombobox defaultValue={resourceData.courseCode}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="course-title">Course Title</Label>
+                                        <Label htmlFor="course-title">Course Title <span>*</span></Label>
                                         <CourseTitleCombobox defaultValue={resourceData.courseTitle}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="primary-instructor">Primary Instructor</Label>
+                                        <Label htmlFor="primary-instructor">Primary Instructor <span>*</span></Label>
                                         <CourseInstructorCombobox type="primary" defaultValue={resourceData.courseInstructor}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
@@ -188,7 +188,7 @@ export function ContributeAlert({ label,variant,resourceId }: { label: string,va
                                         <CourseInstructorCombobox type="secondary" defaultValue={resourceData.courseSecondaryInstructor} />
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="semester">Semester</Label>
+                                        <Label htmlFor="semester">Semester <span>*</span></Label>
                                         <Select onValueChange={handleSemester} defaultValue={semester}>
                                             <SelectTrigger id="semester">
                                                 <SelectValue placeholder="Select semester..." />
@@ -200,7 +200,7 @@ export function ContributeAlert({ label,variant,resourceId }: { label: string,va
                                         </Select>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="year">Year</Label>
+                                        <Label htmlFor="year">Year <span>*</span></Label>
                                         <CourseYearCombobox defaultValue={resourceData.year}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5">
@@ -214,7 +214,7 @@ export function ContributeAlert({ label,variant,resourceId }: { label: string,va
                                         <Textarea onChange={handleDescription} value={description}/>
                                     </div>
                                     <div className="flex flex-col space-y-1.5 mb-2">
-                                        <Label htmlFor="link">Drive Link</Label>
+                                        <Label htmlFor="link">Drive Link <span>*</span></Label>
                                         <Textarea onChange={handleDriveLink} value={driveLink}/>
                                     </div>
                                 </div>

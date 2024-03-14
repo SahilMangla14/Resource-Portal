@@ -136,43 +136,43 @@ const DislikeResource = async (req, res) => {
 const deleteResource = async (req, res) => {
     try {
         const id = req.params.id
+        console.log("ID1", id)
         
         const isExist = await Resource.findById(id)
         if(!isExist)
-            return res.status(404).json({message : "Resource not found!"})
-
-        const resource = await Resource.findByIdAndDelete(id)
-        // const users = await User.find({ contributedResources: id });
-
-        // find users where this resouce id is present in contributed resources array
-        const users = await User.find({contributedResources : { $in : [id]}})
-
-        // update the contributedResources array for each user
-        users.forEach(async (user) => {
-            const index = user.contributedResources.indexOf(id);
-            if (index !== -1) {
-                user.contributedResources.splice(index, 1); // Remove the resourceId from contributedResources array
-                await user.save(); // Save the user to update the database
-            }
-        });
-
-
-        // find users where this resouce id is present in saved resources array
-        const users2 = await User.find({savedResources : { $in : [id]}})
-
-        // update the savedResources array for each user
-        users2.forEach(async (user) => {
-            const index = user.savedResources.indexOf(id);
-            if (index !== -1) {
-                user.savedResources.splice(index, 1); // Remove the resourceId from savedResources array
-                await user.save(); // Save the user to update the database
-            }
-        });
-
-
-        // delete the comments of this resource
-        await Comment.deleteMany({resourceId : id})
-
+        return res.status(404).json({message : "Resource not found!"})
+    
+    const resource = await Resource.findByIdAndDelete(id)
+    // const users = await User.find({ contributedResources: id });
+    
+    // find users where this resouce id is present in contributed resources array
+    const users = await User.find({contributedResources : { $in : [id]}})
+    console.log("ID3", id)
+    
+    // update the contributedResources array for each user
+    for (const user of users) {
+        const index = user.contributedResources.indexOf(id);
+        if (index !== -1) {
+            user.contributedResources.splice(index, 1); // Remove the resourceId from contributedResources array
+            await user.save(); // Save the user to update the database
+        }
+    }
+    
+    // find users where this resouce id is present in saved resources array
+    const users2 = await User.find({savedResources : { $in : [id]}})
+    
+    // update the savedResources array for each user
+    for (const user of users2) {
+        const index = user.savedResources.indexOf(id);
+        if (index !== -1) {
+            user.savedResources.splice(index, 1); // Remove the resourceId from savedResources array
+            await user.save(); // Save the user to update the database
+        }
+    }
+    
+    // delete the comments of this resource
+    await Comment.deleteMany({resourceId : id})
+    
         res.status(200).json({message : "Resource deleted successfully!"  ,resource})
     }
     catch(err) {
@@ -187,11 +187,11 @@ const deleteAllResources = async (req, res) => {
 
         // make the contributed array empty for all the users
         const users = await User.find()
-        users.forEach(async (user) => {
-            user.contributedResources = []
-            user.savedResources = []
-            await user.save()
-        })
+        for (const user of users) {
+            user.contributedResources = [];
+            user.savedResources = [];
+            await user.save();
+        }
 
         res.status(200).json({message : "All resources deleted successfully!"  ,resources})
     }

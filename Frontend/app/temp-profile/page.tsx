@@ -104,7 +104,7 @@ export default function Page() {
                 })
                 // console.log("RESULT",res.data);
                 setSavedResources(res.data.updatedResourceData);
-                // console.log("COURSES",courses);
+                console.log("SAVED COURSES",res.data.updatedResourceData);
             }
             catch(error){
                 console.log(error)
@@ -164,7 +164,7 @@ export default function Page() {
                 })
                 // console.log("RESULT",res.data);
                 setContributedResources(res.data.updatedResourceData);
-                // console.log("COURSES",courses);
+                console.log("CONTRIBUTED COURSES",res.data.updatedResourceData);
             }
             catch(error){
                 console.log(error)

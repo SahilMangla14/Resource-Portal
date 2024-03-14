@@ -22,12 +22,16 @@ const googleAuth = async (req, res) => {
         const { name, email, picture } = ticket.getPayload();
 
         //check if user already exists
-        const user = await User.findOne({email});
+        const user = await User.findOne({ email });
         let id = 'sahil';
         if (!user) {
+            const yearMatch = email.match(/^(\d{4})/);
+            const year = yearMatch ? yearMatch[1] : null;
+
             const newUser = await User.create({
                 name,
                 email,
+                year: year
             });
             id = newUser._id;
         } else {
@@ -149,12 +153,12 @@ const updateUser = async (req, res) => {
         }
 
         // if username is updated, update the author field of all comments where the userId matches
-        if(req.body.name){
-            const comments = await Comment.find({userId:id})
-            comments.forEach(async (comment)=>{
-                comment.author = req.body.name
-                await comment.save()
-            })
+        if (req.body.name) {
+            const comments = await Comment.find({ userId: id });
+            for (const comment of comments) {
+                comment.author = req.body.name;
+                await comment.save();
+            }
         }
 
         const newUser = { ...user._doc, ...req.body }
@@ -190,18 +194,19 @@ const deleteUser = async (req, res) => {
 
         // delete from who liked and who disliked in resources
         const resources = await Resource.find()
-        resources.forEach(async (resource) => {
+        for (const resource of resources) {
             if (resource.peopleWhoLiked.has(id)) {
-                resource.peopleWhoLiked.delete(id)
-                resource.likes = resource.peopleWhoLiked.size
-                await resource.save()
+                resource.peopleWhoLiked.delete(id);
+                resource.likes = resource.peopleWhoLiked.size;
+                await resource.save();
             }
             if (resource.peopleWhoDisliked.has(id)) {
-                resource.peopleWhoDisliked.delete(id)
-                resource.likes -= resource.peopleWhoDisliked.size
-                await resource.save()
+                resource.peopleWhoDisliked.delete(id);
+                resource.likes -= resource.peopleWhoDisliked.size;
+                await resource.save();
             }
-        })
+        }
+        
 
         res.status(200).json({ message: "User deleted successfully", deletedUser })
     }
@@ -270,7 +275,7 @@ cron.schedule('* * * * *', async () => {
         console.log('Counting and sorting process started...');
 
         const users = await User.find();
-        
+
         // Sort users based on the length of contributedResources array
         const calculateTotalLikes = async (contributedResources) => {
             let totalLikes = 0;
@@ -285,15 +290,17 @@ cron.schedule('* * * * *', async () => {
         // Sort users based on the total likes of their contributed resources
         sortedUsers = await Promise.all(users.map(async (user) => {
             const totalLikes = await calculateTotalLikes(user.contributedResources);
+            user.rating = totalLikes;
+            await user.save();
             return { ...user._doc, totalLikes };
         }));
-        
+
         sortedUsers.sort((a, b) => {
             if (b.totalLikes != a.totalLikes) return b.totalLikes - a.totalLikes
             else return b.contributedResources.length - a.contributedResources.length;
         });
 
-        console.log('Counting and sorting process completed...',sortedUsers);
+        console.log('Counting and sorting process completed...', sortedUsers);
     } catch (error) {
         console.error('Error during counting and sorting process:', error);
     }
@@ -430,10 +437,10 @@ const getSavedResources = async (req, res) => {
             res.status(404).json({ message: "User not found" })
         }
         const savedResources = user.savedResources
-        // console.log("Saved Resources ", savedResources)
+        console.log("SavedResources ", savedResources)
         // get all the saved resources
         const savedResourcesData = await Resource.find({ _id: { $in: user.savedResources } })
-        // console.log("Saved Resourcd Data ", savedResourcesData)
+        console.log("SavedResourceData", savedResourcesData)
 
         const updatedResourceData = await Promise.all(
             savedResourcesData.map(async (resource) => {
@@ -445,7 +452,7 @@ const getSavedResources = async (req, res) => {
             })
         );
 
-        // console.log("Saved Resources Data ", resourceDataWithUploadedBy)
+        // console.log("Saved Resources Data ", updatedResourceData)
         res.status(200).json({ message: "Saved resources fetched successfully", updatedResourceData })
     }
     catch (err) {
