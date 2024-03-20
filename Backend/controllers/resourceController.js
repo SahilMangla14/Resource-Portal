@@ -52,7 +52,7 @@ const updateResource = async (req, res) => {
     try {
         let id = req.params.id
         
-        const isExist = await Resource.findById(id)
+        const isExist = await Resource.findById(id).populate('uploaded_by')
 
         if(!isExist)
             return res.status(404).json({message : "Resource not found!"})
@@ -69,7 +69,7 @@ const updateResource = async (req, res) => {
 const LikeResource = async (req, res) => {
     try {
         let id = req.params.id
-        const resource = await Resource.findById(id)
+        const resource = await Resource.findById(id).populate('uploaded_by')
         if(!resource)
             return res.status(404).json({message : "Resource not found!"})
 
@@ -103,7 +103,7 @@ const DislikeResource = async (req, res) => {
     try {
         console.log("Disliking resource")
         let id = req.params.id
-        const resource = await Resource.findById(id)
+        const resource = await Resource.findById(id).populate('uploaded_by')
         if(!resource)
             return res.status(404).json({message : "Resource not found!"})
 
@@ -221,7 +221,7 @@ const getTopKResourcesForLikes = async (req, res) => {
 const getResourcesForYear = async (req, res) => {
     try {
         const year = parseInt(req.params.year)
-        const resources = await Resource.find({year})
+        const resources = await Resource.find({year}).populate('uploaded_by')
         res.status(200).json({message : "Resources fetched successfully!"  ,resources})
     }
     catch(err) {
@@ -234,7 +234,7 @@ const getResourcesForYear = async (req, res) => {
 const getResourcesForCourseCode = async (req, res) => {
     try {
         const courseCode = req.params.courseCode
-        const resources = await Resource.find({courseCode})
+        const resources = await Resource.find({courseCode}).populate('uploaded_by')
         res.status(200).json({message : "Resources fetched successfully!"  ,resources})
     }
     catch(err) {
@@ -246,7 +246,7 @@ const getResourcesForCourseCode = async (req, res) => {
 const getResourcesForUser = async (req, res) => {
     try {
         const uploaded_by=req.user.id
-        const resources = await Resource.find({uploaded_by})
+        const resources = await Resource.find({uploaded_by}).populate('uploaded_by')
         res.status(200).json({message : "Resources fetched successfully!"  ,resources})
     }
     catch(err) {
@@ -275,7 +275,7 @@ const filterResources = async (req, res) => {
         // tags is an array
 
 
-        let resources = await Resource.find()
+        let resources = await Resource.find().populate('uploaded_by')
 
         if(courseCode){
             resources = resources.filter(resource => resource.courseCode === courseCode)

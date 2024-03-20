@@ -12,10 +12,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import axios from 'axios'
 axios.defaults.withCredentials = true;
+import { useImage } from "@/store/image";
 
 export default function Page() {
     const [isPageLoading, setIsPageLoading] = useState(true);
     const router = useRouter();
+    const {setImage,imageUrl}=useImage();
 
     useEffect(() => {
         const loadingTimeout = setTimeout(() => {
@@ -41,6 +43,11 @@ export default function Page() {
         };
         try {
             //   if (isEmpty(response.errors)) {
+            console.log("bodyObject",bodyObject)
+            console.log("response",response.profileObj.imageUrl)
+
+            setImage(response.profileObj.imageUrl)
+            console.log("image",imageUrl)
             const result = await axios.post(`${process.env.BACKEND_URL}/api/v1/user/google-login`, bodyObject);
             localStorage.setItem('authToken', result.data.token);
             console.log("RESULT : ", result.data.message)

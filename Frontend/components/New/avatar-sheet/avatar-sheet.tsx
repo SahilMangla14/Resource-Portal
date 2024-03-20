@@ -16,11 +16,14 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 axios.defaults.withCredentials = true;
 import { useRouter } from "next/navigation"
+import { useImage } from "@/store/image"
 
 export function AvatarSheet() {
 
     const [name, setName] = useState("")
     const router = useRouter();
+    const {imageUrl}=useImage();
+    console.log("imageUrl",imageUrl)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -76,14 +79,14 @@ export function AvatarSheet() {
             <Sheet key="left">
                 <SheetTrigger asChild>
                     <Avatar className="cursor-pointer">
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarImage src={imageUrl} />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                 </SheetTrigger>
                 <SheetContent side="left">
                     <SheetHeader>
                         <Avatar className="w-full h-full">
-                            <AvatarImage src="https://github.com/shadcn.png" />
+                            <AvatarImage src={imageUrl} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div className="flex justify-center w-full">

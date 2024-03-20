@@ -241,7 +241,7 @@ export type Payment = {
     description: string
     year: string
     semester: string
-    uploaded_by: string
+    uploaded_by: any
     batch: string
     link: string
     likes: string
