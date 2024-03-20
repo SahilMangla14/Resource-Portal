@@ -163,7 +163,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                             <br />Semester {courseInfo?.semester}, {courseInfo?.year}
                         </div>
                         <div className="text-right">
-                            <Button variant="outline"  className="w-15 h-10 m-1" onClick={toggleBookmark}>
+                            <Button variant={`${isBookmarked?'default':'secondary'}`}  className="w-15 h-10 m-1" onClick={toggleBookmark}>
                                 <CiBookmark size={20} />
                             </Button>
                             <Button variant="outline" className="w-15 h-10 m-1" onClick={() => router.back()}>
