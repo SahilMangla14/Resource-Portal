@@ -10,11 +10,13 @@ export function SectionTopContributors() {
 
     const [topContributorsData, setTopContributorsData] = useState([]);
     useEffect(() => {
+
         const fetchTopContributors = async () => {
             try {
                 const token = localStorage.getItem('authToken')
                 const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/topContributors`, { headers: { 'Authorization': `Bearer ${token}` } });
                 setTopContributorsData(res.data.sortedUsers.slice(0, 5))
+                // console.log("Top Contributors", res.data.sortedUsers.slice(0, 5))   
             } catch (err) {
                 console.error(err);
             }

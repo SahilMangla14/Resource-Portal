@@ -13,7 +13,7 @@ export function SectionBookmarks({ bookmarks }) {
     const router = useRouter();
 
     const handleViewClick = (id : string) => {
-        router.push(`/temp-academics/temp-course/${id}`)
+        router.push(`/academics/course/${id}`)
     }
 
     const handleRemove = async (id : string) => {
@@ -24,7 +24,7 @@ export function SectionBookmarks({ bookmarks }) {
                 }
             })
             // console.log("RESULT",res.data);
-            console.log("REMOVED", res.data);
+            // console.log("REMOVED", res.data);
             // console.log("COURSES",courses);
             window.location.reload();
         }
@@ -46,7 +46,7 @@ export function SectionBookmarks({ bookmarks }) {
                                     <div>
                                         <p className="text-lg font-semibold">{bookmark.courseCode}</p>
                                         <p className="text-md">{bookmark.courseTitle}</p>
-                                        <p className="text-xs text-muted-foreground">by {bookmark.uploaded_by}</p>
+                                        {/* <p className="text-xs text-muted-foreground">by {bookmark.uploaded_by}</p> */}
                                     </div>
                                 </div>
                                 <div className="space-y-1">

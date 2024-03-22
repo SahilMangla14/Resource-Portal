@@ -43,16 +43,16 @@ export function SectionCourseComments({ commentsInfo , courseInfo, user}:{commen
     const [allComments,setAllComments]=useState<Comment[]>(commentsInfo);
     const [replying,setReplying]=useState<string>('');
 
-    console.log("commentsInfo",currentComments);
-    console.log('commentInfo',commentsInfo)
+    // console.log("commentsInfo",currentComments);
+    // console.log('commentInfo',commentsInfo)
 
     useEffect(()=>{
         setAllComments(commentsInfo);
         setCurrentComments(commentsInfo);
     },[])
-    console.log("courseInfo",courseInfo);
+    // console.log("courseInfo",courseInfo);
     const handleSubmit = async (e : any) => {
-        console.log(commentValue);
+        // console.log(commentValue);
         e.preventDefault()
         try {
             const token = localStorage.getItem('authToken')
@@ -103,14 +103,14 @@ export function SectionCourseComments({ commentsInfo , courseInfo, user}:{commen
     }
 
     const handleDelete=async(id:string)=>{
-        console.log(id);
+        // console.log(id);
         try{
             const res = await axios.delete(`${process.env.BACKEND_URL}/api/v1/comment/delete/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
             })
-            console.log(res.data)
+            // console.log(res.data)
             setAllComments(allComments.filter(comment=>comment._id!==id))
            
         }catch (err:any) {

@@ -28,21 +28,21 @@ export function NavigationBar() {
                     <NavigationMenuItem>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/temp-home" legacyBehavior passHref>
+                        <Link href="/" legacyBehavior passHref>
                             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                 Home
                             </NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/temp-academics" legacyBehavior passHref>
+                        <Link href="/academics" legacyBehavior passHref>
                             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                 Academics
                             </NavigationMenuLink>
                         </Link>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                        <Link href="/temp-team" legacyBehavior passHref>
+                        <Link href="/team" legacyBehavior passHref>
                             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                 About Us
                             </NavigationMenuLink>

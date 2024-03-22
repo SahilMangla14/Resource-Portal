@@ -270,7 +270,7 @@ const deleteUser = async (req, res) => {
 let sortedUsers = []; // Define sortedUsers in a shared scope
 
 // Schedule the task to run every 5 days
-cron.schedule('* * * * *', async () => {
+cron.schedule('0 * * * *', async () => {
     try {
         console.log('Counting and sorting process started...');
 

@@ -23,13 +23,13 @@ export function AvatarSheet() {
     const [name, setName] = useState("")
     const router = useRouter();
     const {imageUrl}=useImage();
-    console.log("imageUrl",imageUrl)
+    // console.log("imageUrl",imageUrl)
 
     useEffect(() => {
         const fetchData = async () => {
             const user = await getUserDetails();
             if(!user){
-                router.push('/temp-login')
+                router.push('/login')
                 return;
             }
 
@@ -57,7 +57,7 @@ export function AvatarSheet() {
         try {
             const token = localStorage.getItem('authToken');
             if (!token) {
-                router.push('/temp-login');
+                router.push('/login');
                 return;
             }
 
@@ -66,7 +66,7 @@ export function AvatarSheet() {
             });
             // console.log(response.data);
             localStorage.removeItem('authToken');
-            router.push('/temp-login');
+            router.push('/login');
         } catch (error) {
             // console.log(error);
             // Handle error if needed
@@ -79,14 +79,14 @@ export function AvatarSheet() {
             <Sheet key="left">
                 <SheetTrigger asChild>
                     <Avatar className="cursor-pointer">
-                        <AvatarImage src={imageUrl} />
+                        <AvatarImage src={imageUrl !== "" ? imageUrl : "https://github.com/shadcn.png"} />
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                 </SheetTrigger>
                 <SheetContent side="left">
                     <SheetHeader>
                         <Avatar className="w-full h-full">
-                            <AvatarImage src={imageUrl} />
+                            <AvatarImage src={imageUrl !== "" ? imageUrl : "https://github.com/shadcn.png"} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div className="flex justify-center w-full">
@@ -95,7 +95,7 @@ export function AvatarSheet() {
                     </SheetHeader>
                     <div className="space-y-2 py-10 w-full">
                         <div>
-                            <Button variant="outline" className="w-full text-md" onClick={() => router.push('/temp-profile')}>
+                            <Button variant="outline" className="w-full text-md" onClick={() => router.push('/profile')}>
                                 View Profile
                             </Button>
                         </div>

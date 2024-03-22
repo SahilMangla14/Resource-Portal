@@ -14,7 +14,7 @@ export function SectionContributions({ contributions }) {
     const router = useRouter();
 
     const handleViewClick = (id : string) => {
-        router.push(`/temp-academics/temp-course/${id}`)
+        router.push(`/academics/course/${id}`)
     }
 
     const handleDelete = async (id : string) => {
@@ -25,7 +25,7 @@ export function SectionContributions({ contributions }) {
                 }
             })
             // console.log("RESULT",res.data);
-            console.log("REMOVED", res.data);
+            // console.log("REMOVED", res.data);
             // console.log("COURSES",courses);
             window.location.reload();
         }

@@ -43,7 +43,7 @@ export function CourseFiltersCard() {
     }
 
     React.useEffect(() => {
-        console.log(semester)
+        // console.log(semester)
         addFilter({semester : semester})
     }
     , [semester])
@@ -60,7 +60,7 @@ export function CourseFiltersCard() {
             }
             else {
 
-                console.log("Filters", filters)
+                // console.log("Filters", filters)
 
                 const data = {
                     tags: filters.tags.length > 0 ? filters.tags : undefined,
@@ -74,7 +74,7 @@ export function CourseFiltersCard() {
                   // console.log("DATA", data);
                   const token = localStorage.getItem('authToken')
                   const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/filterResources`, { params: data, headers: { 'Authorization': `Bearer ${token}` } }); 
-                  console.log("Response : ", res.data.resources)
+                //   console.log("Response : ", res.data.resources)
 
                   setResults(res.data.resources)
             }
@@ -121,7 +121,7 @@ export function CourseFiltersCard() {
                 </form>
             </CardContent>
             <CardFooter className="flex justify-between">
-                <Button variant="outline">Clear</Button>
+                {/* <Button variant="outline">Clear</Button> */}
                 <Button onClick={handleSubmit}>Apply</Button>
             </CardFooter>
         </Card>

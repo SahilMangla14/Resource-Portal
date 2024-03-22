@@ -270,10 +270,10 @@ const HandleVotes=({row})=>{
 
     const handleUpvote = async ({ _id, likes }: { _id: string, likes: number }) => {
         try {
-            console.log("_iddd",_id,likes);
+            // console.log("_iddd",_id,likes);
             const token = localStorage.getItem('authToken')
             const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/like/${_id}`, { likes: likes+1 }, { headers: { 'Authorization': `Bearer ${token}` } });
-            console.log(res.data);
+            // console.log(res.data);
             
             inc();
             
@@ -287,7 +287,7 @@ const HandleVotes=({row})=>{
            
             const token = localStorage.getItem('authToken')
             const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/dislike/${_id}`, { likes: likes-1 }, { headers: { 'Authorization': `Bearer ${token}` } });
-            console.log(res.data);
+            // console.log(res.data);
            
             inc();
         
@@ -302,7 +302,7 @@ const HandleVotes=({row})=>{
 
     return (
         <div className="space-y-2">
-               <Button variant={`${upvoted?'default':'secondary'}`} className={`w-15 h-8 ${upvoted?'bg-gray-300':''}`} onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
+               {/* <Button variant={`${upvoted?'default':'secondary'}`} className={`w-15 h-8 ${upvoted?'bg-gray-300':''}`} onClick={()=>handleUpvote({_id:row.original._id,likes:likes})}>
                     <IoMdArrowRoundUp size={20} />
                 </Button>
                 
@@ -311,7 +311,7 @@ const HandleVotes=({row})=>{
                 </Button>}
                 {likes!==0&&<Button variant={`${downvoted?'default':'secondary'}`}  className={`w-15 h-8 ${downvoted?'bg-gray-300':''}`} onClick={()=>handleDownvote({_id:row.original._id,likes:likes})}>
                     <IoMdArrowRoundDown size={20} />
-                </Button>}
+                </Button>} */}
 
             </div>
     )
@@ -358,9 +358,9 @@ export const columns: ColumnDef<Payment>[] = [
         cell: ({ row }) => (
            
             <div>
-                <div className="my-1 text-muted-foreground">Offered by {row.original.instructor_primary} during Semester {row.original.semester}, {row.original.year}. {row.original.description} </div>
+                <div className="my-1 text-muted-foreground">Offered by {row.original.instructor_primary} {row.original.instructor_secondary !== "" ? "and " + row.original.instructor_secondary : ""} during Semester {row.original.semester}, {row.original.year}. {row.original.description} </div>
                 <Button variant="outline" className="h-8 w-18">
-                    <Link href={`/temp-academics/temp-course/${row.getValue("_id")}`}>
+                    <Link href={`/academics/course/${row.getValue("_id")}`}>
                     View
                     </Link>
                 </Button>
@@ -409,13 +409,13 @@ export const columns: ColumnDef<Payment>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
                         <DropdownMenuItem
                             onClick={() => navigator.clipboard.writeText(payment.link)}
                         >
                             Copy drive link
                         </DropdownMenuItem>
-                        <DropdownMenuItem>Bookmark</DropdownMenuItem>
+                        {/* <DropdownMenuItem>Bookmark</DropdownMenuItem> */}
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
@@ -467,7 +467,7 @@ export function CourseResultsTable() {
 
   
     useEffect(() => {
-        console.log("Data", data)
+        // console.log("Data", data)
         const getPageData = () => {
             const startIndex = pageIndex * pageSize;
             const endIndex = startIndex + pageSize;

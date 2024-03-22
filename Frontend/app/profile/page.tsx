@@ -104,7 +104,7 @@ export default function Page() {
                 })
                 // console.log("RESULT",res.data);
                 setSavedResources(res.data.updatedResourceData);
-                console.log("SAVED COURSES",res.data.updatedResourceData);
+                // console.log("SAVED COURSES",res.data.updatedResourceData);
             }
             catch(error){
                 console.log(error)
@@ -119,12 +119,12 @@ export default function Page() {
               const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
               });
-              console.log("HELLO", response.data.user);
+            //   console.log("HELLO", response.data.user);
               setUserDetails(response.data.user);
             } catch (error) {
               console.log(error);
               // Handle error if needed
-              router.push('/temp-login');
+              router.push('/login');
               return
             }
           };
@@ -139,10 +139,10 @@ export default function Page() {
             const response=await axios.get(`${process.env.BACKEND_URL}/api/v1/user/topContributors`, {
               headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             });
-            console.log(response.data.sortedUsers)
+            // console.log(response.data.sortedUsers)
             response.data.sortedUsers.forEach((element:any,index:number)=>{
               if(element._id===userDetails._id) setRank(index+1)
-              console.log(element._id,userDetails._id,rank);
+            //   console.log(element._id,userDetails._id,rank);
             })
           }catch(e){
             console.log(e)
@@ -164,7 +164,7 @@ export default function Page() {
                 })
                 // console.log("RESULT",res.data);
                 setContributedResources(res.data.updatedResourceData);
-                console.log("CONTRIBUTED COURSES",res.data.updatedResourceData);
+                // console.log("CONTRIBUTED COURSES",res.data.updatedResourceData);
             }
             catch(error){
                 console.log(error)

@@ -21,7 +21,7 @@ export function CourseTags({ type,defaultTags }: { type: string,defaultTags:stri
     const [quizzes, setQuizzes] = React.useState<boolean>( defaultTags? defaultTags.includes('quizzes'):false);
     const [videoLectures, setVideoLectures] = React.useState<boolean>( defaultTags? defaultTags.includes('videoLectures'):false);
 
-    console.log("defaultTage TT",defaultTags);
+    // console.log("defaultTage TT",defaultTags);
     
     React.useEffect(()=>{
         let tags=defaultTags;
@@ -41,12 +41,12 @@ export function CourseTags({ type,defaultTags }: { type: string,defaultTags:stri
         if (videoLectures) tags.push("videoLectures")
         if (type === "filter") {
 
-            console.log("filter Tags : ", tags)
+            // console.log("filter Tags : ", tags)
 
             addFilter({ tags: tags });
         }
         else if (type === "add") {
-            console.log("Add resource Tags : ", tags)
+            // console.log("Add resource Tags : ", tags)
             addResource({ tags: tags })
         }
     }, [assignments, books, endterm, lectureSlides, midterm, notes, programming, quizzes, videoLectures]);

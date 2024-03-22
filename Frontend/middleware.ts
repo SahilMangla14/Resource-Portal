@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   // console.log(token)
   if(!token) {
     const url = request.nextUrl.clone()
-    url.pathname = '/temp-login'
+    url.pathname = '/login'
     return NextResponse.redirect(url)
   }
 
@@ -18,9 +18,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher:["/",
-          "/temp-home",
-          "/temp-academics/:path*",
-          "/temp-profile/:path*",
-          "/temp-team/:path*"
+          "/academics/:path*",
+          "/profile/:path*",
+          "/team/:path*"
         ],
 };

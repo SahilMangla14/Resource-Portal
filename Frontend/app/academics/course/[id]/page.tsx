@@ -33,25 +33,25 @@ export default function Page({ params }: any) {
     useEffect(() => {
         const getCourse = async () => {
             try {
-                console.log(params)
+                // console.log(params)
                 const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/${params.id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
-                console.log(res.data)
+                // console.log(res.data)
 
                 const newData = res.data.resource
                 setCourse(newData)
                 
-                console.log(newData.uploaded_by)
+                // console.log(newData.uploaded_by)
                 const uploaderRes= await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`,{
                     params: {user:newData.uploaded_by},
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
-                console.log(uploaderRes)
+                // console.log(uploaderRes)
                 setUploader(uploaderRes.data.user.name)
             }
             catch (err) {
@@ -79,7 +79,7 @@ export default function Page({ params }: any) {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
-                console.log("currentUser",currentUser);
+                // console.log("currentUser",currentUser);
                 setUser(currentUser.data.user)
                 
             }

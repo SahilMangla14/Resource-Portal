@@ -28,7 +28,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
     }
 
     useEffect(()=>{
-        console.log(user,"user")
+        // console.log(user,"user")
         // if ( courseInfo.peopleWhoLiked.includes(user._id)) 
         //     setUpvoted(true);
         // else 
@@ -52,7 +52,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
-                console.log(res.data)
+                // console.log(res.data)
                 // notifySuccess("Resource removed from bookmarks")
                 setIsBookmarked(false)
             }
@@ -68,7 +68,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
-                console.log(res.data)
+                // console.log(res.data)
                 // notifySuccess("Resource added to bookmarks")
                 setIsBookmarked(true)
             }
@@ -90,7 +90,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                 })
                 // console.log(res.data)
                 // console.log(res.data.isBookmarked)
-                console.log("IS BOOKMARKED", res.data.isBookmarked)
+                // console.log("IS BOOKMARKED", res.data.isBookmarked)
                 setIsBookmarked(res.data.isBookmarked)
             }
             catch (err) {
@@ -101,16 +101,49 @@ export function SectionCourseDetails({ courseInfo,user }) {
         checkBookmark()
     }, [])
 
+    useEffect(() => {
+        const fetchIsLiked = async () => {
+            try {
+                // console.log("******************************")
+                const token = localStorage.getItem('authToken')
+                const res = await axios.get(
+                    `${process.env.BACKEND_URL}/api/v1/resource/isLiked/${courseInfo._id}`,
+                    { headers: { 'Authorization': `Bearer ${token}` } }
+                );
+
+    
+                if (res.data.liked) {
+                    setUpvoted(true)
+                }
+    
+                if (res.data.disliked) {
+                    setDownvoted(true)
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+    
+        fetchIsLiked();
+    }, []);
+    
 
     const handleLikes = async ({ _id, likes }: { _id: string, likes: number }) => {
         try {
             const token = localStorage.getItem('authToken')
             const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/like/${_id}`, { likes: likes }, { headers: { 'Authorization': `Bearer ${token}` } });
-            console.log(res.data);
+            // console.log(res.data);
             setCurrentLikes(res.data.resource.likes)
-            if(downvoted) setDownvoted(false)
-            else setUpvoted(prev=>!prev)
+            if(res.data.message === "Resource liked successfully!" || res.data.message === "Resource already liked!") {
+                setUpvoted(true)
+                setDownvoted(false)
+            }
+            else if(res.data.message === "Resource neither liked nor disliked!"){
+                setUpvoted(false)
+                setDownvoted(false)
+            }
 
+            // console.log("LIKED", res.data.message)
         } catch (err) {
             console.error(err);
         }
@@ -122,8 +155,16 @@ export function SectionCourseDetails({ courseInfo,user }) {
             const token = localStorage.getItem('authToken')
             const res = await axios.put(`${process.env.BACKEND_URL}/api/v1/resource/dislike/${_id}`, { likes: likes }, { headers: { 'Authorization': `Bearer ${token}` } });
             setCurrentLikes(res.data.resource.likes)
-            if(upvoted) setUpvoted(false)
-            else setDownvoted(prev=>!prev)
+            if(res.data.message === "Resource disliked successfully!" || res.data.message === "Resource already disliked!") {
+                setDownvoted(true)
+                setUpvoted(false)
+            }
+            else if(res.data.message === "Resource neither liked nor disliked!"){
+                setDownvoted(false)
+                setUpvoted(false)
+            }
+
+            // console.log("DISLIKED", res.data.message)
         } catch (err) {
             console.error(err);
         }
@@ -142,12 +183,12 @@ export function SectionCourseDetails({ courseInfo,user }) {
                                 </Button>
                             </div>
                             <div>
-                                {currentLikes!==0&&<Button variant={`${downvoted?'default':'secondary'}`} className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                {<Button variant={`${downvoted?'default':'secondary'}`} className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundDown size={20}  />
                                 </Button>}
-                                {currentLikes==0&&<Button variant={`${downvoted?'default':'secondary'}`} disabled className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                {/* {currentLikes==0&&<Button variant={`${downvoted?'default':'secondary'}`} disabled className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundDown size={20}  />
-                                </Button>}
+                                </Button>} */}
                             </div>
                         </div>
                         <div>
@@ -159,7 +200,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                     </div>
                     <div>
                         <div className="px-5 text-right text-muted-foreground text-md">
-                            Offered by <span className="">{courseInfo?.instructor_primary}</span>
+                            Offered by <span className="">{courseInfo?.instructor_primary} {courseInfo?.instructor_secondary !== "" ? "and " + courseInfo?.instructor_secondary : ""}</span>
                             <br />Semester {courseInfo?.semester}, {courseInfo?.year}
                         </div>
                         <div className="text-right">

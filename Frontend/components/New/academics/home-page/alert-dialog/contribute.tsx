@@ -88,7 +88,7 @@ export function ContributeAlert({ label,variant,resourceId }: { label: string,va
             setSemester(value)
         }
 
-        console.log("SEMESTER", semester)
+        // console.log("SEMESTER", semester)
     }
 
     const handleDescription = (e: any) => {
@@ -105,7 +105,7 @@ export function ContributeAlert({ label,variant,resourceId }: { label: string,va
         try{
             const resourceData = resource
             
-            console.log("Add Resource : ", resourceData)
+            // console.log("Add Resource : ", resourceData)
             const token = localStorage.getItem('authToken');
 
             if(label==='Edit'){
