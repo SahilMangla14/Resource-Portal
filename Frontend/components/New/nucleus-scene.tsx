@@ -114,7 +114,7 @@ const NucleusScene = () => {
             renderer.render(scene, camera);
         };
 
-        animate();
+        animate(performance.now());
 
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
