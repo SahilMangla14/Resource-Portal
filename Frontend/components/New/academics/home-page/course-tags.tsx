@@ -2,7 +2,6 @@ import * as React from "react"
 import { Switch } from "@/components/ui/switch"
 import { useFiltersStore } from "@/store/filters";
 import { useAddResourceStore } from "@/store/addResource";
-import add from "@/app/add/page";
 
 
 export function CourseTags({ type,defaultTags }: { type: string,defaultTags:string[]}) {

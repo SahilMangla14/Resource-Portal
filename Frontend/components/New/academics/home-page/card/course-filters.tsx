@@ -94,7 +94,7 @@ export function CourseFiltersCard() {
                 <form>
                     <div className="grid w-full items-center gap-4">
                         <div>
-                            <CourseTags type="filter" />
+                            <CourseTags type="filter" defaultTags={undefined}/>
                         </div>
                         <div className="flex flex-col space-y-1.5">
                             <Label htmlFor="instructor">Instructor</Label>

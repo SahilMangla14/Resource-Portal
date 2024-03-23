@@ -237,7 +237,8 @@ const useStore = create<Store>()((set) => ({
 export type Payment = {
     _id: string
     tags: string[]
-    instructors: string[]
+    instructor_primary: string,
+    instructor_secondary: string
     description: string
     year: string
     semester: string
@@ -371,7 +372,7 @@ export const columns: ColumnDef<Payment>[] = [
     {
         accessorKey: "tags",
         header: () => <div className="text-right">Tags</div>,
-        cell: ({ row }) => {
+        cell: ({ row } : any) => {
             const tags = row.getValue("tags");
             const rows = [];
             for (let i = 0; i < tags.length; i += 2) {

@@ -13,7 +13,7 @@ axios.defaults.withCredentials = true;
 
 export default function Page() {
     const [isPageLoading, setIsPageLoading] = useState(true);
-    const [userDetails, setUserDetails] = useState({});
+    const [userDetails, setUserDetails] = useState<any>({});
     const [savedResources, setSavedResources] = useState([]);
     const [contributedResources, setContributedResources] = useState([]);
     const router = useRouter();

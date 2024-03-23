@@ -18,11 +18,16 @@ axios.defaults.withCredentials = true;
 import { useRouter } from "next/navigation"
 import { useImage } from "@/store/image"
 
+
+interface ImageData {
+    imageUrl: string;
+  }
+
 export function AvatarSheet() {
 
     const [name, setName] = useState("")
     const router = useRouter();
-    const {imageUrl}=useImage();
+    const {imageUrl}=useImage() as ImageData;
     // console.log("imageUrl",imageUrl)
 
     useEffect(() => {
