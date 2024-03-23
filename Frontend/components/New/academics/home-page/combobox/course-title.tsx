@@ -24,14 +24,17 @@ const titles = [
     {
         value: "distributed algorithms",
         label: "Distributed Algorithms",
+        code: "ma302",
     },
     {
         value: "linear optimization",
         label: "Linear Optimization",
+        code: "ma517",
     },
     {
         value: "environmental humanitites",
         label: "Environmental Humanitites",
+        code: "hs509",
     },
 ]
 
@@ -39,6 +42,16 @@ export function CourseTitleCombobox({defaultValue}:{defaultValue:string}) {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState<string>(()=>defaultValue)
     const [resource, addResource] = useAddResourceStore((state : any) => [state.resource, state.addResource])
+
+    React.useEffect(() => {
+        const matchedCode = titles.find((title) => title.code === resource.courseCode);
+        if (matchedCode) {
+            setValue(matchedCode.value);
+        } else {
+            // Set default value if matchedCode is empty
+            setValue(""); // Change this to whatever default value you want
+        }
+    }, [resource.courseCode]);
 
     React.useEffect(() => {
         addResource({ courseTitle: value })
@@ -59,7 +72,7 @@ export function CourseTitleCombobox({defaultValue}:{defaultValue:string}) {
                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="p-0">
+            {/* <PopoverContent className="p-0">
                 <Command>
                     <CommandInput placeholder="Search course title..." className="h-9" />
                     <CommandEmpty>No data found.</CommandEmpty>
@@ -84,7 +97,7 @@ export function CourseTitleCombobox({defaultValue}:{defaultValue:string}) {
                         ))}
                     </CommandGroup>
                 </Command>
-            </PopoverContent>
+            </PopoverContent> */}
         </Popover>
     )
 }
