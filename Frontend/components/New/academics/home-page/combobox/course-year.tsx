@@ -19,7 +19,6 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { useAddResourceStore } from "@/store/addResource"
-import add from "@/app/add/page"
 
 const years = [
     {
