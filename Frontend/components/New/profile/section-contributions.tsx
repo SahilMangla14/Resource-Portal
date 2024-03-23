@@ -48,7 +48,7 @@ export function SectionContributions({ contributions }) {
                                     <div>
                                         <p className="text-lg font-semibold">{contribution.courseCode}</p>
                                         <p className="text-md">{contribution.courseTitle}</p>
-                                        <p className="text-xs text-muted-foreground">{contribution.likes} Upvotes</p>
+                                        <p className="text-xs text-muted-foreground">{contribution.likes} Votes</p>
                                     </div>
                                 </div>
                                 <div className="flex space-y-1">

@@ -49,7 +49,7 @@ export function SectionTopContributors() {
                                     </Avatar>
                                     <div className="flex-1">
                                         <p className="text-sm font-medium">{user.name}</p>
-                                        <p className="text-xs font-xs text-muted-foreground">{user.totalLikes} Upvotes</p>
+                                        <p className="text-xs font-xs text-muted-foreground">{user.totalLikes} Votes</p>
                                     </div>
                                 </div>
                             </div>

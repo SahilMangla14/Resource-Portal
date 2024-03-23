@@ -39,12 +39,12 @@ const googleAuth = async (req, res) => {
             id = user._id;
         }
         const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1d' })
-        // res.cookie('_auth_resource_tkn', token, {
-        //     httpOnly: true,
-        //     maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
-        //     path: '/',
-        //     domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app'
-        // });
+        res.cookie('_auth_resource_tkn', token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
+            path: '/',
+            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app'
+        });
         res.status(200).json({ message: "User logged in successfully", token, user })
     }
     catch (err) {
@@ -94,12 +94,12 @@ const loginUser = async (req, res) => {
         }
         const id = user._id
         const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1d' })
-        // res.cookie('_auth_resource_tkn', token, {
-        //     httpOnly: true,
-        //     maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
-        //     path: '/',
-        //     domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app'
-        // });
+        res.cookie('_auth_resource_tkn', token, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
+            path: '/',
+            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app'
+        });
         res.status(200).json({ message: "User logged in successfully", token })
     }
     catch (err) {

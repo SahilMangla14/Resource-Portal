@@ -348,7 +348,7 @@ export const columns: ColumnDef<Payment>[] = [
                 <br />
                 {/* <span className="text-xs">Batch of 20XX{row.getValue("batch")}</span> */}
                 {/* <br /> */}
-                <span className="text-xs text-muted-foreground">{row.original.likes}X Upvotes</span>
+                <span className="text-xs text-muted-foreground">{row.original.likes} Votes</span>
             </div>
         ),
 

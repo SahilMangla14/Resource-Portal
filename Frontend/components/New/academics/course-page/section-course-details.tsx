@@ -195,7 +195,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                             <div className="px-2 text-2xl font-bold">{courseInfo?.courseCode}</div>
                             <div className="px-2 text-xl text-muted-foreground capitalize">{courseInfo?.courseTitle}</div>
                             <div className="px-2 text-muted-foreground ">Google Drive Link: <a className="text-blue-400 underline " href={courseInfo?.link} target="_blank">{courseInfo.link}</a></div>
-                            <div className="px-2 text-xs text-muted-foreground">{currentLikes} Upvotes</div>
+                            <div className="px-2 text-xs text-muted-foreground">{currentLikes} Votes</div>
                         </div>
                     </div>
                     <div>

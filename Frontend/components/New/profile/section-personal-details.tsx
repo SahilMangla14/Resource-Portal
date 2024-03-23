@@ -16,7 +16,7 @@ export function SectionPersonalDetails({ personalInfo,rank }) {
                     <div>
                         <div className="px-2 pt-4 text-2xl font-bold">{personalInfo?.name}</div>
                         <div className="px-2 text-lg text-muted-foreground capitalize">Batch of {personalInfo?.year}</div>
-                        <div className="px-2 text-xs text-muted-foreground">{personalInfo?.rating} Upvotes</div>
+                        <div className="px-2 text-xs text-muted-foreground">{personalInfo?.rating} Votes</div>
                     </div>
                 </div>
                 <div className="flex px-5">
