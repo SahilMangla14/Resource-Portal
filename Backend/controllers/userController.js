@@ -42,7 +42,7 @@ const googleAuth = async (req, res) => {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
             path: '/',
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.onrender.com'
+            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app'
         });
         res.status(200).json({ message: "User logged in successfully", token, user })
     }
@@ -97,7 +97,7 @@ const loginUser = async (req, res) => {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
             path: '/',
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.onrender.com'
+            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app'
         });
         res.status(200).json({ message: "User logged in successfully", token })
     }
