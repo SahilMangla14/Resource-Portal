@@ -14,10 +14,15 @@ import axios from 'axios'
 axios.defaults.withCredentials = true;
 import { useImage } from "@/store/image";
 
+interface ImageData {
+    setImage: (image: string) => void;
+    imageUrl: string;
+  }
+
 export default function Page() {
     const [isPageLoading, setIsPageLoading] = useState(true);
     const router = useRouter();
-    const {setImage,imageUrl}=useImage();
+    const { setImage, imageUrl } = useImage() as ImageData;
 
     useEffect(() => {
         const loadingTimeout = setTimeout(() => {
