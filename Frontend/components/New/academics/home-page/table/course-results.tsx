@@ -453,7 +453,7 @@ export function CourseResultsTable() {
             try {
               const token = localStorage.getItem('authToken')
               let k = 6
-              const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource/top/${k}`  , { headers: { 'Authorization': `Bearer ${token}` } });
+              const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/resource`  , { headers: { 'Authorization': `Bearer ${token}` } });
               // console.log(res.data);
               setResults(res.data.resources)
               setId(res.data.userId)
