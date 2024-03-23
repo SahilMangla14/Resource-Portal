@@ -80,16 +80,17 @@ const LikeResource = async (req, res) => {
 
         if(userLikedIndex == -1 && userDislikeIndex == -1){
             resource.peopleWhoLiked.push(userId)
-            resource.likes++
+            resource.likes = resource.peopleWhoLiked.length - resource.peopleWhoDisliked.length
             const updateResource = await resource.save()
             res.status(200).json({message : "Resource liked successfully!"  ,resource : updateResource})
         }
         else if(userLikedIndex != -1){
+            resource.likes = resource.peopleWhoLiked.length - resource.peopleWhoDisliked.length
             res.status(200).json({message : "Resource already liked!", resource})
         }
         else{
             resource.peopleWhoDisliked.splice(userDislikeIndex, 1)
-            resource.likes++
+            resource.likes = resource.peopleWhoLiked.length - resource.peopleWhoDisliked.length
             const updateResource = await resource.save()
             res.status(200).json({message : "Resource neither liked nor disliked!", resource : updateResource})
         }
@@ -118,16 +119,17 @@ const DislikeResource = async (req, res) => {
 
         if(userDislikeIndex == -1 && userLikedIndex == -1){
             resource.peopleWhoDisliked.push(userId)
-            resource.likes--
+            resource.likes = resource.peopleWhoLiked.length - resource.peopleWhoDisliked.length
             const updateResource = await resource.save()
             res.status(200).json({message : "Resource disliked successfully!"  ,resource : updateResource})
         }
         else if(userDislikeIndex != -1){
+            resource.likes = resource.peopleWhoLiked.length - resource.peopleWhoDisliked.length
             res.status(200).json({message : "Resource already disliked!", resource})
         }
         else{
             resource.peopleWhoLiked.splice(userLikedIndex, 1)
-            resource.likes--
+            resource.likes = resource.peopleWhoLiked.length - resource.peopleWhoDisliked.length
             const updateResource = await resource.save()
             res.status(200).json({message : "Resource neither liked nor disliked!", resource : updateResource})
         }
