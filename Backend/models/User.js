@@ -6,6 +6,10 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: [true, 'must provide name']
     },
+    imageUrl: {
+        type: String,
+        default: 'https://github.com/shadcn.png'
+    },
     role: {
         type: String,
         default: 'user'

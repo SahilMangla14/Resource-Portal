@@ -16,19 +16,13 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 axios.defaults.withCredentials = true;
 import { useRouter } from "next/navigation"
-import { useImage } from "@/store/image"
 
-
-interface ImageData {
-    imageUrl: string;
-  }
 
 export function AvatarSheet() {
 
     const [name, setName] = useState("")
     const router = useRouter();
-    const {imageUrl}=useImage() as ImageData;
-    // console.log("imageUrl",imageUrl)
+    const [imageUrl, setImageUrl] = useState("https://github.com/shadcn.png");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,6 +33,7 @@ export function AvatarSheet() {
             }
 
             setName(user.name);
+            setImageUrl(user.imageUrl)
         };
         fetchData();
     }, []);

@@ -31,7 +31,8 @@ const googleAuth = async (req, res) => {
             const newUser = await User.create({
                 name,
                 email,
-                year: year
+                year: year,
+                imageUrl: picture
             });
             id = newUser._id;
         } else {
