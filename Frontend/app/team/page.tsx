@@ -22,17 +22,17 @@ export default function Page() {
 
     return (
         <div>
-            {isPageLoading ? (
-                <LoadingIndicator />
-            ) : (
-                <>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="dark"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+            >
 
+                {isPageLoading ? (
+                    <LoadingIndicator />
+                ) : (
+                    <>
                         <NavigationBar />
                         <div className="flex justify-center">
                             <div>
@@ -126,10 +126,10 @@ export default function Page() {
                         <div className="mt-10 border-t py-2 px-6 flex justify-center items-center dark:bg-secondary font-bold text-md">
                             Made with <div style={{ color: 'red' }} className="px-1">&#x2764;&#xFE0F;</div>
                         </div>
+                    </>
+                )}
 
-                    </ThemeProvider>
-                </>
-            )}
+            </ThemeProvider>
         </div>
     );
 }

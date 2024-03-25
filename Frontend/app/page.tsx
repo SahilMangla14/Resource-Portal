@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import NucleusScene from '@/components/New/nucleus-scene';
-import LoadingIndicator from '@/components/LoadingIndicator'
-import { ThemeProvider } from "@/components/New/theme-provider"
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { ThemeProvider } from "@/components/New/theme-provider";
 import { NavigationBar } from '@/components/New/navigation-menu';
 
 export default function Page() {
@@ -19,17 +19,17 @@ export default function Page() {
 
     return (
         <div>
-            {isPageLoading ? (
-                <LoadingIndicator />
-            ) : (
-                <>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="dark"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+            >
 
+                {isPageLoading ? (
+                    <LoadingIndicator />
+                ) : (
+                    <>
                         <NavigationBar />
                         <div className="flex h-[600px]">
                             <div className="w-[50%] flex items-center px-16">
@@ -43,10 +43,10 @@ export default function Page() {
                                 <NucleusScene />
                             </div>
                         </div>
+                    </>
+                )}
 
-                    </ThemeProvider>
-                </>
-            )}
+            </ThemeProvider>
         </div>
     );
 }

@@ -7,7 +7,7 @@ import { NavigationBar } from '@/components/New/navigation-menu';
 import { SectionBookmarks } from '@/components/New/profile/section-bookmarks';
 import { SectionPersonalDetails } from '@/components/New/profile/section-personal-details';
 import { SectionContributions } from '@/components/New/profile/section-contributions';
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import axios from 'axios';
 axios.defaults.withCredentials = true;
 
@@ -17,7 +17,7 @@ export default function Page() {
     const [savedResources, setSavedResources] = useState([]);
     const [contributedResources, setContributedResources] = useState([]);
     const router = useRouter();
-    const [rank,setRank]=useState(0);
+    const [rank, setRank] = useState(0);
 
     useEffect(() => {
         const loadingTimeout = setTimeout(() => {
@@ -96,7 +96,7 @@ export default function Page() {
 
     useEffect(() => {
         const getSavedResources = async () => {
-            try{
+            try {
                 const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getSavedResources/`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
@@ -106,7 +106,7 @@ export default function Page() {
                 setSavedResources(res.data.updatedResourceData);
                 // console.log("SAVED COURSES",res.data.updatedResourceData);
             }
-            catch(error){
+            catch (error) {
                 console.log(error)
             }
         };
@@ -116,47 +116,47 @@ export default function Page() {
     useEffect(() => {
         const getUserDetails = async () => {
             try {
-              const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-              });
-            //   console.log("HELLO", response.data.user);
-              setUserDetails(response.data.user);
+                const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+                //   console.log("HELLO", response.data.user);
+                setUserDetails(response.data.user);
             } catch (error) {
-              console.log(error);
-              // Handle error if needed
-              router.push('/login');
-              return
+                console.log(error);
+                // Handle error if needed
+                router.push('/login');
+                return
             }
-          };
+        };
 
-          getUserDetails();
+        getUserDetails();
     }, []);
 
     useEffect(() => {
         const fetchData = async () => {
-          try{
-    
-            const response=await axios.get(`${process.env.BACKEND_URL}/api/v1/user/topContributors`, {
-              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-            });
-            // console.log(response.data.sortedUsers)
-            response.data.sortedUsers.forEach((element:any,index:number)=>{
-              if(element._id===userDetails._id) setRank(index+1)
-            //   console.log(element._id,userDetails._id,rank);
-            })
-          }catch(e){
-            console.log(e)
-          }
-          // console.log("USER DETAILS", userDetails);
+            try {
+
+                const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/topContributors`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+                // console.log(response.data.sortedUsers)
+                response.data.sortedUsers.forEach((element: any, index: number) => {
+                    if (element._id === userDetails._id) setRank(index + 1)
+                    //   console.log(element._id,userDetails._id,rank);
+                })
+            } catch (e) {
+                console.log(e)
+            }
+            // console.log("USER DETAILS", userDetails);
         };
-    
+
         fetchData();
-      }, [userDetails]);
+    }, [userDetails]);
 
 
     useEffect(() => {
         const getContributedResources = async () => {
-            try{
+            try {
                 const res = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getContributedResources`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
@@ -166,7 +166,7 @@ export default function Page() {
                 setContributedResources(res.data.updatedResourceData);
                 // console.log("CONTRIBUTED COURSES",res.data.updatedResourceData);
             }
-            catch(error){
+            catch (error) {
                 console.log(error)
             }
         };
@@ -176,19 +176,19 @@ export default function Page() {
 
     return (
         <div>
-            {isPageLoading ? (
-                <LoadingIndicator />
-            ) : (
-                <>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="dark"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+            >
 
+                {isPageLoading ? (
+                    <LoadingIndicator />
+                ) : (
+                    <>
                         <NavigationBar />
-                        <SectionPersonalDetails personalInfo={userDetails} rank={rank}/>
+                        <SectionPersonalDetails personalInfo={userDetails} rank={rank} />
                         <div className="flex justify-center">
                             <div className="w-[45%]">
                                 <SectionBookmarks bookmarks={savedResources} />
@@ -197,10 +197,10 @@ export default function Page() {
                                 <SectionContributions contributions={contributedResources} />
                             </div>
                         </div>
+                    </>
+                )}
 
-                    </ThemeProvider>
-                </>
-            )}
+            </ThemeProvider>
         </div>
     );
 }

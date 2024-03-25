@@ -10,7 +10,7 @@
 
 .rotate-icon {
     animation: spin 5s linear infinite;
-    width: 3rem;
-    height: 3rem;
-    color: #04276a;
+    width: 6rem;
+    height: 6rem;
+    color: #099A97;
 }

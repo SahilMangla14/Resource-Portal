@@ -28,17 +28,17 @@ export default function Page() {
 
     return (
         <div>
-            {isPageLoading ? (
-                <LoadingIndicator />
-            ) : (
-                <>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="dark"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+            >
 
+                {isPageLoading ? (
+                    <LoadingIndicator />
+                ) : (
+                    <>
                         <NavigationBar />
                         <div className="flex">
                             <CourseFiltersCard />
@@ -54,9 +54,10 @@ export default function Page() {
                                 </ResizablePanelGroup>
                             </div>
                         </div>
-                    </ThemeProvider>
-                </>
-            )}
+                    </>
+                )}
+
+            </ThemeProvider>
         </div>
     );
 }

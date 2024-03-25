@@ -28,9 +28,9 @@ const LoadingIndicator: React.FC = () => {
                 textAlign: 'center',
             }}
         >
-            <RandomIcon className="rotate-icon ml-9 mb-2" />
-            <p className="text-black font-bold text-2xl font-mono">
-                Loading...
+            <RandomIcon className="rotate-icon ml-5" />
+            <p className="text-black dark:text-gray-200 font-bold text-2xl font-mono mt-2">
+                En route...
             </p>
         </div>
     );

@@ -10,9 +10,9 @@ import { SectionCourseComments } from "@/components/New/academics/course-page/se
 import axios from 'axios'
 axios.defaults.withCredentials = true
 
-const u1={
-    name:'Username',
-    _id:'abc'
+const u1 = {
+    name: 'Username',
+    _id: 'abc'
 }
 
 export default function Page({ params }: any) {
@@ -20,7 +20,7 @@ export default function Page({ params }: any) {
     const [course, setCourse] = useState({})
     const [comments, setComments] = useState([])
     const [uploader, setUploader] = useState('')
-    const [user,setUser]=useState(u1);
+    const [user, setUser] = useState(u1);
 
     useEffect(() => {
         const loadingTimeout = setTimeout(() => {
@@ -43,10 +43,10 @@ export default function Page({ params }: any) {
 
                 const newData = res.data.resource
                 setCourse(newData)
-                
+
                 // console.log(newData.uploaded_by)
-                const uploaderRes= await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`,{
-                    params: {user:newData.uploaded_by},
+                const uploaderRes = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
+                    params: { user: newData.uploaded_by },
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
@@ -73,15 +73,15 @@ export default function Page({ params }: any) {
                 })
                 setComments(res.data.comments ? res.data.comments : [])
 
-                const currentUser= await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`,{
-                    params: {user:res.data.user},
+                const currentUser = await axios.get(`${process.env.BACKEND_URL}/api/v1/user/getParticularUser`, {
+                    params: { user: res.data.user },
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('authToken')}`
                     }
                 })
                 // console.log("currentUser",currentUser);
                 setUser(currentUser.data.user)
-                
+
             }
             catch (err) {
                 console.log(err)
@@ -91,31 +91,31 @@ export default function Page({ params }: any) {
         getComments()
 
     }, [])
-    
+
 
     return (
         <div>
-            {isPageLoading ? (
-                <LoadingIndicator />
-            ) : (
-                <>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="dark"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange
+            >
 
+                {isPageLoading ? (
+                    <LoadingIndicator />
+                ) : (
+                    <>
                         <NavigationBar />
-                        <SectionCourseDetails courseInfo={course} user={user}/>
+                        <SectionCourseDetails courseInfo={course} user={user} />
                         <div className="flex justify-center text-sm">
                             <SectionCourseMetadata courseInfo={course} uploader={uploader} />
-                            <SectionCourseComments commentsInfo={comments} courseInfo = {course} user={user}/>
+                            <SectionCourseComments commentsInfo={comments} courseInfo={course} user={user} />
                         </div>
+                    </>
+                )}
 
-                    </ThemeProvider>
-                </>
-            )}
+            </ThemeProvider>
         </div>
     );
 }

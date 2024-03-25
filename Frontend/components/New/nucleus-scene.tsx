@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react';
 import * as THREE from 'three';
+import { useTheme } from 'next-themes';
+import React, { useEffect } from 'react';
 
 const NucleusScene = () => {
+    const { theme } = useTheme();
+    const backgroundColor = (theme == 'dark' ? 0x030712 : 0xffffff);
+
     useEffect(() => {
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x030712);
+        scene.background = new THREE.Color(backgroundColor);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
@@ -31,21 +35,21 @@ const NucleusScene = () => {
 
         const createNeutrons = (count, size) => {
             const neutrons = [];
-        
+
             for (let i = 0; i < count; i++) {
-              const neutronGeometry = new THREE.SphereGeometry(size, 16, 16);
-              const neutronMaterial = new THREE.MeshStandardMaterial({
-                map: createGradientTexture('#099A97', '#099A97'),
-                metalness: 0.1,
-                roughness: 0.5,
-              });
-              const neutron = new THREE.Mesh(neutronGeometry, neutronMaterial);
-              scene.add(neutron);
-              neutrons.push(neutron);
+                const neutronGeometry = new THREE.SphereGeometry(size, 16, 16);
+                const neutronMaterial = new THREE.MeshStandardMaterial({
+                    map: createGradientTexture('#099A97', '#099A97'),
+                    metalness: 0.1,
+                    roughness: 0.5,
+                });
+                const neutron = new THREE.Mesh(neutronGeometry, neutronMaterial);
+                scene.add(neutron);
+                neutrons.push(neutron);
             }
-        
+
             return neutrons;
-          };
+        };
 
         const neutronsBandA = createNeutrons(9, 0.45);
 
@@ -86,7 +90,7 @@ const NucleusScene = () => {
                 const radius = 7;
                 neutron.position.x = Math.cos(angle) * radius;
                 neutron.position.z = Math.sin(angle) * radius;
-                neutron.position.y =  - Math.cos(angle) * radius / 4;
+                neutron.position.y = - Math.cos(angle) * radius / 4;
                 neutron.rotation.y += 0.03;
                 neutron.rotation.x += 0.03;
             });
@@ -100,7 +104,7 @@ const NucleusScene = () => {
                 neutron.rotation.x += 0.04;
                 neutron.rotation.y += 0.04;
             });
-        
+
             // neutronsBandA.forEach((neutron, index) => {
             //     const angle = (time * 0.001) + (index / 9) * Math.PI * 2;
             //     const radius = 5.1;
@@ -129,8 +133,8 @@ const NucleusScene = () => {
                 nucleusContainer.removeChild(renderer.domElement);
             }
         };
-        
-    }, []);
+
+    }, [backgroundColor]);
 
     const createGradientTexture = (color1, color2) => {
         const canvas = document.createElement('canvas');
@@ -146,8 +150,6 @@ const NucleusScene = () => {
         return new THREE.CanvasTexture(canvas);
     };
 
-
-    
     return <div id="nucleus-container" className="overflow-hidden" />;
 };
 

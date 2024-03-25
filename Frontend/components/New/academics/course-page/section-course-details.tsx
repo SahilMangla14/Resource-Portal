@@ -186,7 +186,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                                 {<Button variant={`${downvoted?'default':'secondary'}`} className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundDown size={20}  />
                                 </Button>}
-                                {/* {currentLikes==0&&<Button variant={`${downvoted?'default':'secondary'}`} disabled className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                {/* {currentLikes==0&&<Button variant={`${downvoted?'secondary':'outline'}`} disabled className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundDown size={20}  />
                                 </Button>} */}
                             </div>
@@ -204,7 +204,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                             <br />Semester {courseInfo?.semester}, {courseInfo?.year}
                         </div>
                         <div className="text-right">
-                            <Button variant={`${isBookmarked?'default':'secondary'}`}  className="w-15 h-10 m-1" onClick={toggleBookmark}>
+                            <Button variant={`${isBookmarked?'secondary':'outline'}`}  className="w-15 h-10 m-1" onClick={toggleBookmark}>
                                 <CiBookmark size={20} />
                             </Button>
                             <Button variant="outline" className="w-15 h-10 m-1" onClick={() => router.back()}>
