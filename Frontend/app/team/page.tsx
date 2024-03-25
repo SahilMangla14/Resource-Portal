@@ -21,7 +21,7 @@ export default function Page() {
     }, []);
 
     return (
-        <div>
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <ThemeProvider
                 attribute="class"
                 defaultTheme="dark"
@@ -46,10 +46,10 @@ export default function Page() {
                                     <div className="grid grid-cols-4 mt-2">
                                         <div className="flex justify-center h-72 w-48 border-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50 m-6">
                                             <div>
-                                                <div className="h-40 w-36 border mt-4">
+                                                <div className="h-40 w-39 border mt-4">
                                                     <img src="https://github.com/shadcn.png" className="h-40 border"></img>
                                                 </div>
-                                                <div className="text-md text-center mt-1">
+                                                <div className="text-md text-center mt-2 font-mono">
                                                     Subham
                                                 </div>
                                                 <div className="text-xs text-center text-muted-foreground">
@@ -64,10 +64,10 @@ export default function Page() {
                                         </div>
                                         <div className="flex justify-center h-72 w-48 border-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50 m-6">
                                             <div>
-                                                <div className="h-40 w-36 border mt-4">
+                                                <div className="h-40 w-39 border mt-4">
                                                     <img src="https://github.com/shadcn.png" className="h-40 border"></img>
                                                 </div>
-                                                <div className="text-md text-center mt-1">
+                                                <div className="text-md text-center mt-2 font-mono">
                                                     Sahil
                                                 </div>
                                                 <div className="text-xs text-center text-muted-foreground">
@@ -82,10 +82,10 @@ export default function Page() {
                                         </div>
                                         <div className="flex justify-center h-72 w-48 border-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50 m-6">
                                             <div>
-                                                <div className="h-40 w-36 border mt-4">
+                                                <div className="h-40 w-39 border mt-4">
                                                     <img src="https://github.com/shadcn.png" className="h-40 border"></img>
                                                 </div>
-                                                <div className="text-md text-center mt-1">
+                                                <div className="text-md text-center mt-2 font-mono">
                                                     Ojassvi Kumar
                                                 </div>
                                                 <div className="text-xs text-center text-muted-foreground">
@@ -100,10 +100,10 @@ export default function Page() {
                                         </div>
                                         <div className="flex justify-center h-72 w-48 border-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50 m-6">
                                             <div>
-                                                <div className="h-40 w-36 border mt-4">
+                                                <div className="h-40 w-39 border mt-4">
                                                     <img src="https://github.com/shadcn.png" className="h-40 border"></img>
                                                 </div>
-                                                <div className="text-md text-center mt-1">
+                                                <div className="text-md text-center mt-2 font-mono">
                                                     Sakshi Bansal
                                                 </div>
                                                 <div className="text-xs text-center text-muted-foreground">
@@ -116,14 +116,11 @@ export default function Page() {
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-                        <div className="mt-10 border-t py-2 px-6 flex justify-center items-center dark:bg-secondary font-bold text-md">
+                        <div className="mt-auto border-t py-2 px-6 flex justify-center items-center dark:bg-secondary font-bold text-md">
                             Made with <div style={{ color: 'red' }} className="px-1">&#x2764;&#xFE0F;</div>
                         </div>
                     </>
