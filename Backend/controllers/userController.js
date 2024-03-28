@@ -40,11 +40,11 @@ const googleAuth = async (req, res) => {
         }
         const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1d' })
         res.cookie('_auth_resource_tkn', token, {
-            httpOnly: false,
+            httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
             path: '/',
             sameSite: 'none',
-            secure: false,
+            secure: true,
             domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'infonest.vercel.app'
         });
         console.log("User logged in successfully")
