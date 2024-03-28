@@ -9,7 +9,7 @@ export function SectionPersonalDetails({ personalInfo,rank }) {
                 <div className="flex">
                     <div className="px-3">
                         <Avatar className="h-28 w-28">
-                            <AvatarImage src="https://github.com/shadcn.png" />
+                            <AvatarImage src={personalInfo.imageUrl ? personalInfo.imageUrl : "https://github.com/shadcn.png"} />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     </div>

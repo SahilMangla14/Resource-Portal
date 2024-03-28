@@ -13,6 +13,7 @@ import axios from 'axios'
 axios.defaults.withCredentials = true;
 import { useImage } from "@/store/image";
 import { useCookies } from 'react-cookie';
+import { max } from 'moment';
 
 interface ImageData {
     setImage: (image: string) => void;
@@ -58,7 +59,9 @@ export default function Page() {
             // console.log("result",result.data.cookies.split("=")[1])
             const cookies = result.data.cookies.split("=")[1]
             // console.log("cookies",cookies)
-            setCookie('_auth_resource_tkn', cookies);
+            setCookie('_auth_resource_tkn', cookies, {
+                maxAge: 60 * 60 * 24
+            });
             localStorage.setItem('authToken', result.data.token);
             // console.log("RESULT : ", result.data.message)
             notifySuccess(result.data.message)

@@ -14,6 +14,7 @@ import moment from 'moment';
 
 type Comment = {
     _id: string;
+    imageUrl: string;
     author: string;
     text: string;
     likedBy: string[];
@@ -140,7 +141,7 @@ export function SectionCourseComments({ commentsInfo , courseInfo, user}:{commen
                             <div key={index} className="flex justify-between items-center py-2 px-4 border-b bg-white hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50">
                                 <div className="flex space-x-2">
                                     <Avatar>
-                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarImage src={comment.imageUrl ? comment.imageUrl : "https://github.com/shadcn.png"} />
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
                                     <div>
@@ -183,7 +184,7 @@ const CommentReplies=({comments,user,handleDelete,allComments,handleReply}:{comm
                             <div key={index} className="flex justify-between items-center py-2 px-4 border-b bg-white hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50">
                                 <div className="flex space-x-2">
                                     <Avatar>
-                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarImage src={comment.imageUrl ? comment.imageUrl : "https://github.com/shadcn.png"} />
                                         <AvatarFallback>CN</AvatarFallback>
                                     </Avatar>
                                     <div>

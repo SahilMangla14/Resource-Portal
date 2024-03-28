@@ -82,8 +82,16 @@ const getCommentByResourceId = async (req, res) => {
         const id = req.params.resourceId
         
         const comments = await Comment.find({resourceId: id}).populate('parent')
-
-        res.status(200).json({message: "Comments fetched successfully!", comments,user:req.user.id})
+        // add profile image to each comment corresponding to the user
+        const updatedComments = await Promise.all(comments.map(async (comment) => {
+            const user = await User.findById(comment.userId);
+            return {
+                ...comment._doc,
+                imageUrl: user.imageUrl
+            }
+        }));
+        console.log("comments",updatedComments)
+        res.status(200).json({message: "Comments fetched successfully!", comments : updatedComments,user:req.user.id})
     }
     catch(err){
         console.log("Error while fetching comments by resource id")

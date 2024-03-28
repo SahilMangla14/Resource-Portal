@@ -8,6 +8,10 @@ import { AiFillInstagram } from "react-icons/ai";
 import LoadingIndicator from '@/components/LoadingIndicator'
 import { ThemeProvider } from "@/components/New/theme-provider"
 import { NavigationBar } from '@/components/New/navigation-menu';
+import ojassvi from '../../public/ojassvi_kumar.jpeg';
+import sahil from '../../public/sahil.jpeg';
+import sakshi from '../../public/sakshi_bansal.jpeg';
+import subham from '../../public/subham.jpeg';
 
 export default function Page() {
     const [isPageLoading, setIsPageLoading] = useState(true);
@@ -47,7 +51,7 @@ export default function Page() {
                                         <div className="flex justify-center h-72 w-48 border-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50 m-6">
                                             <div>
                                                 <div className="h-40 w-39 border mt-4">
-                                                    <img src="https://github.com/shadcn.png" className="h-40 border"></img>
+                                                    <img src={subham ? subham.src : "https://github.com/shadcn.png"} className="h-40 border"></img>
                                                 </div>
                                                 <div className="text-md text-center mt-2 font-mono">
                                                     Subham
@@ -56,16 +60,16 @@ export default function Page() {
                                                     Batch of 2024
                                                 </div>
                                                 <div className="flex space-x-2 justify-center mt-6">
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><MdEmail size={20} /></a>
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><FaLinkedin size={20} /></a>
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><AiFillInstagram size={20} /></a>
+                                                    <a className="cursor-pointer" href="mailto:2020csb1317@iitrpr.ac.in" target="_blank"><MdEmail size={20} /></a>
+                                                    <a className="cursor-pointer" href="https://www.linkedin.com/in/subham71/" target="_blank"><FaLinkedin size={20} /></a>
+                                                    <a className="cursor-pointer" href="https://www.instagram.com/_subham71/" target="_blank"><AiFillInstagram size={20} /></a>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex justify-center h-72 w-48 border-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50 m-6">
                                             <div>
                                                 <div className="h-40 w-39 border mt-4">
-                                                    <img src="https://github.com/shadcn.png" className="h-40 border"></img>
+                                                    <img src={sahil ? sahil.src : "https://github.com/shadcn.png"} className="h-40 border"></img>
                                                 </div>
                                                 <div className="text-md text-center mt-2 font-mono">
                                                     Sahil
@@ -74,16 +78,16 @@ export default function Page() {
                                                     Batch of 2025
                                                 </div>
                                                 <div className="flex space-x-2 justify-center mt-6">
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><MdEmail size={20} /></a>
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><FaLinkedin size={20} /></a>
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><AiFillInstagram size={20} /></a>
+                                                    <a className="cursor-pointer" href="mailto:2021csb1128@iitrpr.ac.in" target="_blank"><MdEmail size={20} /></a>
+                                                    <a className="cursor-pointer" href="https://www.linkedin.com/in/sahilmangla/" target="_blank"><FaLinkedin size={20} /></a>
+                                                    <a className="cursor-pointer" href="https://www.instagram.com/sahilmangla148/" target="_blank"><AiFillInstagram size={20} /></a>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex justify-center h-72 w-48 border-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50 m-6">
                                             <div>
                                                 <div className="h-40 w-39 border mt-4">
-                                                    <img src="https://github.com/shadcn.png" className="h-40 border"></img>
+                                                    <img src={ojassvi ? ojassvi.src : "https://github.com/shadcn.png"} className="h-40 border"></img>
                                                 </div>
                                                 <div className="text-md text-center mt-2 font-mono">
                                                     Ojassvi Kumar
@@ -92,16 +96,16 @@ export default function Page() {
                                                     Batch of 2024
                                                 </div>
                                                 <div className="flex space-x-2 justify-center mt-6">
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><MdEmail size={20} /></a>
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><FaLinkedin size={20} /></a>
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><AiFillInstagram size={20} /></a>
+                                                    <a className="cursor-pointer" href="mailto:2020csb1187@iitrpr.ac.in" target="_blank"><MdEmail size={20} /></a>
+                                                    <a className="cursor-pointer" href="https://www.linkedin.com/in/ojassvi-kumar/" target="_blank"><FaLinkedin size={20} /></a>
+                                                    <a className="cursor-pointer" href="https://www.instagram.com/0jassvikumar/" target="_blank"><AiFillInstagram size={20} /></a>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex justify-center h-72 w-48 border-2 rounded-lg hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:hover:text-slate-50 m-6">
                                             <div>
                                                 <div className="h-40 w-39 border mt-4">
-                                                    <img src="https://github.com/shadcn.png" className="h-40 border"></img>
+                                                    <img src={sakshi ? sakshi.src : "https://github.com/shadcn.png"} className="h-40 border"></img>
                                                 </div>
                                                 <div className="text-md text-center mt-2 font-mono">
                                                     Sakshi Bansal
@@ -110,9 +114,9 @@ export default function Page() {
                                                     Batch of 2025
                                                 </div>
                                                 <div className="flex space-x-2 justify-center mt-6">
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><MdEmail size={20} /></a>
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><FaLinkedin size={20} /></a>
-                                                    <a className="cursor-pointer" href="www.google.com" target="_blank"><AiFillInstagram size={20} /></a>
+                                                    <a className="cursor-pointer" href="mailto:2021mcb1244@iitrpr.ac.in" target="_blank"><MdEmail size={20} /></a>
+                                                    <a className="cursor-pointer" href="https://www.linkedin.com/in/sakshi-bansal-a0b132234/" target="_blank"><FaLinkedin size={20} /></a>
+                                                    <a className="cursor-pointer" href="https://www.instagram.com/sakshi_19603/" target="_blank"><AiFillInstagram size={20} /></a>
                                                 </div>
                                             </div>
                                         </div>

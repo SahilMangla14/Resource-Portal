@@ -178,12 +178,12 @@ export function SectionCourseDetails({ courseInfo,user }) {
                     <div className="flex">
                         <div className="pl-3">
                             <div>
-                                <Button variant={`${upvoted?'default':'secondary'}`} className={`w-15 h-9 m-1 ${upvoted?'bg-gray-300':''}`} onClick={() => handleLikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                <Button variant={`${upvoted?'default':'secondary'}`} className={`w-15 h-9 m-1`} onClick={() => handleLikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundUp size={20}  />
                                 </Button>
                             </div>
                             <div>
-                                {<Button variant={`${downvoted?'default':'secondary'}`} className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
+                                {<Button variant={`${downvoted?'default':'secondary'}`} className={`w-15 h-9 m-1`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
                                     <IoMdArrowRoundDown size={20}  />
                                 </Button>}
                                 {/* {currentLikes==0&&<Button variant={`${downvoted?'secondary':'outline'}`} disabled className={`w-15 h-9 m-1 ${downvoted?'bg-gray-300':''}`} onClick={() => handleDislikes({ _id: courseInfo._id, likes: courseInfo.likes})}>
@@ -204,7 +204,7 @@ export function SectionCourseDetails({ courseInfo,user }) {
                             <br />Semester {courseInfo?.semester}, {courseInfo?.year}
                         </div>
                         <div className="text-right">
-                            <Button variant={`${isBookmarked?'secondary':'outline'}`}  className="w-15 h-10 m-1" onClick={toggleBookmark}>
+                            <Button variant={`${isBookmarked?'default':'secondary'}`}  className="w-15 h-10 m-1" onClick={toggleBookmark}>
                                 <CiBookmark size={20} />
                             </Button>
                             <Button variant="outline" className="w-15 h-10 m-1" onClick={() => router.back()}>
