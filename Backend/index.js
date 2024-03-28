@@ -18,6 +18,8 @@ const origin = process.env.NODE_ENV === "development"
 app.use(
     cors({
       credentials: true,
+      exposedHeaders: ["set-cookie","ajax_redirect"],
+      preflightContinue: true,
       origin
     }),
 );
