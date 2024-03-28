@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios'
 axios.defaults.withCredentials = true;
 import { useImage } from "@/store/image";
+import { useCookies } from 'react-cookie';
 
 interface ImageData {
     setImage: (image: string) => void;
@@ -22,6 +23,7 @@ export default function Page() {
     const [isPageLoading, setIsPageLoading] = useState(true);
     const router = useRouter();
     const { setImage, imageUrl } = useImage() as ImageData;
+    const [cookies, setCookie, removeCookie] = useCookies(['_auth_resource_tkn']);
 
     useEffect(() => {
         const loadingTimeout = setTimeout(() => {
@@ -53,6 +55,10 @@ export default function Page() {
             setImage(response.profileObj.imageUrl)
             // console.log("image",imageUrl)
             const result = await axios.post(`${process.env.BACKEND_URL}/api/v1/user/google-login`, bodyObject, {withCredentials: true});
+            console.log("result",result.data.cookies.split("=")[1])
+            const cookies = result.data.cookies.split("=")[1]
+            console.log("cookies",cookies)
+            setCookie('_auth_resource_tkn', cookies);
             localStorage.setItem('authToken', result.data.token);
             // console.log("RESULT : ", result.data.message)
             notifySuccess(result.data.message)

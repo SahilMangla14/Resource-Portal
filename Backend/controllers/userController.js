@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const { OAuth2Client } = require('google-auth-library');
 const cron = require('node-cron');
 const dotenv = require('dotenv');
+const cookie = require('cookie');
 dotenv.config();
 
 const googleAuth = async (req, res) => {
@@ -39,16 +40,19 @@ const googleAuth = async (req, res) => {
             id = user._id;
         }
         const token = jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: '1d' })
-        res.cookie('_auth_resource_tkn', token, {
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
-            path: '/',
-            sameSite: 'none',
-            secure: true,
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'infonest.vercel.app'
-        });
+        // res.cookie('_auth_resource_tkn', token, {
+        //     httpOnly: true,
+        //     maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
+        //     path: '/',
+        //     sameSite: 'none',
+        //     secure: true,
+        //     domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'infonest.vercel.app'
+        // });
+
+        const cookies = cookie.serialize("token", token);
+        console.log("Cookies: ", cookies)
         console.log("User logged in successfully")
-        res.status(200).json({ message: "User logged in successfully", token, user })
+        res.status(200).json({ message: "User logged in successfully", token, user, cookies })
     }
     catch (err) {
         console.log("Error while logging in user")
