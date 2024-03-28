@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   // const token = getLocalStorage('authToken');
   const token = request.cookies.get('_auth_resource_tkn');
-  console.log("middleware_token",token)
+  // console.log("middleware_token",token)
   if(!token) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'

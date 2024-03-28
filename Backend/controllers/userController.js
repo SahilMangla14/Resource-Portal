@@ -50,8 +50,8 @@ const googleAuth = async (req, res) => {
         // });
 
         const cookies = cookie.serialize("token", token);
-        console.log("Cookies: ", cookies)
-        console.log("User logged in successfully")
+        // console.log("Cookies: ", cookies)
+        // console.log("User logged in successfully")
         res.status(200).json({ message: "User logged in successfully", token, user, cookies })
     }
     catch (err) {

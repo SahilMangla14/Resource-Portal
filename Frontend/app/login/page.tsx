@@ -55,9 +55,9 @@ export default function Page() {
             setImage(response.profileObj.imageUrl)
             // console.log("image",imageUrl)
             const result = await axios.post(`${process.env.BACKEND_URL}/api/v1/user/google-login`, bodyObject, {withCredentials: true});
-            console.log("result",result.data.cookies.split("=")[1])
+            // console.log("result",result.data.cookies.split("=")[1])
             const cookies = result.data.cookies.split("=")[1]
-            console.log("cookies",cookies)
+            // console.log("cookies",cookies)
             setCookie('_auth_resource_tkn', cookies);
             localStorage.setItem('authToken', result.data.token);
             // console.log("RESULT : ", result.data.message)
