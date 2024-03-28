@@ -52,7 +52,7 @@ export default function Page() {
 
             setImage(response.profileObj.imageUrl)
             // console.log("image",imageUrl)
-            const result = await axios.post(`${process.env.BACKEND_URL}/api/v1/user/google-login`, bodyObject);
+            const result = await axios.post(`${process.env.BACKEND_URL}/api/v1/user/google-login`, bodyObject, {withCredentials: true});
             localStorage.setItem('authToken', result.data.token);
             // console.log("RESULT : ", result.data.message)
             notifySuccess(result.data.message)

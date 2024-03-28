@@ -43,8 +43,10 @@ const googleAuth = async (req, res) => {
             httpOnly: true,
             maxAge: 24 * 60 * 60 * 1000, // Cookie expires in 1 day
             path: '/',
+            sameSite: 'none',
             domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'infonest.vercel.app'
         });
+        console.log("User logged in successfully")
         res.status(200).json({ message: "User logged in successfully", token, user })
     }
     catch (err) {
